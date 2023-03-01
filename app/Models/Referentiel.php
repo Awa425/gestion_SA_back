@@ -20,6 +20,7 @@ class Referentiel extends Model
         'libelle',
         'description',
         'is_active',
+        'userid',
     ];
 
     /**
