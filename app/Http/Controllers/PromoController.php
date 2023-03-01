@@ -13,33 +13,46 @@ class PromoController extends Controller
 {
     public function index()
     {
-        $promos = Promo::all();
+        $promos = Promo::where('is_active','=','1')->get();
 
         return new PromoCollection($promos);
     }
 
-    public function store(PromoStoreRequest $request)
-    {
-        $promo = Promo::create($request->validated());
-
-        return new PromoResource($promo);
-    }
 
     public function show(Promo $promo)
     {
         return new PromoResource($promo);
     }
 
+    public function store(PromoStoreRequest $request)
+    {
+        
+        $user_id=auth()->user()->id;
+        
+        $promo = Promo::create([
+            'libelle' => $request->libelle,
+            'annee' => $request->annee,
+            'user_id' => $user_id,
+    
+        ]);
+       
+
+        return new PromoResource($promo);
+    }
+
     public function update(PromoUpdateRequest $request, Promo $promo)
     {
+        
         $promo->update($request->validated());
 
         return new PromoResource($promo);
     }
 
-    public function destroy(Request $request, Promo $promo)
+    public function destroy( Promo $promo)
     {
-        $promo->delete();
+        $promo->update([
+            'is_active' => 0
+        ]);
 
         return response()->noContent();
     }

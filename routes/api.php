@@ -14,14 +14,16 @@ use App\Http\Controllers\AuthController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('promo', App\Http\Controllers\PromoController::class);
+});
 
-
-Route::apiResource('promo', App\Http\Controllers\PromoController::class);
 
 Route::apiResource('referentiel', App\Http\Controllers\ReferentielController::class);

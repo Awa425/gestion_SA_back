@@ -19,6 +19,7 @@ class Promo extends Model
     protected $fillable = [
         'libelle',
         'annee',
+        'user_id',
         'is_active',
     ];
 

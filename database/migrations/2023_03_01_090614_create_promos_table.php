@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('promos', function (Blueprint $table) {
             $table->id();
             $table->string('libelle', 255)->unique();
-            $table->string('annee', 255);
+            $table->year('annee');
             $table->boolean('is_active')->default(1);
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

@@ -58,6 +58,20 @@ class User extends Authenticatable
     }
 
 
+    public function promos() : HasMany
+    {
+        return $this->hasMany(Promo::class);
+
+    }
+    public function referentiels() : HasMany
+    {
+        return $this->hasMany(Referentiel::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public static function isAdmin($user): bool
     {

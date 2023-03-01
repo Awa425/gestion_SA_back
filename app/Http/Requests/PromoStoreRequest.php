@@ -21,8 +21,7 @@ class PromoStoreRequest extends FormRequest
     {
         return [
             'libelle' => ['required', 'string', 'max:255', 'unique:promos,libelle'],
-            'annee' => ['required', 'string', 'max:255'],
-            'is_active' => ['required'],
+            'annee' => ['required', 'integer', 'min:2017','max:2110'],
         ];
     }
 }
