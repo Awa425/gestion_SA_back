@@ -1,0 +1,27 @@
+models:
+  # ...
+  Promo:
+    libelle: string:255 unique
+    annee: string:255
+    is_active: boolean default:1
+    relationships:
+      belongsTo: User
+      belongsToMany: Referentiel
+
+  Referentiel:
+    libelle: string:255 unique
+    description: string
+    is_active: boolean default:1
+    relationships:
+      belongsTo: User
+      belongsToMany: Promo
+
+controllers:
+  # ...
+  Promo:
+    resource: api.store, api.update, api.destroy, api.index, api.show
+
+  Referentiel:
+    resource: api.store, api.update, api.destroy, api.index, api.show
+
+
