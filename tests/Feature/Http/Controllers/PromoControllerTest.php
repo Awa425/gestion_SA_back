@@ -2,7 +2,11 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Owner;
 use App\Models\Promo;
+use App\Models\Uid;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -47,19 +51,34 @@ class PromoControllerTest extends TestCase
     public function store_saves(): void
     {
         $libelle = $this->faker->word;
-        $annee = $this->faker->word;
+        $date_debut = $this->faker->date();
+        $date_fin_prevue = $this->faker->date();
+        $date_fin_reel = $this->faker->date();
         $is_active = $this->faker->boolean;
+        $user = User::factory()->create();
+        $owner = Owner::factory()->create();
+        $uid = Uid::factory()->create();
 
         $response = $this->post(route('promo.store'), [
             'libelle' => $libelle,
-            'annee' => $annee,
+            'date_debut' => $date_debut,
+            'date_fin_prevue' => $date_fin_prevue,
+            'date_fin_reel' => $date_fin_reel,
             'is_active' => $is_active,
+            'user_id' => $user->id,
+            'owner_id' => $owner->id,
+            'uid' => $uid->id,
         ]);
 
         $promos = Promo::query()
             ->where('libelle', $libelle)
-            ->where('annee', $annee)
+            ->where('date_debut', $date_debut)
+            ->where('date_fin_prevue', $date_fin_prevue)
+            ->where('date_fin_reel', $date_fin_reel)
             ->where('is_active', $is_active)
+            ->where('user_id', $user->id)
+            ->where('owner_id', $owner->id)
+            ->where('uid', $uid->id)
             ->get();
         $this->assertCount(1, $promos);
         $promo = $promos->first();
@@ -102,13 +121,23 @@ class PromoControllerTest extends TestCase
     {
         $promo = Promo::factory()->create();
         $libelle = $this->faker->word;
-        $annee = $this->faker->word;
+        $date_debut = $this->faker->date();
+        $date_fin_prevue = $this->faker->date();
+        $date_fin_reel = $this->faker->date();
         $is_active = $this->faker->boolean;
+        $user = User::factory()->create();
+        $owner = Owner::factory()->create();
+        $uid = Uid::factory()->create();
 
         $response = $this->put(route('promo.update', $promo), [
             'libelle' => $libelle,
-            'annee' => $annee,
+            'date_debut' => $date_debut,
+            'date_fin_prevue' => $date_fin_prevue,
+            'date_fin_reel' => $date_fin_reel,
             'is_active' => $is_active,
+            'user_id' => $user->id,
+            'owner_id' => $owner->id,
+            'uid' => $uid->id,
         ]);
 
         $promo->refresh();
@@ -117,8 +146,13 @@ class PromoControllerTest extends TestCase
         $response->assertJsonStructure([]);
 
         $this->assertEquals($libelle, $promo->libelle);
-        $this->assertEquals($annee, $promo->annee);
+        $this->assertEquals(Carbon::parse($date_debut), $promo->date_debut);
+        $this->assertEquals(Carbon::parse($date_fin_prevue), $promo->date_fin_prevue);
+        $this->assertEquals(Carbon::parse($date_fin_reel), $promo->date_fin_reel);
         $this->assertEquals($is_active, $promo->is_active);
+        $this->assertEquals($user->id, $promo->user_id);
+        $this->assertEquals($owner->id, $promo->owner_id);
+        $this->assertEquals($uid->id, $promo->uid);
     }
 
 

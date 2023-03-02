@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Referentiel extends Model
+class Visiteur extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,11 @@ class Referentiel extends Model
      * @var array
      */
     protected $fillable = [
-        'libelle',
-        'description',
-        'is_active',
-        'user_id'
+        'nom',
+        'prenom',
+        'INE',
+        'motif',
+        'user_id',
     ];
 
     /**
@@ -29,9 +30,14 @@ class Referentiel extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'is_active' => 'boolean',
+        'INE' => 'integer',
         'user_id' => 'integer',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function user(): BelongsTo
     {

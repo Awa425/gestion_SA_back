@@ -4,17 +4,17 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Promo;
 use App\Models\User;
+use App\Models\Visiteur;
 
-class PromoFactory extends Factory
+class VisiteurFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Promo::class;
+    protected $model = Visiteur::class;
 
     /**
      * Define the model's default state.
@@ -22,11 +22,10 @@ class PromoFactory extends Factory
     public function definition(): array
     {
         return [
-            'libelle' => $this->faker->regexify('[A-Za-z0-9]{255}'),
-            'date_debut' => $this->faker->date(),
-            'date_fin_prevue' => $this->faker->date(),
-            'date_fin_reel' => $this->faker->date(),
-            'is_active' => $this->faker->boolean,
+            'nom' => $this->faker->regexify('[A-Za-z0-9]{255}'),
+            'prenom' => $this->faker->regexify('[A-Za-z0-9]{255}'),
+            'INE' => $this->faker->numberBetween(-100000, 100000),
+            'motif' => $this->faker->regexify('[A-Za-z0-9]{255}'),
             'user_id' => User::factory(),
         ];
     }

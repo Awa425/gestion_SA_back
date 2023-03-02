@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('promos', function (Blueprint $table) {
+        Schema::create('visiteurs', function (Blueprint $table) {
             $table->id();
-            $table->string('libelle', 255)->unique();
-            $table->year('annee');
-            $table->boolean('is_active')->default(1);
+            $table->string('nom', 255);
+            $table->string('prenom', 255);
+            $table->bigInteger('INE')->unique();
+            $table->string('motif', 255);
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('promos');
+        Schema::dropIfExists('visiteurs');
     }
 };
