@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Referentiel extends Model
+class Presence extends Model
 {
     use HasFactory;
 
@@ -16,10 +16,7 @@ class Referentiel extends Model
      * @var array
      */
     protected $fillable = [
-        'libelle',
-        'description',
-        'is_active',
-        'user_id',
+        'date_heure_arriver',
     ];
 
     /**
@@ -29,17 +26,11 @@ class Referentiel extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'is_active' => 'boolean',
-        'user_id' => 'integer',
+        'date_heure_arriver' => 'datetime',
     ];
 
-    public function user(): BelongsTo
+    public function apprenants(): HasMany
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Apprenant::class);
     }
 }

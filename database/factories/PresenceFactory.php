@@ -4,17 +4,16 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\Referentiel;
-use App\Models\User;
+use App\Models\Presence;
 
-class ReferentielFactory extends Factory
+class PresenceFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Referentiel::class;
+    protected $model = Presence::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +21,7 @@ class ReferentielFactory extends Factory
     public function definition(): array
     {
         return [
-            'libelle' => $this->faker->regexify('[A-Za-z0-9]{255}'),
-            'description' => $this->faker->text,
-            'is_active' => $this->faker->boolean,
-            'user_id' => User::factory(),
+            'date_heure_arriver' => $this->faker->dateTime(),
         ];
     }
 }

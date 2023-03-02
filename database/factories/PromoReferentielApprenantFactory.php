@@ -4,17 +4,19 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\Apprenant;
+use App\Models\Promo;
+use App\Models\Promo_Referentiel_Apprenant;
 use App\Models\Referentiel;
-use App\Models\User;
 
-class ReferentielFactory extends Factory
+class PromoReferentielApprenantFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Referentiel::class;
+    protected $model = PromoReferentielApprenant::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +24,9 @@ class ReferentielFactory extends Factory
     public function definition(): array
     {
         return [
-            'libelle' => $this->faker->regexify('[A-Za-z0-9]{255}'),
-            'description' => $this->faker->text,
-            'is_active' => $this->faker->boolean,
-            'user_id' => User::factory(),
+            'promo_id' => Promo::factory(),
+            'referentiel_id' => Referentiel::factory(),
+            'apprenant_id' => Apprenant::factory(),
         ];
     }
 }

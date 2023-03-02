@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PromoStoreRequest extends FormRequest
+class Promo_Referentiel_ApprenantStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +20,7 @@ class PromoStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'libelle' => ['required', 'string', 'max:255', 'unique:promos,libelle'],
-            'annee' => ['required', 'integer', 'min:2017','max:2110'],
+            'promoReferentielApprenant' => ['required'],
         ];
     }
 }

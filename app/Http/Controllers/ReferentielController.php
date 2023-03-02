@@ -12,33 +12,33 @@ use Illuminate\Http\Response;
 
 class ReferentielController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): ReferentielCollection
     {
         $referentiels = Referentiel::all();
 
         return new ReferentielCollection($referentiels);
     }
 
-    public function store(ReferentielStoreRequest $request)
+    public function store(ReferentielStoreRequest $request): ReferentielResource
     {
         $referentiel = Referentiel::create($request->validated());
 
         return new ReferentielResource($referentiel);
     }
 
-    public function show(Request $request, Referentiel $referentiel)
+    public function show(Request $request, Referentiel $referentiel): ReferentielResource
     {
         return new ReferentielResource($referentiel);
     }
 
-    public function update(ReferentielUpdateRequest $request, Referentiel $referentiel)
+    public function update(ReferentielUpdateRequest $request, Referentiel $referentiel): ReferentielResource
     {
         $referentiel->update($request->validated());
 
         return new ReferentielResource($referentiel);
     }
 
-    public function destroy(Request $request, Referentiel $referentiel)
+    public function destroy(Request $request, Referentiel $referentiel): Response
     {
         $referentiel->delete();
 

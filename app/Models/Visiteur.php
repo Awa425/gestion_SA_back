@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Promo extends Model
+class Visiteur extends Model
 {
     use HasFactory;
 
@@ -17,10 +16,11 @@ class Promo extends Model
      * @var array
      */
     protected $fillable = [
-        'libelle',
-        'annee',
+        'nom',
+        'prenom',
+        'INE',
+        'motif',
         'user_id',
-        'is_active',
     ];
 
     /**
@@ -30,7 +30,8 @@ class Promo extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'is_active' => 'boolean',
+        'INE' => 'integer',
+        'user_id' => 'integer',
     ];
 
     public function user(): BelongsTo
@@ -38,8 +39,8 @@ class Promo extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function referentiels(): BelongsToMany
+    public function user(): BelongsTo
     {
-        return $this->belongsToMany(Referentiel::class);
+        return $this->belongsTo(User::class);
     }
 }
