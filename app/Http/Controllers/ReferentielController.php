@@ -12,16 +12,24 @@ use Illuminate\Http\Response;
 
 class ReferentielController extends Controller
 {
+
     public function index(Request $request): ReferentielCollection
     {
-        $referentiels = Referentiel::all();
+       $referentiels = Referentiel::where('is_active', true)->get();
 
         return new ReferentielCollection($referentiels);
     }
 
     public function store(ReferentielStoreRequest $request): ReferentielResource
     {
-        $referentiel = Referentiel::create($request->validated());
+        $user = auth()->user();
+        $validate = $request->validated();
+        $referentiel = Referentiel::create([
+            'libelle' => $validate['libelle'],
+            'description' => $validate['description'],
+            'userid' => $user->id,
+        ]
+        );
 
         return new ReferentielResource($referentiel);
     }
@@ -40,7 +48,9 @@ class ReferentielController extends Controller
 
     public function destroy(Request $request, Referentiel $referentiel): Response
     {
-        $referentiel->delete();
+       $res= $referentiel->update([
+            'is_active' => false,
+        ]);
 
         return response()->noContent();
     }

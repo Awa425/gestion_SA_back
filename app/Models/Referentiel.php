@@ -19,7 +19,7 @@ class Referentiel extends Model
         'libelle',
         'description',
         'is_active',
-        'user_id',
+        'user_id'
     ];
 
     /**
@@ -32,11 +32,6 @@ class Referentiel extends Model
         'is_active' => 'boolean',
         'user_id' => 'integer',
     ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function user(): BelongsTo
     {

@@ -22,7 +22,6 @@ class ReferentielStoreRequest extends FormRequest
         return [
             'libelle' => ['required', 'string', 'max:255', 'unique:referentiels,libelle'],
             'description' => ['required', 'string'],
-            'is_active' => ['required'],
         ];
     }
 }
