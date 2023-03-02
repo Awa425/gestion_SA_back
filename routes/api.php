@@ -22,8 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->group(function(){
-    Route::apiResource('promo', App\Http\Controllers\PromoController::class);
-    
+    Route::apiResource('promo', App\Http\Controllers\PromoController::class); 
     Route::apiResource('referentiel', App\Http\Controllers\ReferentielController::class);
 
 });
