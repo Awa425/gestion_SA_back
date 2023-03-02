@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Models\Owner;
 use App\Models\Referentiel;
+use App\Models\Uid;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use JMac\Testing\Traits\AdditionalAssertions;
@@ -49,17 +52,26 @@ class ReferentielControllerTest extends TestCase
         $libelle = $this->faker->word;
         $description = $this->faker->text;
         $is_active = $this->faker->boolean;
+        $user = User::factory()->create();
+        $owner = Owner::factory()->create();
+        $uid = Uid::factory()->create();
 
         $response = $this->post(route('referentiel.store'), [
             'libelle' => $libelle,
             'description' => $description,
             'is_active' => $is_active,
+            'user_id' => $user->id,
+            'owner_id' => $owner->id,
+            'uid' => $uid->id,
         ]);
 
         $referentiels = Referentiel::query()
             ->where('libelle', $libelle)
             ->where('description', $description)
             ->where('is_active', $is_active)
+            ->where('user_id', $user->id)
+            ->where('owner_id', $owner->id)
+            ->where('uid', $uid->id)
             ->get();
         $this->assertCount(1, $referentiels);
         $referentiel = $referentiels->first();
@@ -104,11 +116,17 @@ class ReferentielControllerTest extends TestCase
         $libelle = $this->faker->word;
         $description = $this->faker->text;
         $is_active = $this->faker->boolean;
+        $user = User::factory()->create();
+        $owner = Owner::factory()->create();
+        $uid = Uid::factory()->create();
 
         $response = $this->put(route('referentiel.update', $referentiel), [
             'libelle' => $libelle,
             'description' => $description,
             'is_active' => $is_active,
+            'user_id' => $user->id,
+            'owner_id' => $owner->id,
+            'uid' => $uid->id,
         ]);
 
         $referentiel->refresh();
@@ -119,6 +137,9 @@ class ReferentielControllerTest extends TestCase
         $this->assertEquals($libelle, $referentiel->libelle);
         $this->assertEquals($description, $referentiel->description);
         $this->assertEquals($is_active, $referentiel->is_active);
+        $this->assertEquals($user->id, $referentiel->user_id);
+        $this->assertEquals($owner->id, $referentiel->owner_id);
+        $this->assertEquals($uid->id, $referentiel->uid);
     }
 
 
