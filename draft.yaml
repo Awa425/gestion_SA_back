@@ -2,19 +2,22 @@ models:
   # ...
   Promo:
     libelle: string:255 unique
-    annee: string:255
+    date_debut: date
+    date_fin_prevue: date
+    date_fin_reel: date
     is_active: boolean default:1
+    user_id: unsignedBigInteger
     relationships:
       belongsTo: User
-      belongsToMany: Referentiel
 
   Referentiel:
     libelle: string:255 unique
     description: string
     is_active: boolean default:1
+    user_id: unsignedBigInteger
     relationships:
       belongsTo: User
-      belongsToMany: Promo
+   
 
 controllers:
   # ...

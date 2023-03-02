@@ -1,27 +1,7 @@
-created:
-    - app/Http/Controllers/PromoController.php
-    - app/Http/Controllers/ReferentielController.php
-    - database/factories/PromoFactory.php
-    - database/factories/ReferentielFactory.php
-    - database/migrations/2023_03_01_090614_create_promos_table.php
-    - database/migrations/2023_03_01_090615_create_referentiels_table.php
-    - database/migrations/2023_03_01_090616_create_promo_referentiel_table.php
-    - app/Models/Promo.php
-    - app/Models/Referentiel.php
-    - tests/Feature/Http/Controllers/PromoControllerTest.php
-    - tests/Feature/Http/Controllers/ReferentielControllerTest.php
-    - app/Http/Requests/PromoStoreRequest.php
-    - app/Http/Requests/PromoUpdateRequest.php
-    - app/Http/Requests/ReferentielStoreRequest.php
-    - app/Http/Requests/ReferentielUpdateRequest.php
-    - app/Http/Resources/PromoCollection.php
-    - app/Http/Resources/PromoResource.php
-    - app/Http/Resources/ReferentielCollection.php
-    - app/Http/Resources/ReferentielResource.php
-updated:
-    - routes/api.php
+created: 'app/Http/Controllers/PromoController.php app/Http/Controllers/ReferentielController.php database/factories/PromoFactory.php database/factories/ReferentielFactory.php database/migrations/2023_03_01_090614_create_promos_table.php database/migrations/2023_03_01_090615_create_referentiels_table.php database/migrations/2023_03_01_090616_create_promo_referentiel_table.php app/Models/Promo.php app/Models/Referentiel.php tests/Feature/Http/Controllers/PromoControllerTest.php tests/Feature/Http/Controllers/ReferentielControllerTest.php app/Http/Requests/PromoStoreRequest.php app/Http/Requests/PromoUpdateRequest.php app/Http/Requests/ReferentielStoreRequest.php app/Http/Requests/ReferentielUpdateRequest.php app/Http/Resources/PromoCollection.php app/Http/Resources/PromoResource.php app/Http/Resources/ReferentielCollection.php app/Http/Resources/ReferentielResource.php'
+updated: routes/api.php
 models:
+    Promo: { libelle: string, annee: string, is_active: 'boolean default:1', user_id: 'biginteger unsigned' }
+    Referentiel: { libelle: string, description: 'string:191', is_active: 'boolean default:1' }
     Role: { libelle: 'string:191' }
     User: { name: 'string:191', prenom: 'string:191', date_naissance: 'string:191 nullable', matricule: 'string:191 nullable', email: 'string:191', password: 'string:191', photo: 'binary nullable', telephone: 'string:191 nullable', isactive: 'boolean default:1', email_verified_at: 'datetime nullable', user_id: 'biginteger unsigned nullable', isfirstlyconnected: 'boolean default:0', adresse: 'string:191 nullable', role_id: 'biginteger unsigned', remember_token: 'string:100 nullable' }
-    Promo: { libelle: 'string:255 unique', annee: 'string:255', is_active: 'boolean default:1', relationships: { belongsTo: User, belongsToMany: Referentiel } }
-    Referentiel: { libelle: 'string:255 unique', description: string, is_active: 'boolean default:1', relationships: { belongsTo: User, belongsToMany: Promo } }
