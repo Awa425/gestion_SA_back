@@ -15,8 +15,9 @@ class PromoResource extends JsonResource
         return [
             'id' => $this->id,
             'libelle' => $this->libelle,
-            'annee' => $this->annee,
-            'is_active' => $this->is_active,
+            'date_debut' => $this->date_debut,
+            'date_fin_prevue' => $this->date_fin_prevue,
+            'date_fin_reel' => $this->date_fin_reel,
             //'user' => UserResource::make($this->whenLoaded('user')),
             'referentiels' => ReferentielCollection::make($this->whenLoaded('referentiels')),
         ];

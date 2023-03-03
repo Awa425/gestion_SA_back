@@ -18,7 +18,9 @@ class Promo extends Model
      */
     protected $fillable = [
         'libelle',
-        'annee',
+        'date_debut',
+        'date_fin_prevue',
+        'date_fin_reel',
         'user_id',
         'is_active',
     ];
@@ -38,8 +40,5 @@ class Promo extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function referentiels(): BelongsToMany
-    {
-        return $this->belongsToMany(Referentiel::class);
-    }
+    
 }
