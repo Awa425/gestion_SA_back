@@ -14,7 +14,7 @@ class PromoController extends Controller
 {
     public function index()
     {
-        if ((auth()->user()->cannot('manage_promo') || auth()->user()->can('view_promo')) && (auth()->user()->can('manage_promo') || auth()->user()->cannot('view_promo'))){
+        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
 
                 "message" => "vous n'avez pas le droit",
@@ -38,7 +38,7 @@ class PromoController extends Controller
     public function store(PromoStoreRequest $request)
     {
 
-        if ($request->user()->cannot('manage_promo')){
+        if ($request->user()->cannot('manage')){
            return response([
                "message" => "vous n'avez pas le droit",
             ],401);
@@ -66,7 +66,7 @@ class PromoController extends Controller
 
     public function update(PromoUpdateRequest $request, Promo $promo)
     {
-        if ($request->user()->cannot('manage_promo')){
+        if ($request->user()->cannot('manage')){
             return response([
                 "message" => "vous n'avez pas le droit",
              ],401);
@@ -83,7 +83,7 @@ class PromoController extends Controller
 
     public function destroy( Promo $promo)
     {
-        if (auth()->user()->cannot('manage_promo')){
+        if (auth()->user()->cannot('manage')){
             return response([
                 "message" => "vous n'avez pas le droit",
              ],401);
