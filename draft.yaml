@@ -6,7 +6,6 @@ models:
     date_fin_prevue: date
     date_fin_reel: date
     is_active: boolean default:1
-    user_id: id
     relationships:
       belongsTo: User
 
@@ -14,14 +13,13 @@ models:
     libelle: string:255 unique
     description: string
     is_active: boolean default:1
-    user_id: id
     relationships:
       belongsTo: User
    
   Promo_Referentiel_Apprenant:
-    promo_id: id 
-    referentiel_id: id 
-    apprenant_id: id 
+    relationships:
+      hasMany: Apprenant,Promo,Referentiel
+      
     
   Apprenant:
     nom: string:255
@@ -30,7 +28,6 @@ models:
     password: string:255
     date_naissance: date
     lieu_naissance: string:255
-    user_id: id 
     is_active: boolean default:1
     relationships:
       hasOne: Presence
@@ -46,7 +43,6 @@ models:
     prenom: string:255
     INE: bigInteger unique
     motif: string:255
-    user_id: id 
     relationships:
       belongsTo: User
 
@@ -60,4 +56,3 @@ controllers:
 
   Visiteur:
     resource: api.store, api.update, api.destroy, api.index, api.show
-  

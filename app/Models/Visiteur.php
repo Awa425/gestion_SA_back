@@ -20,7 +20,6 @@ class Visiteur extends Model
         'prenom',
         'INE',
         'motif',
-        'user_id',
     ];
 
     /**
@@ -31,13 +30,7 @@ class Visiteur extends Model
     protected $casts = [
         'id' => 'integer',
         'INE' => 'integer',
-        'user_id' => 'integer',
     ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function user(): BelongsTo
     {

@@ -23,7 +23,6 @@ class Apprenant extends Model
         'password',
         'date_naissance',
         'lieu_naissance',
-        'user_id',
         'is_active',
     ];
 
@@ -44,18 +43,12 @@ class Apprenant extends Model
     protected $casts = [
         'id' => 'integer',
         'date_naissance' => 'date',
-        'user_id' => 'integer',
         'is_active' => 'boolean',
     ];
 
     public function presence(): HasOne
     {
         return $this->hasOne(Presence::class);
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function user(): BelongsTo

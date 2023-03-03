@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\User;
 use App\Models\Visiteur;
 
 class VisiteurFactory extends Factory
@@ -26,7 +25,6 @@ class VisiteurFactory extends Factory
             'prenom' => $this->faker->regexify('[A-Za-z0-9]{255}'),
             'INE' => $this->faker->numberBetween(-100000, 100000),
             'motif' => $this->faker->regexify('[A-Za-z0-9]{255}'),
-            'user_id' => User::factory(),
         ];
     }
 }

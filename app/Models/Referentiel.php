@@ -19,7 +19,6 @@ class Referentiel extends Model
         'libelle',
         'description',
         'is_active',
-        'user_id'
     ];
 
     /**
@@ -30,7 +29,6 @@ class Referentiel extends Model
     protected $casts = [
         'id' => 'integer',
         'is_active' => 'boolean',
-        'user_id' => 'integer',
     ];
 
     public function user(): BelongsTo

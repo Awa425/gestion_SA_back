@@ -3,7 +3,6 @@
 namespace Tests\Feature\Http\Controllers;
 
 use App\Models\Apprenant;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -54,7 +53,6 @@ class ApprenantControllerTest extends TestCase
         $password = $this->faker->password;
         $date_naissance = $this->faker->date();
         $lieu_naissance = $this->faker->word;
-        $user = User::factory()->create();
         $is_active = $this->faker->boolean;
 
         $response = $this->post(route('apprenant.store'), [
@@ -64,7 +62,6 @@ class ApprenantControllerTest extends TestCase
             'password' => $password,
             'date_naissance' => $date_naissance,
             'lieu_naissance' => $lieu_naissance,
-            'user_id' => $user->id,
             'is_active' => $is_active,
         ]);
 
@@ -75,7 +72,6 @@ class ApprenantControllerTest extends TestCase
             ->where('password', $password)
             ->where('date_naissance', $date_naissance)
             ->where('lieu_naissance', $lieu_naissance)
-            ->where('user_id', $user->id)
             ->where('is_active', $is_active)
             ->get();
         $this->assertCount(1, $apprenants);
@@ -124,7 +120,6 @@ class ApprenantControllerTest extends TestCase
         $password = $this->faker->password;
         $date_naissance = $this->faker->date();
         $lieu_naissance = $this->faker->word;
-        $user = User::factory()->create();
         $is_active = $this->faker->boolean;
 
         $response = $this->put(route('apprenant.update', $apprenant), [
@@ -134,7 +129,6 @@ class ApprenantControllerTest extends TestCase
             'password' => $password,
             'date_naissance' => $date_naissance,
             'lieu_naissance' => $lieu_naissance,
-            'user_id' => $user->id,
             'is_active' => $is_active,
         ]);
 
@@ -149,7 +143,6 @@ class ApprenantControllerTest extends TestCase
         $this->assertEquals($password, $apprenant->password);
         $this->assertEquals(Carbon::parse($date_naissance), $apprenant->date_naissance);
         $this->assertEquals($lieu_naissance, $apprenant->lieu_naissance);
-        $this->assertEquals($user->id, $apprenant->user_id);
         $this->assertEquals($is_active, $apprenant->is_active);
     }
 
