@@ -37,11 +37,12 @@ class VisiteurController extends Controller
 
         return new VisiteurResource($visiteur);
     }
-
+/*
     public function destroy(Request $request, Visiteur $visiteur): Response
     {
         $visiteur->delete();
 
         return response()->noContent();
     }
+    */
 }

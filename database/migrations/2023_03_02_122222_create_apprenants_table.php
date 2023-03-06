@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('date_naissance');
             $table->string('lieu_naissance', 255);
             $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

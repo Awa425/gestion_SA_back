@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('promos', function (Blueprint $table) {
             $table->id();
             $table->string('libelle', 255)->unique();
-            $table->year('annee');
+            $table->date('date_debut');
+            $table->date('date_fin_prevue');
+            $table->date('date_fin_reel');
             $table->boolean('is_active')->default(1);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

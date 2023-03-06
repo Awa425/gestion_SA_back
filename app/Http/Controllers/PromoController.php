@@ -14,17 +14,19 @@ class PromoController extends Controller
 {
     public function index()
     {
-        if ((auth()->user()->cannot('manage_promo') || auth()->user()->can('view_promo')) && (auth()->user()->can('manage_promo') || auth()->user()->cannot('view_promo'))){
+        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
+
                 "message" => "vous n'avez pas le droit",
-             ]);
+
+             ],401);
          
           }
-          else{
+          
         $promos = Promo::where('is_active','=','1')->get();
 
         return new PromoCollection($promos);
-          }
+          
     }
 
 
@@ -36,59 +38,63 @@ class PromoController extends Controller
     public function store(PromoStoreRequest $request)
     {
 
-        if ($request->user()->cannot('manage_promo')){
+        if ($request->user()->cannot('manage')){
            return response([
                "message" => "vous n'avez pas le droit",
-            ]);
+            ],401);
         
          }
 
-         else{
+         
         
-        $user_id=auth()->user()->id;
+        $user_id=array(
+            "user_id" =>auth()->user()->id
+        );
         
-        $promo = Promo::create([
-            'libelle' => $request->libelle,
-            'annee' => $request->annee,
-            'user_id' => $user_id,
-    
-        ]);
+        $promos=$request->validated();
+        $result = array_merge($promos,$user_id);
+        $date_fin_reel=array(
+            "date_fin_reel" =>$request->date_fin_prevue
+        );
+        $result = array_merge($result,$date_fin_reel);
+        $promo = Promo::create($result);
        
 
         return new PromoResource($promo);
-           }
+           
     }
 
     public function update(PromoUpdateRequest $request, Promo $promo)
     {
-        if ($request->user()->cannot('manage_promo')){
+        if ($request->user()->cannot('manage')){
             return response([
                 "message" => "vous n'avez pas le droit",
-             ]);
+             ],401);
          
           }
-          else{
+          
+          
         
         $promo->update($request->validated());
 
         return new PromoResource($promo);
-          }
+          
     }
 
     public function destroy( Promo $promo)
     {
-        if ($request->user()->cannot('manage_promo')){
+        if (auth()->user()->cannot('manage')){
             return response([
                 "message" => "vous n'avez pas le droit",
-             ]);
+             ],401);
          
           }
-          else{
+         
         $promo->update([
             'is_active' => 0
         ]);
 
         return response()->noContent();
-     }
+     
     }
 }

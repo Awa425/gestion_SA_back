@@ -5,7 +5,6 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Referentiel;
-use App\Models\User;
 
 class ReferentielFactory extends Factory
 {
@@ -25,7 +24,6 @@ class ReferentielFactory extends Factory
             'libelle' => $this->faker->regexify('[A-Za-z0-9]{255}'),
             'description' => $this->faker->text,
             'is_active' => $this->faker->boolean,
-            'user_id' => User::factory(),
         ];
     }
 }

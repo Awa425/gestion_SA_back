@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PromoReferentielApprenant extends Model
 {
@@ -15,11 +15,7 @@ class PromoReferentielApprenant extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'promo_id',
-        'referentiel_id',
-        'apprenant_id',
-    ];
+    protected $fillable = [];
 
     /**
      * The attributes that should be cast to native types.
@@ -28,23 +24,20 @@ class PromoReferentielApprenant extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'promo_id' => 'integer',
-        'referentiel_id' => 'integer',
-        'apprenant_id' => 'integer',
     ];
 
-    public function promo(): BelongsTo
+    public function apprenants(): HasMany
     {
-        return $this->belongsTo(Promo::class);
+        return $this->hasMany(Apprenant::class);
     }
 
-    public function referentiel(): BelongsTo
+    public function promos(): HasMany
     {
-        return $this->belongsTo(Referentiel::class);
+        return $this->hasMany(Promo::class);
     }
 
-    public function apprenant(): BelongsTo
+    public function referentiels(): HasMany
     {
-        return $this->belongsTo(Apprenant::class);
+        return $this->hasMany(Referentiel::class);
     }
 }
