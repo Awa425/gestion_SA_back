@@ -30,7 +30,7 @@ class Referentiel extends Model
     protected $casts = [
         'id' => 'integer',
         'is_active' => 'boolean',
-        'user_id' => 'integer',
+        'userid' => 'integer',
     ];
 
     public function user(): BelongsTo
