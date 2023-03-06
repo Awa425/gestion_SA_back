@@ -15,6 +15,12 @@ class ReferentielController extends Controller
 
     public function index(Request $request): ReferentielCollection
     {
+        $user = auth()->user();
+        if(!isSuperAdmin($user) || !isAdmin($user)){
+            return response([
+                "message" => "vous n'avez pas le droit",
+            ]);
+        }
        $referentiels = Referentiel::where('is_active', true)->get();
 
         return new ReferentielCollection($referentiels);
@@ -23,6 +29,11 @@ class ReferentielController extends Controller
     public function store(ReferentielStoreRequest $request): ReferentielResource
     {
         $user = auth()->user();
+        if(!isSuperAdmin($user)){
+            return response([
+                "message" => "vous n'avez pas le droit",
+            ]);
+        }
         $validate = $request->validated();
         $referentiel = Referentiel::create([
             'libelle' => $validate['libelle'],
@@ -41,6 +52,12 @@ class ReferentielController extends Controller
 
     public function update(ReferentielUpdateRequest $request, Referentiel $referentiel): ReferentielResource
     {
+        $user = auth()->user();
+        if(!isSuperAdmin($user)){
+            return response([
+                "message" => "vous n'avez pas le droit",
+            ]);
+        }
         $referentiel->update($request->validated());
 
         return new ReferentielResource($referentiel);
@@ -48,6 +65,12 @@ class ReferentielController extends Controller
 
     public function destroy(Request $request, Referentiel $referentiel): Response
     {
+        $user = auth()->user();
+        if(!isSuperAdmin($user)){
+            return response([
+                "message" => "vous n'avez pas le droit",
+            ]);
+        }
        $res= $referentiel->update([
             'is_active' => false,
         ]);
