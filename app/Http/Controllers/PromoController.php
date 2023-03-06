@@ -64,7 +64,7 @@ class PromoController extends Controller
         $result = array_merge($result,$date_fin_reel);
         $promo = Promo::create($result);
 
-    }
+           }
         
        
 

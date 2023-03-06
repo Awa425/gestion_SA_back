@@ -7,6 +7,7 @@ use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Resources\ApprenantResource;
 use App\Models\Apprenant;
+use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -26,7 +27,7 @@ class ApprenantController extends Controller
         return new ApprenantCollection($apprenants);
     }
 
-    public function store(ApprenantStoreRequest $request)
+    public function store_in_table(ApprenantStoreRequest $request)
     {
         if ($request->user()->cannot('manage')){
             return response([
@@ -38,12 +39,21 @@ class ApprenantController extends Controller
         $user_id=array(
             "user_id" =>auth()->user()->id
         );
-        
+
         $apprenants=$request->validated();
         $apprenants['password']=bcrypt($apprenants['password']);
         $result = array_merge($apprenants,$user_id);
         $apprenant = Apprenant::create($result);
 
+        $id_apprenant=Apprenant::select('id')->latest()->first();
+        $id_apprenant=$id_apprenant->id;
+        $id_referentiel= $request->referentiel;
+        $id_promo= $request->promo;
+        $Promo_Referentiel_Apprenant=PromoReferentielApprenant::create([
+              "promo_id" => $id_promo,
+              "referentiel_id" => $id_referentiel,
+              "apprenant_id" => $id_apprenant,
+        ]);
         return new ApprenantResource($apprenant);
     }
 

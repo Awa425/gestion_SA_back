@@ -9,13 +9,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PromoReferentielApprenant extends Model
 {
     use HasFactory;
-
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        "promo_id",
+        "referentiel_id",
+        "apprenant_id",
+    ];
 
     /**
      * The attributes that should be cast to native types.
