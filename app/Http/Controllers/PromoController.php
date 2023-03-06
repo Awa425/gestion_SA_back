@@ -53,11 +53,19 @@ class PromoController extends Controller
         
         $promos=$request->validated();
         $result = array_merge($promos,$user_id);
+        if($request->date_fin_reel)
+        {
+            $promo = Promo::create($result);
+        }   
+        else{                                                                                                               
         $date_fin_reel=array(
             "date_fin_reel" =>$request->date_fin_prevue
         );
         $result = array_merge($result,$date_fin_reel);
         $promo = Promo::create($result);
+
+    }
+        
        
 
         return new PromoResource($promo);
