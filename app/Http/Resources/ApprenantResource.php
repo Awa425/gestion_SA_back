@@ -22,6 +22,7 @@ class ApprenantResource extends JsonResource
             'password' => $this->password,
             'date_naissance' => $this->date_naissance,
             'lieu_naissance' => $this->lieu_naissance,
+            'telephone' => $this->telephone,
             'user' => $this->user_id,
             'is_active' => $this->is_active,
         ];

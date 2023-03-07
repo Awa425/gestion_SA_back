@@ -23,6 +23,7 @@ class Apprenant extends Model
         'password',
         'date_naissance',
         'lieu_naissance',
+        'telephone',
         'user_id',
         'is_active',
     ];

@@ -21,6 +21,11 @@ class VisiteurController extends Controller
 
     public function store(VisiteurStoreRequest $request): VisiteurResource
     {
+        $user_id=array(
+            "user_id" =>auth()->user()->id
+        );
+        $visiteurs=$request->validated();
+        $result = array_merge($visiteurs,$user_id);
         $visiteur = Visiteur::create($request->validated());
 
         return new VisiteurResource($visiteur);
