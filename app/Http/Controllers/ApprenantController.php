@@ -43,18 +43,18 @@ class ApprenantController extends Controller
         $apprenants=$request->validated();
         $apprenants['password']=bcrypt($apprenants['password']);
         $result = array_merge($apprenants,$user_id);
-        //$apprenant = Apprenant::create($result);
+        $apprenant = Apprenant::create($result);
 
         $id_apprenant=Apprenant::select('id')->latest()->first();
         $id_apprenant=$id_apprenant->id;
         $id_referentiel= $request->referentiel;
         $id_promo= $request->promo;
-        //$Promo_Referentiel_Apprenant=PromoReferentielApprenant::create([
-        //      "promo_id" => $id_promo,
-        //      "referentiel_id" => $id_referentiel,
-        //      "apprenant_id" => $id_apprenant,
-        //]);
-        return $result;
+        $Promo_Referentiel_Apprenant=PromoReferentielApprenant::create([
+              "promo_id" => $id_promo,
+              "referentiel_id" => $id_referentiel,
+              "apprenant_id" => $id_apprenant,
+        ]);
+        return new ApprenantResource($apprenant);
     }
 
     public function show(Request $request, Apprenant $apprenant)
