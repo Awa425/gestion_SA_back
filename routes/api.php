@@ -28,9 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('promo', App\Http\Controllers\PromoController::class); 
     Route::apiResource('referentiel', App\Http\Controllers\ReferentielController::class);
-    Route::apiResource('promo_-referentiel_-apprenant', App\Http\Controllers\Promo_Referentiel_ApprenantController::class);
+    Route::apiResource('promo_referentiel_apprenant', App\Http\Controllers\Promo_Referentiel_ApprenantController::class);
     
     Route::apiResource('apprenant', App\Http\Controllers\ApprenantController::class);
     
     Route::apiResource('visiteur', App\Http\Controllers\VisiteurController::class);
+    
+    Route::get('/referentiels/{id}/promos', [App\Http\Controllers\ReferentielController::class, 'promosRef']);
 });

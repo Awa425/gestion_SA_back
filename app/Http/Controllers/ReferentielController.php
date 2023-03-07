@@ -25,6 +25,16 @@ class ReferentielController extends Controller
 
         return new ReferentielCollection($referentiels);
     }
+    public function promosRef($id)
+    {
+        if (auth()->user()->cannot('manage')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $referentiel = Referentiel::findOrFail($id);
+        $promos = $referentiel->promos;
+        return response()->json($promos);
+    }
 
     public function store(ReferentielStoreRequest $request)
     {

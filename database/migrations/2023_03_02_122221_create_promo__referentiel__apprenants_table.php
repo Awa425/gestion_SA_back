@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('promo__referentiel__apprenants', function (Blueprint $table) {
+        Schema::create('promo_referentiel_apprenants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('promo_id');
             $table->unsignedBigInteger('referentiel_id');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('promo__referentiel__apprenants');
+        Schema::dropIfExists('promo_referentiel_apprenants');
     }
 };
