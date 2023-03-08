@@ -14,6 +14,12 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
     }
+    // protected function schedule(Schedule $schedule)
+    // {
+    //     $schedule->call(function () {
+    //         // Créer une nouvelle table de présence ici
+    //     })->daily();
+    // }
 
     /**
      * Register the commands for the application.

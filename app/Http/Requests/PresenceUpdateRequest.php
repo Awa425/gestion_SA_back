@@ -21,6 +21,7 @@ class PresenceUpdateRequest extends FormRequest
     {
         return [
             'date_heure_arriver' => ['required'],
+            'apprenant_id' => ['required']
         ];
     }
 }
