@@ -36,6 +36,6 @@ Route::middleware('auth:sanctum')->group(function(){
 
 
 
-Route::apiResource('visiteur', App\Http\Controllers\VisiteurController::class);
+
 
 

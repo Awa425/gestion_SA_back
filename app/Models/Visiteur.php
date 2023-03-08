@@ -20,6 +20,7 @@ class Visiteur extends Model
         'prenom',
         'INE',
         'motif',
+        'user_id',
     ];
 
     /**
