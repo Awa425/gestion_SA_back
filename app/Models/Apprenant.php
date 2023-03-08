@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+
 class Apprenant extends Model
 {
     use HasFactory;
@@ -57,9 +58,9 @@ class Apprenant extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    public function user(): BelongsTo
+    public function liste_presences(): HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(ListePresence::class);
     }
+
 }
