@@ -35,4 +35,6 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('visiteur', App\Http\Controllers\VisiteurController::class);
     
     Route::get('/referentiels/{id}/promos', [App\Http\Controllers\ReferentielController::class, 'promosRef']);
+    Route::apiResource('presence', App\Http\Controllers\PresenceController::class);
 });
+

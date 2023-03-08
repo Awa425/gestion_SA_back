@@ -58,9 +58,5 @@ class Apprenant extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function liste_presences(): HasMany
-    {
-        return $this->hasMany(ListePresence::class);
-    }
 
 }
