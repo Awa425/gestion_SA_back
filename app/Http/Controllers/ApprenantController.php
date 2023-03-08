@@ -13,7 +13,7 @@ use Illuminate\Http\Response;
 
 class ApprenantController extends Controller
 {
-    public function index(Request $request): ApprenantCollection
+    public function index(Request $request)
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
@@ -22,9 +22,11 @@ class ApprenantController extends Controller
 
              ],401);
             }
-        $apprenants = Apprenant::where('is_active','=','1')->get();
-
-        return new ApprenantCollection($apprenants);
+            $apprenants = Apprenant::where('is_active', '=', '1')->get();
+            
+            
+            return new ApprenantCollection($apprenants);
+       
     }
 
     public function store_in_table(ApprenantStoreRequest $request)
@@ -45,15 +47,13 @@ class ApprenantController extends Controller
         $result = array_merge($apprenants,$user_id);
         $apprenant = Apprenant::create($result);
 
-        $id_apprenant=Apprenant::select('id')->latest()->first();
-        $id_apprenant=$id_apprenant->id;
-        $id_referentiel= $request->referentiel;
-        $id_promo= $request->promo;
+       
         $Promo_Referentiel_Apprenant=PromoReferentielApprenant::create([
-              "promo_id" => $id_promo,
-              "referentiel_id" => $id_referentiel,
-              "apprenant_id" => $id_apprenant,
+              "promo_id" => $request->promo,
+              "referentiel_id" => $request->referentiel,
+              "apprenant_id" => $apprenant->id,
         ]);
+        
         return new ApprenantResource($apprenant);
     }
 
@@ -66,6 +66,7 @@ class ApprenantController extends Controller
 
              ],401);
             }
+       
         return new ApprenantResource($apprenant);
     }
 
