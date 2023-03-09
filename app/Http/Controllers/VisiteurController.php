@@ -21,7 +21,7 @@ class VisiteurController extends Controller
 
              ],401);
             }
-        $visiteurs = Visiteur::all();
+        $visiteurs = Visiteur::paginate(env('DEFAULT_PAGINATION', 15));
 
         return new VisiteurCollection($visiteurs);
     }

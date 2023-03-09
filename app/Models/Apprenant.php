@@ -26,6 +26,7 @@ class Apprenant extends Model
         'lieu_naissance',
         'telephone',
         'user_id',
+        'genre',
         'is_active',
     ];
 

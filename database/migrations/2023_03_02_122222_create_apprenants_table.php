@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password', 255);
             $table->date('date_naissance');
             $table->string('lieu_naissance', 255);
+            $table->enum('genre', ['M', 'F']);
             $table->string('telephone', 255);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

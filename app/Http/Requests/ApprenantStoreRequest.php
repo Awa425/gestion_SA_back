@@ -23,11 +23,17 @@ class ApprenantStoreRequest extends FormRequest
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'email'],
-            'password' => ['required', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!@$#%]).*$/',],
+            'password' => ['required', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
+            'genre' => ['required', 'in:M,F'],
             
         ];
+    }
+    public function validatedAndFiltered()
+    {
+        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone'];
+        return $this->only($allowedFields);
     }
 }
