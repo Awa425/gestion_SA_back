@@ -1,4 +1,54 @@
+models:
+  # ...
+  Promo:
+    libelle: string:255 unique
+    date_debut: date
+    date_fin_prevue: date
+    date_fin_reel: date
+    is_active: boolean default:1
+    relationships:
+      belongsTo: User
+
+  Referentiel:
+    libelle: string:255 unique
+    description: string
+    is_active: boolean default:1
+    relationships:
+      belongsTo: User
+   
+  Promo_Referentiel_Apprenant:
+    relationships:
+      hasMany: Apprenant,Promo,Referentiel
+      
+    
+  Apprenant:
+    nom: string:255
+    prenom: string:255
+    email: string:255 unique
+    password: string:255
+    date_naissance: date
+    lieu_naissance: string:255
+    telephone: string:255
+    is_active: boolean default:1
+    relationships:
+      hasOne: Presence
+      belongsTo: User
+
+  Presence:
+    date_heure_arriver: datetime
+    relationships:
+      hasMany: Apprenant
+  
+  Visiteur:
+    nom: string:255
+    prenom: string:255
+    INE: bigInteger unique
+    motif: string:255
+    relationships:
+      belongsTo: User
+
 controllers:
   # ...
   Presence:
     resource: api.store, api.update, api.destroy, api.index, api.show
+  

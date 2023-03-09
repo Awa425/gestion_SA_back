@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 
@@ -24,6 +25,7 @@ class Apprenant extends Model
         'password',
         'date_naissance',
         'lieu_naissance',
+        'telephone',
         'user_id',
         'is_active',
     ];
@@ -45,7 +47,6 @@ class Apprenant extends Model
     protected $casts = [
         'id' => 'integer',
         'date_naissance' => 'date',
-        'user_id' => 'integer',
         'is_active' => 'boolean',
     ];
 
@@ -58,5 +59,5 @@ class Apprenant extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+   
 }

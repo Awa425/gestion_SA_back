@@ -6,7 +6,10 @@ use App\Http\Requests\Promo_Referentiel_ApprenantStoreRequest;
 use App\Http\Requests\Promo_Referentiel_ApprenantUpdateRequest;
 use App\Http\Resources\PromoReferentielApprenantCollection;
 use App\Http\Resources\PromoReferentielApprenantResource;
-use App\PromoReferentielApprenant;
+
+use App\Models\PromoReferentielApprenant;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

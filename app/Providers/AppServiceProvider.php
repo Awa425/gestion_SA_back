@@ -21,11 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('manage_promo', function (User $user) {
+        Gate::define('manage', function (User $user) {
             return User::isSuperAdmin($user) ;
         });
-        Gate::define('view_promo', function (User $user) {
+        Gate::define('view', function (User $user) {
             return User::isAdmin($user) ;
+        });
+        Gate::define('vigil_job', function (User $user) {
+            return User::isVigile($user) ;
         });
     }
 }

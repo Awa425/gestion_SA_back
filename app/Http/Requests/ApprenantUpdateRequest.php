@@ -22,12 +22,12 @@ class ApprenantUpdateRequest extends FormRequest
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:apprenants,email'],
-            'password' => ['required', 'password', 'max:255'],
+            'email' => ['required', 'email', 'max:255','email'],
+            'password' => ['required', 'regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\x])(?=.*[!@$#%]).*$/',],
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
-            'is_active' => ['required'],
+            'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
+
         ];
     }
 }

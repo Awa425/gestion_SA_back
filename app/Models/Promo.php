@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Promo extends Model
 {
@@ -18,9 +17,11 @@ class Promo extends Model
      */
     protected $fillable = [
         'libelle',
-        'annee',
-        'user_id',
+        'date_debut',
+        'date_fin_prevue',
+        'date_fin_reel',
         'is_active',
+        'user_id',
     ];
 
     /**
@@ -36,10 +37,5 @@ class Promo extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function referentiels(): BelongsToMany
-    {
-        return $this->belongsToMany(Referentiel::class);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Visiteur;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -51,14 +50,12 @@ class VisiteurControllerTest extends TestCase
         $prenom = $this->faker->word;
         $INE = $this->faker->numberBetween(-100000, 100000);
         $motif = $this->faker->word;
-        $user = User::factory()->create();
 
         $response = $this->post(route('visiteur.store'), [
             'nom' => $nom,
             'prenom' => $prenom,
             'INE' => $INE,
             'motif' => $motif,
-            'user_id' => $user->id,
         ]);
 
         $visiteurs = Visiteur::query()
@@ -66,7 +63,6 @@ class VisiteurControllerTest extends TestCase
             ->where('prenom', $prenom)
             ->where('INE', $INE)
             ->where('motif', $motif)
-            ->where('user_id', $user->id)
             ->get();
         $this->assertCount(1, $visiteurs);
         $visiteur = $visiteurs->first();
@@ -112,14 +108,12 @@ class VisiteurControllerTest extends TestCase
         $prenom = $this->faker->word;
         $INE = $this->faker->numberBetween(-100000, 100000);
         $motif = $this->faker->word;
-        $user = User::factory()->create();
 
         $response = $this->put(route('visiteur.update', $visiteur), [
             'nom' => $nom,
             'prenom' => $prenom,
             'INE' => $INE,
             'motif' => $motif,
-            'user_id' => $user->id,
         ]);
 
         $visiteur->refresh();
@@ -131,7 +125,6 @@ class VisiteurControllerTest extends TestCase
         $this->assertEquals($prenom, $visiteur->prenom);
         $this->assertEquals($INE, $visiteur->INE);
         $this->assertEquals($motif, $visiteur->motif);
-        $this->assertEquals($user->id, $visiteur->user_id);
     }
 
 
