@@ -7,12 +7,13 @@ use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Resources\ApprenantResource;
 use App\Models\Apprenant;
+use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class ApprenantController extends Controller
 {
-    public function index(Request $request): ApprenantCollection
+    public function index(Request $request)
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
@@ -21,12 +22,14 @@ class ApprenantController extends Controller
 
              ],401);
             }
-        $apprenants = Apprenant::where('is_active','=','1')->get();
-
-        return new ApprenantCollection($apprenants);
+            $apprenants = Apprenant::where('is_active', '=', '1')->get();
+            
+            
+            return new ApprenantCollection($apprenants);
+       
     }
 
-    public function store(ApprenantStoreRequest $request)
+    public function store_in_table(ApprenantStoreRequest $request)
     {
         if ($request->user()->cannot('manage')){
             return response([
@@ -38,12 +41,19 @@ class ApprenantController extends Controller
         $user_id=array(
             "user_id" =>auth()->user()->id
         );
-        
+
         $apprenants=$request->validated();
         $apprenants['password']=bcrypt($apprenants['password']);
         $result = array_merge($apprenants,$user_id);
         $apprenant = Apprenant::create($result);
 
+       
+        $Promo_Referentiel_Apprenant=PromoReferentielApprenant::create([
+              "promo_id" => $request->promo,
+              "referentiel_id" => $request->referentiel,
+              "apprenant_id" => $apprenant->id,
+        ]);
+        
         return new ApprenantResource($apprenant);
     }
 
@@ -56,6 +66,7 @@ class ApprenantController extends Controller
 
              ],401);
             }
+       
         return new ApprenantResource($apprenant);
     }
 

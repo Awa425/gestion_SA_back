@@ -22,9 +22,9 @@ class VisiteurStoreRequest extends FormRequest
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'INE' => ['required', 'integer', 'unique:visiteurs,INE'],
+            'INE' => ['required', 'integer', 'unique:visiteurs,INE','digits:13'],
             'motif' => ['required', 'string', 'max:255'],
-            'user_id' => ['required', 'integer', 'exists:users,id'],
+            
         ];
     }
 }

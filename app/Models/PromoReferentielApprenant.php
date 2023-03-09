@@ -9,13 +9,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PromoReferentielApprenant extends Model
 {
     use HasFactory;
-
+    
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        "promo_id",
+        "referentiel_id",
+        "apprenant_id",
+    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -26,18 +30,18 @@ class PromoReferentielApprenant extends Model
         'id' => 'integer',
     ];
 
-    public function apprenants(): HasMany
+    public function promo()
     {
-        return $this->hasMany(Apprenant::class);
+        return $this->belongsTo(Promo::class);
     }
 
-    public function promos(): HasMany
+    public function referentiel()
     {
-        return $this->hasMany(Promo::class);
+        return $this->belongsTo(Referentiel::class);
     }
 
-    public function referentiels(): HasMany
+    public function apprenant()
     {
-        return $this->hasMany(Referentiel::class);
+        return $this->belongsTo(Apprenant::class);
     }
 }

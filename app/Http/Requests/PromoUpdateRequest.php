@@ -23,7 +23,7 @@ class PromoUpdateRequest extends FormRequest
             'libelle' => ['required', 'string', 'max:255', 'unique:promos,libelle'],
             'date_debut' => ['required', 'date'],
             'date_fin_prevue' => ['required', 'date'],
-            'date_fin_reel' => ['sometimes|required', 'date'],    
+            'date_fin_reel' => ['sometimes', 'date'],    
         ];
     }
 }

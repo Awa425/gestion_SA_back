@@ -27,5 +27,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view', function (User $user) {
             return User::isAdmin($user) ;
         });
+        Gate::define('vigil_job', function (User $user) {
+            return User::isVigile($user) ;
+        });
     }
 }

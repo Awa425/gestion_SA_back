@@ -50,14 +50,15 @@ class PromoController extends Controller
         $user_id=array(
             "user_id" =>auth()->user()->id
         );
-        
         $promos=$request->validated();
         $result = array_merge($promos,$user_id);
-        $date_fin_reel=array(
-            "date_fin_reel" =>$request->date_fin_prevue
-        );
-        $result = array_merge($result,$date_fin_reel);
-        $promo = Promo::create($result);
+        
+        
+           $date_fin_reel= array_key_exists('date_fin_reel', $request->validated()) ? array(  "date_fin_reel" =>$request->date_fin_reel  ) : array(  "date_fin_reel" =>$request->date_fin_prevue  );
+          
+           $result = array_merge($result,$date_fin_reel);
+         
+           $promo = Promo::create($result);
        
 
         return new PromoResource($promo);
