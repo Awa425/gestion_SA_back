@@ -1,4 +1,8 @@
 created:
+    - app/Http/Controllers/PresenceController.php
+    - tests/Feature/Http/Controllers/PresenceControllerTest.php
+updated:
+    - routes/api.php
     - database/factories/PromoReferentielApprenantFactory.php
     - database/factories/ApprenantFactory.php
     - database/factories/PresenceFactory.php

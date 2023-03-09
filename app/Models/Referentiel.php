@@ -30,10 +30,22 @@ class Referentiel extends Model
     protected $casts = [
         'id' => 'integer',
         'is_active' => 'boolean',
+        'userid' => 'integer',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    public function promos()
+    {
+        return $this->belongsToMany(Promo::class, 'promo_referentiel_apprenants')
+            ->withTimestamps()
+            ->where('referentiel_id', $this->id);
+    }
+    public static function getPromosByReferentielId($referentielId)
+    {
+        $referentiel = self::find($referentielId);
+        return $referentiel->promos;
     }
 }

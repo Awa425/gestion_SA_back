@@ -49,11 +49,6 @@ models:
 
 controllers:
   # ...
-  Promo_Referentiel_Apprenant:
+  Presence:
     resource: api.store, api.update, api.destroy, api.index, api.show
-
-  Apprenant:
-    resource: api.store, api.update, api.destroy, api.index, api.show
-
-  Visiteur:
-    resource: api.store, api.update, api.destroy, api.index, api.show
+  
