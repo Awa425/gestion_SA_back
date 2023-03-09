@@ -6,6 +6,9 @@ use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Resources\ApprenantResource;
+use App\Http\Requests\ValidateDataApp;
+use App\Http\Requests\ApprenantsImport;
+
 use App\Models\Apprenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,6 +28,22 @@ class ApprenantController extends Controller
 
         return new ApprenantResource($apprenant);
     }
+    public function storeExcel(Request $request)
+    {
+        if (!$request->hasFile('excel_file')) {
+            return response()->json([
+                'message' => 'Veuillez sélectionner un fichier Excel à importer.'] , 422
+            );
+        }
+        $file = $request->file('excel_file');
+
+        $data = Excel::import(new ApprenantsImport, $file);
+
+        $apprenants = Apprenant::create($data->toArray());
+
+        return new ApprenantResource($apprenants);
+    }
+
 
     public function show(Request $request, Apprenant $apprenant): ApprenantResource
     {

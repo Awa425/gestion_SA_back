@@ -19,12 +19,13 @@ class ReferentielController extends Controller
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             abort(403, 'Unauthorized action.');
-         
         }
-       $referentiels = Referentiel::where('is_active', true)->get();
-
+        $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10)); 
+        $referentiels = Referentiel::where('is_active', true)->paginate($perPage);
         return new ReferentielCollection($referentiels);
     }
+
+    // cette fonction permet de recuperer les promos d'un referentiel
     public function promosRef($id)
     {
         if (auth()->user()->cannot('manage')) {

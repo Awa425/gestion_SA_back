@@ -18,7 +18,9 @@ class PresenceController extends Controller
             abort(403, 'Unauthorized action.');
          
         }
-        $presences = Presence::all();
+        $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10));
+
+        $presences = Presence::all()->paginate($perPage);
 
         return new PresenceCollection($presences);
     }
