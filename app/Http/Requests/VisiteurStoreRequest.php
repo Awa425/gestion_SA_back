@@ -27,4 +27,9 @@ class VisiteurStoreRequest extends FormRequest
             
         ];
     }
+    public function validatedAndFiltered()
+    {
+        $allowedFields = ['nom', 'prenom', 'INE', 'motif'];
+        return $this->only($allowedFields);
+    }
 }

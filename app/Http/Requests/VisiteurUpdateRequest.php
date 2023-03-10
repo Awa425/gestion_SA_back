@@ -26,4 +26,9 @@ class VisiteurUpdateRequest extends FormRequest
             'motif' => ['required', 'string', 'max:255'],
         ];
     }
+    public function validatedAndFiltered()
+    {
+        $allowedFields = ['nom', 'prenom', 'INE', 'motif'];
+        return $this->only($allowedFields);
+    }
 }

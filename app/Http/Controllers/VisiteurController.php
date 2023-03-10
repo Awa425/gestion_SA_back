@@ -21,9 +21,11 @@ class VisiteurController extends Controller
 
              ],401);
             }
-        $visiteurs = Visiteur::paginate(env('DEFAULT_PAGINATION', 15));
+       
 
-        return new VisiteurCollection($visiteurs);
+        return new VisiteurCollection(Visiteur::ignoreRequest(['perpage'])
+        ->filter()
+        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
     }
 
     public function store(VisiteurStoreRequest $request)
@@ -35,13 +37,10 @@ class VisiteurController extends Controller
 
              ],401);
             }
-        $user_id=array(
-            "user_id" =>auth()->user()->id
-        );
        
-        $visiteurs=$request->validated();
-        $result = array_merge($visiteurs,$user_id);
-        $visiteur = Visiteur::create($result);
+        $data = $request->validatedAndFiltered();
+        $data['user_id'] = auth()->user()->id;
+        $visiteur = Visiteur::create($data);
 
         return new VisiteurResource($visiteur);
     }
@@ -67,7 +66,8 @@ class VisiteurController extends Controller
 
              ],401);
             }
-        $visiteur->update($request->validated());
+        $validatedData = $request->validatedAndFiltered();
+        $visiteur->update($validatedData);
 
         return new VisiteurResource($visiteur);
     }

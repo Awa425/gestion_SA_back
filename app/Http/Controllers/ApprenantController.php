@@ -14,7 +14,7 @@ use App\Http\Requests\ApprenantIndexRequest;
 
 class ApprenantController extends Controller
 {
-    public function index(ApprenantIndexRequest $request)
+    public function index(Request $request)
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
@@ -23,50 +23,10 @@ class ApprenantController extends Controller
 
              ],401);
             }
-
-            $query = Apprenant::where('is_active', '=', '1');
-
-    // Apply filters
-    if ($request->has('nom')) {
-        $query->where('nom', 'like', '%'.$request->input('nom').'%');
-    }
-
-    if ($request->has('prenom')) {
-        $query->where('prenom', 'like', '%'.$request->input('prenom').'%');
-    }
-
-    if ($request->has('genre')) {
-        $query->where('genre', 'like', '%'.$request->input('genre').'%');
-    }
-
-    if ($request->has('email')) {
-        $query->where('email', 'like', '%'.$request->input('email').'%');
-    }
-    if ($request->has('date_naissance')) {
-        $query->where('date_naissance', '=', $request->input('date_naissance'));
-    }
-
-    if ($request->has('lieu_naissance')) {
-        $query->where('lieu_naissance', 'like', '%'.$request->input('lieu_naissance').'%');
-    }
-
-    if ($request->has('telephone')) {
-        $query->where('telephone', 'like', '%'.$request->input('telephone').'%');
-    }
-
-    // Apply sorting
-    if ($request->has('sort')) {
-        $sortField = $request->input('sort');
-        $sortDirection = $request->input('direction', 'asc');
-        $query->orderBy($sortField, $sortDirection);
-    }
-
-     // Get paginated results
-     $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 15));
-     $apprenants = $query->paginate($perPage);
- 
-    
-    return new ApprenantCollection($apprenants);
+    return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
+    ->filter()
+    ->where('is_active', '=', '1')
+    ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
        
     }
 
@@ -82,10 +42,10 @@ class ApprenantController extends Controller
 
      $data = $request->validatedAndFiltered();
 
-    $data['password'] = bcrypt($data['password']);
-    $data['user_id'] = auth()->user()->id;
+     $data['password'] = bcrypt($data['password']);
+     $data['user_id'] = auth()->user()->id;
 
-    $apprenant = Apprenant::create($data);
+     $apprenant = Apprenant::create($data);
 
     $promoReferentielApprenant = PromoReferentielApprenant::create([
         "promo_id" => $request->promo,
@@ -119,7 +79,7 @@ class ApprenantController extends Controller
         ],401);
     }
    
-    $validatedData = $request->validatedAndFiltered();
+      $validatedData = $request->validatedAndFiltered();
 
     if (isset($validatedData['password'])) {
         $validatedData['password'] = bcrypt($validatedData['password']);
