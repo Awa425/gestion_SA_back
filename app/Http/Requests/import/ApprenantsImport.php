@@ -20,7 +20,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             'prenom' => $row['prenom'],
             'email' => $row['email'],
             'telephone' => $row['telephone'],
-            'password' => $row['password'],
+            'password' => bcrypt('Passer'),
             'date_naissance' => $row['date_naissance'],
             'lieu_naissance' => $row['lieu_naissance'],
             'user_id' => $u,
@@ -33,7 +33,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             "apprenant_id" => $apprenant->id,
         ]);
 
-        return [$apprenant, $promoReferentielApprenant];
+        return [$promoReferentielApprenant];
     }
 
 
