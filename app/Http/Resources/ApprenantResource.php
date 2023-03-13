@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Resources;
-use App\Models\PromoReferentielApprenant;
+use App\Models\Promo;
 
+use App\Models\Referentiel;
 use Illuminate\Http\Request;
+use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\PromoReferentielApprenantResource;
 
@@ -20,7 +22,7 @@ class ApprenantResource extends JsonResource
              $apprenant = $this->resource;
 
             $promoReferentielApprenant = PromoReferentielApprenant::where('apprenant_id', '=', $apprenant->id)->with('promo', 'referentiel')->first();
-           
+
         return [
             'id' => $this->id,
             'matricule' => $this->matricule,
@@ -34,8 +36,8 @@ class ApprenantResource extends JsonResource
             'telephone' => $this->telephone,
             'user' => $this->user_id,
             'is_active' => $this->is_active,
-            'promo' => $promoReferentielApprenant->promo,
-            'referentiel' => $promoReferentielApprenant->referentiel,
+            'promo' => Promo::make($this->promo),
+            'referentiel' => Referentiel::make($this->referentiel),
         ];
     }
 }

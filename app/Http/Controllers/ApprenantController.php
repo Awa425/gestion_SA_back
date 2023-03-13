@@ -21,152 +21,151 @@ use App\Http\Requests\import\ApprenantsImport;
 
 class ApprenantController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
+        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
             return response([
 
                 "message" => "vous n'avez pas le droit",
 
-             ],401);
-            }
-    return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
-    ->filter()
-    ->where('is_active', '=', '1')
-    ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
-            $apprenants = Apprenant::where('is_active', '=', '1')->get();            
-            return new ApprenantCollection($apprenants);
-       
+            ], 401);
+        }
+        return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
+            ->filter()
+            ->where('is_active', '=', '1')
+            ->paginate(request()
+                ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
     }
 
 
-    public function generate_matricule($promo_id,$referentiel_id){
+    public function generate_matricule($promo_id, $referentiel_id)
+    {
 
-            $promo = Promo::where('id','=',$promo_id)->select('libelle')->first();
-            $referentiel = Referentiel::where('id','=',$referentiel_id)->select('libelle')->first();
-
-
-            $promo_tabs = explode(' ', $promo['libelle']);
-            $referentiel_tabs=explode(' ', $referentiel['libelle']);
-            $promo_prefix = '';
-            $referentiel_prefix = '';
-
-            foreach ($promo_tabs as $promo_tab) {
-            $promo_prefix .= strtoupper(substr($promo_tab, 0, 1)) ;
-            
-            }
-            foreach ($referentiel_tabs as $referentiel_tab) {
-            $referentiel_prefix.= strtoupper(substr($referentiel_tab, 0, 1)) ;
-            
-            }
+        $promo = Promo::where('id', '=', $promo_id)->select('libelle')->first();
+        $referentiel = Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
 
 
-            $date = date('YmdHis'). substr(microtime(), 2, 3);
-            $matricule= $promo_prefix.'_'.$referentiel_prefix.'_'. $date;
-            return $matricule;
+        $promo_tabs = explode(' ', $promo['libelle']);
+        $referentiel_tabs = explode(' ', $referentiel['libelle']);
+        $promo_prefix = '';
+        $referentiel_prefix = '';
+
+        foreach ($promo_tabs as $promo_tab) {
+            $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
+        }
+        foreach ($referentiel_tabs as $referentiel_tab) {
+            $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
+        }
+
+
+        $date = date('YmdHis') . substr(microtime(), 2, 3);
+        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
+        return $matricule;
     }
 
     public function store(ApprenantStoreRequest $request)
     {
-       
-    
-    if ($request->user()->cannot('manage')){
-        return response([
-            "message" => "vous n'avez pas le droit",
-         ],401);
-     }
 
-     $data = $request->validatedAndFiltered();
 
-     $data['password'] = bcrypt($data['password']);
-     $data['user_id'] = auth()->user()->id;
-    
-     $data['matricule']= $this->generate_matricule($request->promo_id,$request->referentiel_id);
-     
-     
-     
+        if ($request->user()->cannot('manage')) {
+            return response([
+                "message" => "vous n'avez pas le droit",
+            ], 401);
+        }
 
-     //insert into apprenant
-     
-     $apprenant = Apprenant::create($data);
+        $data = $request->validatedAndFiltered();
 
-     //insert into promoReferentielApprenant
-    $promoReferentielApprenant = PromoReferentielApprenant::create([
-        "promo_id" => $request->promo_id,
-        "referentiel_id" => $request->referentiel_id,
-        "apprenant_id" => $apprenant->id,
-    ]);
-        
+        $data['password'] = bcrypt($data['password']);
+        $data['user_id'] = auth()->user()->id;
+
+        $data['matricule'] = $this->generate_matricule($request->promo_id, $request->referentiel_id);
+
+
+
+
+        //insert into apprenant
+
+        $apprenant = Apprenant::create($data);
+
+        //insert into promoReferentielApprenant
+        $promoReferentielApprenant = PromoReferentielApprenant::create([
+            "promo_id" => $request->promo_id,
+            "referentiel_id" => $request->referentiel_id,
+            "apprenant_id" => $apprenant->id,
+        ]);
+
         return new ApprenantResource($apprenant);
     }
     public function storeExcel(Request $request)
     {
-        if ($request->user()->cannot('manage')){
+        if ($request->user()->cannot('manage')) {
             return response([
                 "message" => "vous n'avez pas le droit",
-             ],401);
-         
-          }
-        if (!$request->hasFile('excel_file1')) {
-            return response()->json([
-                'message' => 'Veuillez sélectionner un fichier Excel à importer.'
-            ], 422);
+            ], 401);
         }
+        $request->validate([
+            "excel_file" => 'required|mimes:xlsx,csv,xls',
+        ]);
+
+
         $file = $request->file('excel_file1');
-        $data = Excel::import(new ApprenantsImport(), $file);
+        Excel::import(new ApprenantsImport(), $file);
+        if (count($request->file()) > 0) {
+            return response()->json([
+                'message' => 'Insertion en masse reussie',
+            ], 201);
+        }
         return response()->json([
-            'message' => 'Le fichier Excel a été importé avec succès.'
-        ], 200);
+            'message' => 'Erreur lors de l\'insertion en masse',
+        ], 401);
     }
 
 
-    public function show(Request $request, Apprenant $apprenant)
+    public function show(Apprenant $apprenant)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
+        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
             return response([
 
                 "message" => "vous n'avez pas le droit",
 
-             ],401);
-            }
-       
+            ], 401);
+        }
+
         return new ApprenantResource($apprenant);
     }
 
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
-       
-    
-    if ($request->user()->cannot('manage')){
-        return response([
-            "message" => "vous n'avez pas le droit",
-        ],401);
-    }
-   
-      $validatedData = $request->validatedAndFiltered();
 
-    if (isset($validatedData['password'])) {
-        $validatedData['password'] = bcrypt($validatedData['password']);
-    }
 
-    $apprenant->update($validatedData);
+        if ($request->user()->cannot('manage')) {
+            return response([
+                "message" => "vous n'avez pas le droit",
+            ], 401);
+        }
 
-    return new ApprenantResource($apprenant);
+        $validatedData = $request->validatedAndFiltered();
+
+        if (isset($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        }
+
+        $apprenant->update($validatedData);
+
+        return new ApprenantResource($apprenant);
     }
 
     public function destroy(Request $request, Apprenant $apprenant): Response
     {
-        if (auth()->user()->cannot('manage')){
+        if (auth()->user()->cannot('manage')) {
             return response([
                 "message" => "vous n'avez pas le droit",
-             ],401);
-         
-          }
+            ], 401);
+        }
         $apprenant->update([
             'is_active' => 0
         ]);
 
         return response()->noContent();
     }
-    
 }
