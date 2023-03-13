@@ -17,9 +17,7 @@ class ReferentielController extends Controller
 
     public function index(Request $request)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
-            abort(403, 'Unauthorized action.');
-        }
+       
         $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10)); 
         $referentiels = Referentiel::where('is_active', true)->paginate($perPage);
         return new ReferentielCollection($referentiels);
