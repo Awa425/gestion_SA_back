@@ -23,6 +23,7 @@ class ApprenantResource extends JsonResource
            
         return [
             'id' => $this->id,
+            'matricule' => $this->matricule,
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'email' => $this->email,

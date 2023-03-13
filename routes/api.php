@@ -25,8 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware('auth:sanctum')->group(function(){
     Route::apiResource('promo', App\Http\Controllers\PromoController::class); 
     Route::apiResource('referentiel', App\Http\Controllers\ReferentielController::class);
-    Route::apiResource('apprenant', App\Http\Controllers\ApprenantController::class)->except(['store']);
-    Route::post('apprenant/{promo}/{referentiel}', 'App\Http\Controllers\ApprenantController@store_in_table');
+    Route::apiResource('apprenant', App\Http\Controllers\ApprenantController::class);
+    //Route::post('apprenant/{promo}/{referentiel}', 'App\Http\Controllers\ApprenantController@store_in_table');
     Route::apiResource('visiteur', App\Http\Controllers\VisiteurController::class);
     Route::apiResource('promo_referentiel_apprenant', App\Http\Controllers\Promo_Referentiel_ApprenantController::class);
 

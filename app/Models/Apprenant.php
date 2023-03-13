@@ -19,6 +19,7 @@ class Apprenant extends Model
      * @var array
      */
     protected $fillable = [
+        'matricule',
         'nom',
         'prenom',
         'email',
@@ -32,6 +33,7 @@ class Apprenant extends Model
     ];
 
     private static $whiteListFilter=[
+        'matricule',
         'nom',
         'prenom',
         'email',
