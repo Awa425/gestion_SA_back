@@ -77,7 +77,7 @@ class ApprenantController extends Controller
     }
 
 
-    public function show(Request $request, Apprenant $apprenant)
+    public function show(Apprenant $apprenant)
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
