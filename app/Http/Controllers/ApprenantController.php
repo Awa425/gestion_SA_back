@@ -84,7 +84,7 @@ class ApprenantController extends Controller
 
      //insert into apprenant
      
-     //$apprenant = Apprenant::create($data);
+     $apprenant = Apprenant::create($data);
 
      //insert into promoReferentielApprenant
     $promoReferentielApprenant = PromoReferentielApprenant::create([
