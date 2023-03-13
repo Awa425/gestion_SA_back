@@ -9,38 +9,60 @@ use App\Http\Resources\ReferentielResource;
 use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use  App\Models\User ;
+
 
 class ReferentielController extends Controller
 {
 
-    public function index(Request $request): ReferentielCollection
+    public function index(Request $request)
     {
-       $referentiels = Referentiel::where('is_active', true)->get();
-
+        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
+            abort(403, 'Unauthorized action.');
+        }
+        $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10)); 
+        $referentiels = Referentiel::where('is_active', true)->paginate($perPage);
         return new ReferentielCollection($referentiels);
     }
 
-    public function store(ReferentielStoreRequest $request): ReferentielResource
+    // cette fonction permet de recuperer les promos d'un referentiel
+    public function promosRef($id)
     {
-        $user = auth()->user();
-        $validate = $request->validated();
-        $referentiel = Referentiel::create([
-            'libelle' => $validate['libelle'],
-            'description' => $validate['description'],
-            'userid' => $user->id,
-        ]
-        );
+        if (auth()->user()->cannot('manage')) {
+            abort(403, 'Unauthorized action.');
+        }
 
-        return new ReferentielResource($referentiel);
+        $referentiel = Referentiel::findOrFail($id);
+        $promos = $referentiel->promos;
+        return response()->json($promos);
     }
 
-    public function show(Request $request, Referentiel $referentiel): ReferentielResource
+    public function store(ReferentielStoreRequest $request)
+    {
+        if (auth()->user()->cannot('manage')){
+            abort(403, 'Unauthorized action.');
+         
+        }
+        $validatedData = $request->validated();
+        $u= array('userid' => auth()->user()->id);
+        $referentiel = Referentiel::create(array_merge($validatedData,$u));
+        return new ReferentielResource($referentiel);
+
+
+    }
+
+    public function show(Request $request, Referentiel $referentiel)
     {
         return new ReferentielResource($referentiel);
     }
 
     public function update(ReferentielUpdateRequest $request, Referentiel $referentiel): ReferentielResource
     {
+        
+        if (auth()->user()->cannot('manage')){
+            abort(403, 'Unauthorized action.');
+         
+        }
         $referentiel->update($request->validated());
 
         return new ReferentielResource($referentiel);
@@ -48,6 +70,10 @@ class ReferentielController extends Controller
 
     public function destroy(Request $request, Referentiel $referentiel): Response
     {
+        $user = auth()->user();
+        if(auth()->user()->cannot('manage')){
+            abort(403, 'Unauthorized action.');
+        }
        $res= $referentiel->update([
             'is_active' => false,
         ]);

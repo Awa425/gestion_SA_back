@@ -9,6 +9,7 @@ use App\Http\Resources\PromoReferentielApprenantResource;
 
 use App\Models\PromoReferentielApprenant;
 
+
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

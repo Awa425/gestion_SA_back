@@ -17,6 +17,7 @@ class Presence extends Model
      */
     protected $fillable = [
         'date_heure_arriver',
+        'apprenant_id'
     ];
 
     /**

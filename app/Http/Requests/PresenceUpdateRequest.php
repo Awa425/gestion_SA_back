@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReferentielUpdateRequest extends FormRequest
+class PresenceUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,8 +20,8 @@ class ReferentielUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'libelle' => ['required', 'string', 'max:255', 'unique:referentiels,libelle'],
-            'description' => ['required', 'string'],
+            'date_heure_arriver' => ['required'],
+            'apprenant_id' => ['required']
         ];
     }
 }
