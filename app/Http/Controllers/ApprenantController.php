@@ -84,7 +84,7 @@ class ApprenantController extends Controller
      $data['matricule']= $this->generate_matricule($request->promo_id,$request->referentiel_id);
      
      
-     return $data['matricule'];
+     
 
      //insert into apprenant
      
