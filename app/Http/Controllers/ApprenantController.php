@@ -2,13 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApprenantStoreRequest;
-use App\Http\Requests\ApprenantUpdateRequest;
-use App\Http\Resources\ApprenantCollection;
-use App\Http\Resources\ApprenantResource;
-use App\Http\Requests\ValidateDataApp;
-use App\Http\Requests\ApprenantsImport;
-
 use App\Models\Apprenant;
 use App\Models\Referentiel;
 use App\Models\Promo;
@@ -16,6 +9,15 @@ use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\ApprenantIndexRequest;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Resources\ApprenantResource;
+use App\Models\PromoReferentielApprenant;
+use App\Http\Resources\ApprenantCollection;
+use App\Http\Requests\ApprenantStoreRequest;
+use App\Http\Requests\ApprenantUpdateRequest;
+use App\Http\Requests\import\ApprenantsImport;
 
 class ApprenantController extends Controller
 {
@@ -32,6 +34,8 @@ class ApprenantController extends Controller
     ->filter()
     ->where('is_active', '=', '1')
     ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
+            $apprenants = Apprenant::where('is_active', '=', '1')->get();            
+            return new ApprenantCollection($apprenants);
        
     }
 
@@ -97,18 +101,22 @@ class ApprenantController extends Controller
     }
     public function storeExcel(Request $request)
     {
-        if (!$request->hasFile('excel_file')) {
+        if ($request->user()->cannot('manage')){
+            return response([
+                "message" => "vous n'avez pas le droit",
+             ],401);
+         
+          }
+        if (!$request->hasFile('excel_file1')) {
             return response()->json([
-                'message' => 'Veuillez sélectionner un fichier Excel à importer.'] , 422
-            );
+                'message' => 'Veuillez sélectionner un fichier Excel à importer.'
+            ], 422);
         }
-        $file = $request->file('excel_file');
-
-        $data = Excel::import(new ApprenantsImport, $file);
-
-        $apprenants = Apprenant::create($data->toArray());
-
-        return new ApprenantResource($apprenants);
+        $file = $request->file('excel_file1');
+        $data = Excel::import(new ApprenantsImport(), $file);
+        return response()->json([
+            'message' => 'Le fichier Excel a été importé avec succès.'
+        ], 200);
     }
 
 
