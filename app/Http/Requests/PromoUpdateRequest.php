@@ -20,10 +20,15 @@ class PromoUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'libelle' => ['required', 'string', 'max:255', 'unique:promos,libelle'],
+            'libelle' => ['required', 'string', 'max:255'],
             'date_debut' => ['required', 'date'],
             'date_fin_prevue' => ['required', 'date'],
             'date_fin_reel' => ['sometimes', 'date'],    
         ];
+    }
+    public function validatedAndFiltered()
+    {
+        $allowedFields = ['libelle', 'date_debut', 'date_fin_prevue', 'date_fin_reel'];
+        return $this->only($allowedFields);
     }
 }

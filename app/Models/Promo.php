@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Promo extends Model
 {
+    use Filterable;
     use HasFactory;
 
     /**
@@ -22,6 +24,14 @@ class Promo extends Model
         'date_fin_reel',
         'is_active',
         'user_id',
+    ];
+    private static $whiteListFilter=[
+        'libelle',
+        'date_debut',
+        'date_fin_prevue',
+        'date_fin_reel',
+        'user_id',
+       
     ];
 
     /**

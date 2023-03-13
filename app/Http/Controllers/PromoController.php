@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PromoStoreRequest;
 use App\Http\Requests\PromoUpdateRequest;
+use App\Http\Requests\PromoIndexRequest;
 use App\Http\Resources\PromoCollection;
 use App\Http\Resources\PromoResource;
 use App\Models\Promo;
@@ -12,7 +13,7 @@ use Illuminate\Http\Request;
 
 class PromoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
             return response([
@@ -23,15 +24,27 @@ class PromoController extends Controller
          
           }
           
-        $promos = Promo::where('is_active','=','1')->get();
-
-        return new PromoCollection($promos);
+       
+       
+    
+        return new PromoCollection(Promo::ignoreRequest(['perpage'])
+        ->filter()
+        ->where('is_active', '=', '1')
+        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
           
     }
 
 
     public function show(Promo $promo)
     {
+        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
+            return response([
+
+                "message" => "vous n'avez pas le droit",
+
+             ],401);
+            }
+       
         return new PromoResource($promo);
     }
 
@@ -45,20 +58,12 @@ class PromoController extends Controller
         
          }
 
-         
-        
-        $user_id=array(
-            "user_id" =>auth()->user()->id
-        );
-        $promos=$request->validated();
-        $result = array_merge($promos,$user_id);
-        
-        
-           $date_fin_reel= array_key_exists('date_fin_reel', $request->validated()) ? array(  "date_fin_reel" =>$request->date_fin_reel  ) : array(  "date_fin_reel" =>$request->date_fin_prevue  );
-          
-           $result = array_merge($result,$date_fin_reel);
-         
-           $promo = Promo::create($result);
+        $promos = $request->validatedAndFiltered();
+        $promos['user_id'] = auth()->user()->id;
+
+        $promos['date_fin_reel']= array_key_exists('date_fin_reel', $promos) ? $promos['date_fin_reel'] : $promos['date_fin_prevue'];
+ 
+        $promo = Promo::create($promos);
        
 
         return new PromoResource($promo);
@@ -76,7 +81,7 @@ class PromoController extends Controller
           
           
         
-        $promo->update($request->validated());
+        $promo->update($request->validatedAndFiltered());
 
         return new PromoResource($promo);
           

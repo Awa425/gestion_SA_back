@@ -8,9 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
+
 
 class Apprenant extends Model
 {
+    use Filterable;
     use HasFactory;
 
     /**
@@ -19,6 +22,7 @@ class Apprenant extends Model
      * @var array
      */
     protected $fillable = [
+        'matricule',
         'nom',
         'prenom',
         'email',
@@ -27,7 +31,21 @@ class Apprenant extends Model
         'lieu_naissance',
         'telephone',
         'user_id',
+        'genre',
         'is_active',
+    ];
+
+    private static $whiteListFilter=[
+        'matricule',
+        'nom',
+        'prenom',
+        'email',
+        'password',
+        'date_naissance',
+        'lieu_naissance',
+        'telephone',
+        'user_id',
+        'genre',
     ];
 
     /**
