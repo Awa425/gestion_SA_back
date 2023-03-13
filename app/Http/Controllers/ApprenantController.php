@@ -64,23 +64,13 @@ class ApprenantController extends Controller
              ],401);
          
           }
-        if (!$request->hasFile('excel_file')) {
+        if (!$request->hasFile('excel_file1')) {
             return response()->json([
                 'message' => 'Veuillez sélectionner un fichier Excel à importer.'
             ], 422);
         }
-        $file = $request->file('excel_file');
-        $mimeType = $file->getClientMimeType();
-
-        if ($mimeType !== 'application/vnd.ms-excel') {
-            return response()->json([
-                'message' => 'Le fichier doit être au format Excel (.xls ou .xlsx).'
-            ], 422);
-        }
-
-        $promo_id=$request->promo;
-        $referentiel_id=$request->referentiel;
-        $data = Excel::import(new ApprenantsImport($promo_id, $referentiel_id), $file);
+        $file = $request->file('excel_file1');
+        $data = Excel::import(new ApprenantsImport(), $file);
         return response()->json([
             'message' => 'Le fichier Excel a été importé avec succès.'
         ], 200);

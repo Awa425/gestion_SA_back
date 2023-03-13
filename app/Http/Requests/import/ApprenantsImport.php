@@ -12,14 +12,6 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class ApprenantsImport implements ToModel, WithHeadingRow
 {
-    protected $promo_id;
-    protected $referentiel_id;
-    // permet d'importer les id de referentiel et promo renseigner dans l'url
-    public function __construct($promo_id, $referentiel_id)
-    {
-        $this->promo_id = $promo_id;
-        $this->referentiel_id = $referentiel_id;
-    }
     public function model(array $row)
     {
         $u = auth()->user()->id;
@@ -36,8 +28,8 @@ class ApprenantsImport implements ToModel, WithHeadingRow
         $apprenant->save();
 
         $promoReferentielApprenant = new PromoReferentielApprenant([
-            "promo_id" => $this->promo_id,
-            "referentiel_id" => $this->referentiel_id,
+            "referentiel_id" => request()->referentiel_id,
+            "promo_id" => request()->promo_id,
             "apprenant_id" => $apprenant->id,
         ]);
 
