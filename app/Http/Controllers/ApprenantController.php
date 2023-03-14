@@ -9,11 +9,8 @@ use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\ApprenantIndexRequest;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\ApprenantResource;
-use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
@@ -23,18 +20,16 @@ class ApprenantController extends Controller
 {
     public function index()
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-            ], 401);
-        }
+        dd(Apprenant::ignoreRequest(['perpage'])
+        ->filter()
+        ->where('is_active', '=', '1')
+        ->paginate(request()
+        ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
         return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
             ->filter()
             ->where('is_active', '=', '1')
             ->paginate(request()
-                ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
+            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
     }
 
 
@@ -65,14 +60,6 @@ class ApprenantController extends Controller
 
     public function store(ApprenantStoreRequest $request)
     {
-
-
-        if ($request->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
-
         $data = $request->validatedAndFiltered();
 
         $data['password'] = bcrypt($data['password']);
@@ -98,13 +85,8 @@ class ApprenantController extends Controller
     }
     public function storeExcel(Request $request)
     {
-        if ($request->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
         $request->validate([
-            "excel_file" => 'required|mimes:xlsx,csv,xls',
+            "excel_file1" => 'required|mimes:xlsx,csv,xls',
         ]);
 
 
@@ -123,26 +105,12 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-            ], 401);
-        }
 
         return new ApprenantResource($apprenant);
     }
 
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
-
-
-        if ($request->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
 
         $validatedData = $request->validatedAndFiltered();
 
@@ -157,11 +125,6 @@ class ApprenantController extends Controller
 
     public function destroy(Request $request, Apprenant $apprenant): Response
     {
-        if (auth()->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
         $apprenant->update([
             'is_active' => 0
         ]);

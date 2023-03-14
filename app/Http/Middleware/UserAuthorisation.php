@@ -16,14 +16,16 @@ class UserAuthorisation
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
-
-        if ($user && $user->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
+        $user = auth()->user();
+        if(User::isSuperAdmin($user) || User::isAdmin($user)){
+            //Ici nous allons verifier si l'utilisateur est un super Admin pour acceder aux differentes methodes 
+            if (($request->route()->getActionMethod() === 'store' || $request->route()->getActionMethod() === 'storeExcel' 
+            || $request->route()->getActionMethod() === 'destroy')   && !User::isSuperAdmin($user)) {
+                return abort(403, 'Unauthorized action.');
+            }
+            return $next($request);
         }
+        return abort(403, 'Unauthorized action.');
 
-        return $next($request);
     }
 }

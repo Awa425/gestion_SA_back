@@ -36,8 +36,8 @@ class ApprenantResource extends JsonResource
             'telephone' => $this->telephone,
             'user' => $this->user_id,
             'is_active' => $this->is_active,
-            'promo' => Promo::make($this->promo),
-            'referentiel' => Referentiel::make($this->referentiel),
+            'promo_id' => Promo::make($this->promo),
+            'referentiel_id' => Referentiel::make($this->referentiel),
         ];
     }
 }
