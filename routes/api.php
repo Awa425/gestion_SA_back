@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function(){
             'referentiels' => App\Http\Controllers\ReferentielController::class,
             'apprenants' => App\Http\Controllers\ApprenantController::class,
             'visiteurs' => App\Http\Controllers\VisiteurController::class,
+            'user' => App\Http\Controllers\UserController::class,
             ]
         );
 
@@ -37,11 +38,3 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::post('ajout/excel', 'App\Http\Controllers\ApprenantController@storeExcel');
     });
 });
-
-
-
-
-
-
-
-

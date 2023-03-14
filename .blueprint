@@ -1,20 +1,11 @@
 created:
-    - app/Http/Controllers/PresenceController.php
-    - tests/Feature/Http/Controllers/PresenceControllerTest.php
+    - app/Http/Controllers/UserController.php
+    - tests/Feature/Http/Controllers/UserControllerTest.php
+    - app/Http/Requests/UserStoreRequest.php
+    - app/Http/Requests/UserUpdateRequest.php
+    - app/Http/Resources/UserCollection.php
 updated:
     - routes/api.php
-    - database/factories/PromoReferentielApprenantFactory.php
-    - database/factories/ApprenantFactory.php
-    - database/factories/PresenceFactory.php
-    - database/factories/VisiteurFactory.php
-    - database/migrations/2023_03_03_105206_create_promo__referentiel__apprenants_table.php
-    - database/migrations/2023_03_03_105207_create_apprenants_table.php
-    - database/migrations/2023_03_03_105208_create_presences_table.php
-    - database/migrations/2023_03_03_105209_create_visiteurs_table.php
-    - app/Models/Promo_Referentiel_Apprenant.php
-    - app/Models/Apprenant.php
-    - app/Models/Presence.php
-    - app/Models/Visiteur.php
 models:
     Promo: { libelle: 'string:255 unique', date_debut: date, date_fin_prevue: date, date_fin_reel: date, is_active: 'boolean default:1', user_id: 'id:users foreign', relationships: { belongsTo: User } }
     Referentiel: { libelle: 'string:255 unique', description: string, is_active: 'boolean default:1', user_id: 'id:users foreign', relationships: { belongsTo: User } }
