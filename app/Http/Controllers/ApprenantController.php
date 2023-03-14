@@ -9,11 +9,8 @@ use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\ApprenantIndexRequest;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\ApprenantResource;
-use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
@@ -21,7 +18,7 @@ use App\Http\Requests\import\ApprenantsImport;
 
 class ApprenantController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
             return response([
@@ -29,6 +26,18 @@ class ApprenantController extends Controller
                 "message" => "vous n'avez pas le droit",
 
             ], 401);
+        }
+        if ($request->has('referentiel')) {
+            $referentiel_name = $request->input('referentiel');
+            $referentielId=Referentiel::where('libelle','=', $referentiel_name)->first();
+            $promoReferentielApprenant = PromoReferentielApprenant::where('referentiel_id', '=', $referentielId['id'])->with('apprenant')->get()->pluck('apprenant');
+            return $promoReferentielApprenant;
+        }
+        if ($request->has('promo')) {
+            $promo_name = $request->input('promo');
+            $promoId=Promo::where('libelle','=', $promo_name)->first();
+            $promoReferentielApprenant = PromoReferentielApprenant::where('promo_id', '=', $promoId['id'])->with('apprenant')->get()->pluck('apprenant');
+            return $promoReferentielApprenant;
         }
         return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
             ->filter()

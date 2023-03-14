@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -13,8 +14,7 @@ use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Apprenant extends Model
 {
-    use Filterable;
-    use HasFactory;
+    use Filterable, HasApiTokens, HasFactory;
 
     /**
      * The attributes that are mass assignable.
