@@ -15,6 +15,8 @@ use App\Http\Resources\ApprenantCollection;
 use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Requests\import\ApprenantsImport;
+use App\Http\Resources\PromoReferentielApprenantCollection;
+use App\Http\Resources\PromoReferentielApprenantResource;
 
 class ApprenantController extends Controller
 {
@@ -27,24 +29,34 @@ class ApprenantController extends Controller
 
             ], 401);
         }
-        if ($request->has('referentiel')) {
-            $referentiel_name = $request->input('referentiel');
-            $referentielId=Referentiel::where('libelle','=', $referentiel_name)->first();
-            $promoReferentielApprenant = PromoReferentielApprenant::where('referentiel_id', '=', $referentielId['id'])->with('apprenant')->get()->pluck('apprenant');
-            return $promoReferentielApprenant;
-        }
-        if ($request->has('promo')) {
-            $promo_name = $request->input('promo');
-            $promoId=Promo::where('libelle','=', $promo_name)->first();
-            $promoReferentielApprenant = PromoReferentielApprenant::where('promo_id', '=', $promoId['id'])->with('apprenant')->get()->pluck('apprenant');
-            return $promoReferentielApprenant;
-        }
-        return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
+
+        // if ($request->has('referentiel')) {
+        //     $referentiel_name = $request->input('referentiel');
+        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('referentiel', function ($query)  use ($referentiel_name) {
+        //        $query
+        //        ->whereIn('libelle', [$referentiel_name]);
+        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+        //      );
+        // }
+
+
+        // if ($request->has('promo')) {
+        //     $promo_name = $request->input('promo');
+        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query)  use ($promo_name) {
+        //        $query
+        //        ->whereIn('libelle', [$promo_name]);
+        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+        //      );
+        // }
+        
+        return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('apprenant', function ($query) {
+            $query
             ->filter()
-            ->where('is_active', '=', '1')
-            ->paginate(request()
-                ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
-    }
+            ->whereIn('is_active', [1]);
+        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+           );
+       
+ }
 
 
     public function generate_matricule($promo_id, $referentiel_id)
