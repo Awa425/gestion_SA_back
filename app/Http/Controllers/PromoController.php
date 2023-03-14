@@ -15,18 +15,6 @@ class PromoController extends Controller
 {
     public function index(Request $request)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-             ],401);
-         
-          }
-          
-       
-       
-    
         return new PromoCollection(Promo::ignoreRequest(['perpage'])
         ->filter()
         ->where('is_active', '=', '1')
@@ -37,26 +25,12 @@ class PromoController extends Controller
 
     public function show(Promo $promo)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-             ],401);
-            }
        
         return new PromoResource($promo);
     }
 
     public function store(PromoStoreRequest $request)
     {
-
-        if ($request->user()->cannot('manage')){
-           return response([
-               "message" => "vous n'avez pas le droit",
-            ],401);
-        
-         }
 
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
@@ -72,14 +46,6 @@ class PromoController extends Controller
 
     public function update(PromoUpdateRequest $request, Promo $promo)
     {
-        if ($request->user()->cannot('manage')){
-            return response([
-                "message" => "vous n'avez pas le droit",
-             ],401);
-         
-          }
-          
-          
         
         $promo->update($request->validatedAndFiltered());
 
@@ -89,13 +55,6 @@ class PromoController extends Controller
 
     public function destroy( Promo $promo)
     {
-        if (auth()->user()->cannot('manage')){
-            return response([
-                "message" => "vous n'avez pas le droit",
-             ],401);
-         
-          }
-         
         $promo->update([
             'is_active' => 0
         ]);
