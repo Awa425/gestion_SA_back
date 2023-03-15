@@ -10,6 +10,10 @@ use App\Http\Resources\PromoResource;
 use App\Models\Promo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\PromoReferentielApprenantCollection;
+use App\Http\Resources\PromoReferentielApprenantResource;
+use App\Models\PromoReferentielApprenant;
+
 
 class PromoController extends Controller
 {
@@ -25,12 +29,12 @@ class PromoController extends Controller
           }
           
        
-       
-    
-        return new PromoCollection(Promo::ignoreRequest(['perpage'])
-        ->filter()
-        ->where('is_active', '=', '1')
-        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
+          return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query) {
+            $query
+            ->filter()
+            ->whereIn('is_active', [1]);
+        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+           );
           
     }
 
