@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\ApprenantController;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class ApprenantsImport implements ToModel, WithHeadingRow
 {
@@ -50,8 +52,9 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
         }
     
-        $date = date('YmdHis') . substr(microtime(), 2, 3);
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
+        $string= Str::random(5);
+        $date = date('Ymd');
+        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $string . '_' . $date;
         return $matricule;
     }
     public function model(array $row)

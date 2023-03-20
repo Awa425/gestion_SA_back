@@ -17,7 +17,7 @@ use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Requests\import\ApprenantsImport;
 use App\Http\Resources\PromoReferentielApprenantCollection;
 use App\Http\Resources\PromoReferentielApprenantResource;
-
+use Illuminate\Support\Str;
 class ApprenantController extends Controller
 {
     public function index(Request $request)
@@ -74,9 +74,9 @@ class ApprenantController extends Controller
             $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
         }
 
-
-        $date = date('YmdHis') . substr(microtime(), 2, 3);
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
+        $string= Str::random(5);
+        $date = date('Ymd');
+        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $string . '_' . $date;
         return $matricule;
     }
 
