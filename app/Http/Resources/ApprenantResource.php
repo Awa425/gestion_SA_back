@@ -30,6 +30,7 @@ class ApprenantResource extends JsonResource
             'telephone' => $this->telephone,
             'user' => $this->user_id,
             'is_active' => $this->is_active,
+
         ];
     }
 }

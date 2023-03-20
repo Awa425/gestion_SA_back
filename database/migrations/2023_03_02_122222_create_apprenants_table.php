@@ -27,7 +27,6 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_active')->default(1);
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

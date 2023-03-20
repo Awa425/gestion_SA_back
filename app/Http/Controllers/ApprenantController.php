@@ -22,6 +22,7 @@ class ApprenantController extends Controller
 {
     public function index(Request $request)
     {
+
         
 
         // if ($request->has('referentiel')) {
@@ -53,6 +54,7 @@ class ApprenantController extends Controller
  }
 
 
+
     public function generate_matricule($promo_id, $referentiel_id)
     {
 
@@ -81,9 +83,6 @@ class ApprenantController extends Controller
     public function store(ApprenantStoreRequest $request)
     {
 
-
-        
-
         $data = $request->validatedAndFiltered();
 
         $data['password'] = bcrypt($data['password']);
@@ -109,9 +108,9 @@ class ApprenantController extends Controller
     }
     public function storeExcel(Request $request)
     {
-      
+
         $request->validate([
-            "excel_file" => 'required|mimes:xlsx,csv,xls',
+            "excel_file1" => 'required|mimes:xlsx,csv,xls',
         ]);
 
 
@@ -130,7 +129,7 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
-       
+
 
         return new ApprenantResource($apprenant);
     }
@@ -138,8 +137,6 @@ class ApprenantController extends Controller
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
 
-
-        
 
         $validatedData = $request->validatedAndFiltered();
 
@@ -154,7 +151,7 @@ class ApprenantController extends Controller
 
     public function destroy(Request $request, Apprenant $apprenant): Response
     {
-        
+
         $apprenant->update([
             'is_active' => 0
         ]);

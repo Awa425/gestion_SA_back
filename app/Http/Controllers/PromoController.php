@@ -19,6 +19,7 @@ class PromoController extends Controller
 {
     public function index(Request $request)
     {
+
         
        
           return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query) {
@@ -33,7 +34,7 @@ class PromoController extends Controller
 
     public function show(Promo $promo)
     {
-       
+
        
         return new PromoResource($promo);
     }
@@ -41,7 +42,6 @@ class PromoController extends Controller
     public function store(PromoStoreRequest $request)
     {
 
-        
 
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
@@ -57,9 +57,7 @@ class PromoController extends Controller
 
     public function update(PromoUpdateRequest $request, Promo $promo)
     {
-        
-          
-        
+
         $promo->update($request->validatedAndFiltered());
 
         return new PromoResource($promo);
@@ -68,8 +66,7 @@ class PromoController extends Controller
 
     public function destroy( Promo $promo)
     {
-        
-         
+
         $promo->update([
             'is_active' => 0
         ]);

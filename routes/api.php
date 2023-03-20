@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ApprenantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,20 +22,22 @@ Route::post('apprenant/login', [App\Http\Controllers\ApprenantAuth::class, 'logi
 
 
 
-Route::middleware('auth:sanctum')->group(function(){
+
+Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::apiResources(
         [
 
-            'promos' => App\Http\Controllers\PromoController::class,
-            'referentiels' => App\Http\Controllers\ReferentielController::class,
-            'apprenants' => App\Http\Controllers\ApprenantController::class,
-            'visiteurs' => App\Http\Controllers\VisiteurController::class,
+            'promos'=> App\Http\Controllers\PromoController::class,
+            'referentiels'=> App\Http\Controllers\ReferentielController::class,
+            'apprenants'=> App\Http\Controllers\ApprenantController::class,
+            'visiteurs'=> App\Http\Controllers\VisiteurController::class,
             'user' => App\Http\Controllers\UserController::class,
+
             ]
         );
 
     Route::group(['prefix' => 'apprenants'], function (){
 
-        Route::post('ajout/excel', 'App\Http\Controllers\ApprenantController@storeExcel');
+        Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
     });
 });
