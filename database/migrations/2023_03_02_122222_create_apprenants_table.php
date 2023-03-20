@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('lieu_naissance', 255);
             $table->enum('genre', ['M', 'F']);
             $table->string('telephone', 255);
+            $table->binary('photo')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_active')->default(1);
