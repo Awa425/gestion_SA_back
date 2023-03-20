@@ -16,29 +16,42 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class ApprenantsImport implements ToModel, WithHeadingRow
 {
     public function generate_matricule($promo_id, $referentiel_id)
-    {
+{
+    static $promoCache = [];
+    static $referentielCache = [];
 
+    if (!isset($promoCache[$promo_id])) {
         $promo = Promo::where('id', '=', $promo_id)->select('libelle')->first();
-        $referentiel = Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
-
-
-        $promo_tabs = explode(' ', $promo['libelle']);
-        $referentiel_tabs = explode(' ', $referentiel['libelle']);
-        $promo_prefix = '';
-        $referentiel_prefix = '';
-
-        foreach ($promo_tabs as $promo_tab) {
-            $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
-        }
-        foreach ($referentiel_tabs as $referentiel_tab) {
-            $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
-        }
-
-
-        $date = date('YmdHis') . substr(microtime(), 2, 3);
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
-        return $matricule;
+        $promoCache[$promo_id] = $promo['libelle'];
+    } else {
+        $promo = ['libelle' => $promoCache[$promo_id]];
     }
+
+    if (!isset($referentielCache[$referentiel_id])) {
+        $referentiel = Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
+        $referentielCache[$referentiel_id] = $referentiel['libelle'];
+    } else {
+        $referentiel = ['libelle' => $referentielCache[$referentiel_id]];
+    }
+
+    $promo_tabs = explode(' ', $promo['libelle']);
+    $referentiel_tabs = explode(' ', $referentiel['libelle']);
+    $promo_prefix = '';
+    $referentiel_prefix = '';
+
+    foreach ($promo_tabs as $promo_tab) {
+        $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
+    }
+
+    foreach ($referentiel_tabs as $referentiel_tab) {
+        $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
+    }
+
+    $date = date('YmdHis') . substr(microtime(), 2, 3);
+    $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
+    return $matricule;
+}
+
     public function model(array $row)
     {
         $mat= $this->generate_matricule(request()->promo_id,request()->referentiel_id);
