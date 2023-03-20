@@ -22,13 +22,7 @@ class ApprenantController extends Controller
 {
     public function index(Request $request)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-            ], 401);
-        }
+        
 
         // if ($request->has('referentiel')) {
         //     $referentiel_name = $request->input('referentiel');
@@ -88,11 +82,7 @@ class ApprenantController extends Controller
     {
 
 
-        if ($request->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
+        
 
         $data = $request->validatedAndFiltered();
 
@@ -119,11 +109,7 @@ class ApprenantController extends Controller
     }
     public function storeExcel(Request $request)
     {
-        if ($request->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
+      
         $request->validate([
             "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
@@ -144,13 +130,7 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))) {
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-            ], 401);
-        }
+       
 
         return new ApprenantResource($apprenant);
     }
@@ -159,11 +139,7 @@ class ApprenantController extends Controller
     {
 
 
-        if ($request->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
+        
 
         $validatedData = $request->validatedAndFiltered();
 
@@ -178,11 +154,7 @@ class ApprenantController extends Controller
 
     public function destroy(Request $request, Apprenant $apprenant): Response
     {
-        if (auth()->user()->cannot('manage')) {
-            return response([
-                "message" => "vous n'avez pas le droit",
-            ], 401);
-        }
+        
         $apprenant->update([
             'is_active' => 0
         ]);
