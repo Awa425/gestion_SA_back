@@ -14,13 +14,7 @@ class VisiteurController extends Controller
 {
     public function index(Request $request)
     {
-        if ((auth()->user()->cannot('manage') xor auth()->user()->cannot('view')) xor auth()->user()->cannot('vigil_job')){
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-             ],401);
-            }
+        
        
 
         return new VisiteurCollection(Visiteur::ignoreRequest(['perpage'])
@@ -30,13 +24,7 @@ class VisiteurController extends Controller
 
     public function store(VisiteurStoreRequest $request)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('vigil_job')) && (auth()->user()->can('manage') || auth()->user()->cannot('vigil_job'))){
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-             ],401);
-            }
+        
        
         $data = $request->validatedAndFiltered();
         $data['user_id'] = auth()->user()->id;
@@ -47,25 +35,13 @@ class VisiteurController extends Controller
 
     public function show(Request $request, Visiteur $visiteur)
     {
-        if ((auth()->user()->cannot('manage') xor auth()->user()->cannot('view')) xor auth()->user()->cannot('vigil_job')){
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-             ],401);
-            }
+        
         return new VisiteurResource($visiteur);
     }
 
     public function update(VisiteurUpdateRequest $request, Visiteur $visiteur)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('vigil_job')) && (auth()->user()->can('manage') || auth()->user()->cannot('vigil_job'))){
-            return response([
-
-                "message" => "vous n'avez pas le droit",
-
-             ],401);
-            }
+       
         $validatedData = $request->validatedAndFiltered();
         $visiteur->update($validatedData);
 

@@ -17,6 +17,8 @@ use App\Http\Controllers\ApprenantController;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('apprenant/login', [App\Http\Controllers\ApprenantAuth::class, 'login']);
+
 
 
 
@@ -29,6 +31,8 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'referentiels'=> App\Http\Controllers\ReferentielController::class,
             'apprenants'=> App\Http\Controllers\ApprenantController::class,
             'visiteurs'=> App\Http\Controllers\VisiteurController::class,
+            'user' => App\Http\Controllers\UserController::class,
+
             ]
         );
 
@@ -37,11 +41,3 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
     });
 });
-
-
-
-
-
-
-
-

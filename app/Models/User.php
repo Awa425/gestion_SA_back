@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,Filterable;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +31,18 @@ class User extends Authenticatable
         'role_id',
         'email',
         'password',
+        'telephone',
+        'isActive',
+    ];
+
+    private static $whiteListFilter=[
+        'matricule',
+        'name',
+        'prenom',
+        'email',
+        'date_naissance',
+        'telephone',
+        'adresse',
     ];
 
     /**

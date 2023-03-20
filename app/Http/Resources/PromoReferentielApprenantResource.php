@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Resources;
-
+use App\Models\Promo;
+use App\Models\Apprenant;
+use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,12 +17,10 @@ class PromoReferentielApprenantResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'promo_id' => $this->promo_id,
-            'referentiel_id' => $this->referentiel_id,
-            'apprenant_id' => $this->apprenant_id,
-            //'apprenants' => new ApprenantResource($this->apprenants),
-            //'promo_referentiel_apprenants' =>new ApprenantResource($this->apprenants),
+            
+            'apprenant' => Apprenant::make($this->apprenant->toArray()),
+            'promo' => Promo::make($this->promo->toArray()),
+            'referentiel' => Referentiel::make($this->referentiel->toArray()),
 
         ];
     }

@@ -10,27 +10,38 @@ use App\Http\Resources\PromoResource;
 use App\Models\Promo;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\PromoReferentielApprenantCollection;
+use App\Http\Resources\PromoReferentielApprenantResource;
+use App\Models\PromoReferentielApprenant;
+
 
 class PromoController extends Controller
 {
     public function index(Request $request)
     {
-        return new PromoCollection(Promo::ignoreRequest(['perpage'])
-        ->filter()
-        ->where('is_active', '=', '1')
-        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
+
+        
+       
+          return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query) {
+            $query
+            ->filter()
+            ->whereIn('is_active', [1]);
+        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+           );
           
     }
 
 
     public function show(Promo $promo)
     {
+
        
         return new PromoResource($promo);
     }
 
     public function store(PromoStoreRequest $request)
     {
+
 
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
@@ -46,7 +57,7 @@ class PromoController extends Controller
 
     public function update(PromoUpdateRequest $request, Promo $promo)
     {
-        
+
         $promo->update($request->validatedAndFiltered());
 
         return new PromoResource($promo);
@@ -55,6 +66,7 @@ class PromoController extends Controller
 
     public function destroy( Promo $promo)
     {
+
         $promo->update([
             'is_active' => 0
         ]);

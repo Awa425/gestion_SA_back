@@ -15,22 +15,44 @@ use App\Http\Resources\ApprenantCollection;
 use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Requests\import\ApprenantsImport;
+use App\Http\Resources\PromoReferentielApprenantCollection;
+use App\Http\Resources\PromoReferentielApprenantResource;
 
 class ApprenantController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        dd(Apprenant::ignoreRequest(['perpage'])
-        ->filter()
-        ->where('is_active', '=', '1')
-        ->paginate(request()
-        ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
-        return new ApprenantCollection(Apprenant::ignoreRequest(['perpage'])
+
+        
+
+        // if ($request->has('referentiel')) {
+        //     $referentiel_name = $request->input('referentiel');
+        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('referentiel', function ($query)  use ($referentiel_name) {
+        //        $query
+        //        ->whereIn('libelle', [$referentiel_name]);
+        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+        //      );
+        // }
+
+
+        // if ($request->has('promo')) {
+        //     $promo_name = $request->input('promo');
+        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query)  use ($promo_name) {
+        //        $query
+        //        ->whereIn('libelle', [$promo_name]);
+        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+        //      );
+        // }
+        
+        return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('apprenant', function ($query) {
+            $query
             ->filter()
-            ->where('is_active', '=', '1')
-            ->paginate(request()
-            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page'));
-    }
+            ->whereIn('is_active', [1]);
+        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+           );
+       
+ }
+
 
 
     public function generate_matricule($promo_id, $referentiel_id)
@@ -60,6 +82,7 @@ class ApprenantController extends Controller
 
     public function store(ApprenantStoreRequest $request)
     {
+
         $data = $request->validatedAndFiltered();
 
         $data['password'] = bcrypt($data['password']);
@@ -85,6 +108,7 @@ class ApprenantController extends Controller
     }
     public function storeExcel(Request $request)
     {
+
         $request->validate([
             "excel_file1" => 'required|mimes:xlsx,csv,xls',
         ]);
@@ -106,11 +130,13 @@ class ApprenantController extends Controller
     public function show(Apprenant $apprenant)
     {
 
+
         return new ApprenantResource($apprenant);
     }
 
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
+
 
         $validatedData = $request->validatedAndFiltered();
 
@@ -125,6 +151,7 @@ class ApprenantController extends Controller
 
     public function destroy(Request $request, Apprenant $apprenant): Response
     {
+
         $apprenant->update([
             'is_active' => 0
         ]);
