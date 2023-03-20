@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\ApprenantController;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Facades\Cache;
+
 class ApprenantsImport implements ToModel, WithHeadingRow
 {
 
@@ -20,13 +20,23 @@ class ApprenantsImport implements ToModel, WithHeadingRow
 
     public function generate_matricule($promo_id, $referentiel_id)
     {
-        $promo = Cache::remember('promo_'.$promo_id, 50, function () use ($promo_id) {
-            return Promo::where('id', '=', $promo_id)->select('libelle')->first();
-        });
-        
-        $referentiel = Cache::remember('referentiel_'.$referentiel_id, 50, function () use ($referentiel_id) {
-            return Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
-        });
+        // Define the cache keys for promo and referentiel
+        $promo_cache_key = 'promo_' . $promo_id;
+        $referentiel_cache_key = 'referentiel_' . $referentiel_id;
+    
+        // Check if the cache exists for promo and referentiel
+        $promo = Cache::get($promo_cache_key);
+        $referentiel = Cache::get($referentiel_cache_key);
+    
+        // If the cache doesn't exist, execute the queries and store the results in the cache
+        if (!$promo) {
+            $promo = Promo::where('id', '=', $promo_id)->select('libelle')->first();
+            Cache::put($promo_cache_key, $promo, $seconds = 20); // Cache for 20 seconds
+        }
+        if (!$referentiel) {
+            $referentiel = Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
+            Cache::put($referentiel_cache_key, $referentiel, $seconds = 20); // Cache for 20 seconds
+        }
     
         $promo_tabs = explode(' ', $promo['libelle']);
         $referentiel_tabs = explode(' ', $referentiel['libelle']);
@@ -42,7 +52,6 @@ class ApprenantsImport implements ToModel, WithHeadingRow
     
         $date = date('YmdHis') . substr(microtime(), 2, 3);
         $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
-    
         return $matricule;
     }
     public function model(array $row)
