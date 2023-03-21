@@ -34,16 +34,15 @@ class ApprenantController extends Controller
 
 
 
-    public function generate_matricule($promo_id, $referentiel_id)
+    public function generate_matricule($promo_libelle, $referentiel_libelle)
     {
 
-        $promo = Promo::where('id', '=', $promo_id)->select('libelle')->first();
-        $referentiel = Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
-        $lastRow = Apprenant::latest()->select('id')->first();
+       
+       
 
 
-        $promo_tabs = explode(' ', $promo['libelle']);
-        $referentiel_tabs = explode(' ', $referentiel['libelle']);
+        $promo_tabs = explode(' ', $promo_libelle);
+        $referentiel_tabs = explode(' ', $referentiel_libelle);
         $promo_prefix = '';
         $referentiel_prefix = '';
 
@@ -53,9 +52,8 @@ class ApprenantController extends Controller
         foreach ($referentiel_tabs as $referentiel_tab) {
             $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
         }
-        $id=$lastRow['id'] + 1;
-        $date = date('Ymd');
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $id . '_' . $date;
+        $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
+        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
         return $matricule;
     }
 
@@ -66,10 +64,9 @@ class ApprenantController extends Controller
 
         $data['password'] = bcrypt($data['password']);
         $data['user_id'] = auth()->user()->id;
-
-        $data['matricule'] = $this->generate_matricule($request->promo_id, $request->referentiel_id);
-
-
+        $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
+        $referentiel = Referentiel::where('id', '=', $request->referentiel_id)->select('libelle')->first();
+        $data['matricule'] = $this->generate_matricule($promo['libelle'], $referentiel['libelle']);
 
 
         //insert into apprenant
@@ -108,9 +105,11 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
-        dd($apprenant);
-        $ap = PromoReferentielApprenant::find($apprenant)->first();
-        return new ApprenantResource($apprenant);
+
+        return new PromoReferentielApprenantResource(PromoReferentielApprenant::whereHas('apprenant', function ($query) use ($apprenant) {
+            $query->where('id', $apprenant['id']);
+        })->first());
+
     }
 
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)

@@ -48,4 +48,21 @@ class Promo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function promoReferentielApprenants()
+    {
+        return $this->hasMany(PromoReferentielApprenant::class);
+    }
+    
+    public function referentiels()
+    {
+        return $this->belongsToMany(Referentiel::class, 'promo_referentiel_apprenants');
+    }
+    
+    public function apprenants()
+    {
+        return $this->belongsToMany(Apprenant::class, 'promo_referentiel_apprenants');
+    }
+    
 }
+

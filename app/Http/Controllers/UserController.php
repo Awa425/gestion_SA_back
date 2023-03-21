@@ -28,13 +28,12 @@ class UserController extends Controller
 
     public function generate_matricule($role_id)
     {
-        $lastRow = User::latest()->select('id')->first();
+        
         $role = Role::where('id', '=', $role_id)->select('libelle')->first();
         $role_prefix = $role['libelle'];
         $role_prefix =substr($role_prefix, 0, 3);
-        $date = date('Ymd');
-        $id=$lastRow['id'] + 1;
-        $matricule = $role_prefix . '_' . $id . '_' . $date;
+        $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
+        $matricule = $role_prefix . '_' . $date;
         return $matricule;
     }
 
