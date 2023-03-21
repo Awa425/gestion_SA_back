@@ -60,6 +60,7 @@ class ApprenantController extends Controller
 
         $promo = Promo::where('id', '=', $promo_id)->select('libelle')->first();
         $referentiel = Referentiel::where('id', '=', $referentiel_id)->select('libelle')->first();
+        $lastRow = Apprenant::latest()->select('id')->first();
 
 
         $promo_tabs = explode(' ', $promo['libelle']);
@@ -73,10 +74,9 @@ class ApprenantController extends Controller
         foreach ($referentiel_tabs as $referentiel_tab) {
             $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
         }
-
-
-        $date = date('YmdHis') . substr(microtime(), 2, 3);
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $date;
+        $id=$lastRow['id'] + 1;
+        $date = date('Ymd');
+        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_' . $id . '_' . $date;
         return $matricule;
     }
 
