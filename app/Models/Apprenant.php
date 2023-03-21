@@ -77,5 +77,21 @@ class Apprenant extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function promoReferentielApprenants()
+{
+    return $this->hasMany(PromoReferentielApprenant::class);
+}
+
+public function promos()
+{
+    return $this->belongsToMany(Promo::class, 'promo_referentiel_apprenants');
+}
+
+public function referentiels()
+{
+    return $this->belongsToMany(Referentiel::class, 'promo_referentiel_apprenants');
+}
+
    
 }
