@@ -84,7 +84,7 @@ class ApprenantController extends Controller
     }
     public function storeExcel(Request $request)
     {
-
+    
         $request->validate([
             "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
