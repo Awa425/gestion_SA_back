@@ -23,34 +23,13 @@ class ApprenantController extends Controller
     public function index(Request $request)
     {
 
-        
-
-        // if ($request->has('referentiel')) {
-        //     $referentiel_name = $request->input('referentiel');
-        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('referentiel', function ($query)  use ($referentiel_name) {
-        //        $query
-        //        ->whereIn('libelle', [$referentiel_name]);
-        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-        //      );
-        // }
-
-
-        // if ($request->has('promo')) {
-        //     $promo_name = $request->input('promo');
-        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query)  use ($promo_name) {
-        //        $query
-        //        ->whereIn('libelle', [$promo_name]);
-        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-        //      );
-        // }
-        
         return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('apprenant', function ($query) {
             $query
             ->filter()
             ->whereIn('is_active', [1]);
         })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
            );
-       
+
  }
 
 
@@ -107,11 +86,11 @@ class ApprenantController extends Controller
     {
 
         $request->validate([
-            "excel_file1" => 'required|mimes:xlsx,csv,xls',
+            "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
 
 
-        $file = $request->file('excel_file1');
+        $file = $request->file('excel_file');
         Excel::import(new ApprenantsImport(), $file);
         if (count($request->file()) > 0) {
             return response()->json([
@@ -126,9 +105,11 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
+
         return new PromoReferentielApprenantResource(PromoReferentielApprenant::whereHas('apprenant', function ($query) use ($apprenant) {
             $query->where('id', $apprenant['id']);
         })->first());
+
     }
 
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)

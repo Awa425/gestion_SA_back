@@ -31,7 +31,7 @@ class Promo extends Model
         'date_fin_prevue',
         'date_fin_reel',
         'user_id',
-       
+
     ];
 
     /**
@@ -48,6 +48,7 @@ class Promo extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function promoReferentielApprenants()
     {
         return $this->hasMany(PromoReferentielApprenant::class);
@@ -64,3 +65,4 @@ class Promo extends Model
     }
     
 }
+

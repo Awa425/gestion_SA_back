@@ -24,7 +24,7 @@ class UserResource extends JsonResource
             'date_naissance' => $this->date_naissance,
             'isFirstlyConnected' => $this->isFirstlyConnected,
             'adresse' => $this->adresse,
-            'role_id' => $this->role_id,
+            'role_id' =>  RoleResource::make($this->role),
             'isActive' => $this->isActive,
         ];
     }

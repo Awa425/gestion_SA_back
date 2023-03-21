@@ -6,10 +6,11 @@ namespace App\Models;
 use Laravel\Sanctum\HasApiTokens;
 use App\Providers\RoleServiceProvider;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {

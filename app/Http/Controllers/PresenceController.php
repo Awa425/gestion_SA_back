@@ -12,12 +12,10 @@ use Illuminate\Http\Response;
 
 class PresenceController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
-        if ((auth()->user()->cannot('manage') || auth()->user()->can('view')) && (auth()->user()->can('manage') || auth()->user()->cannot('view'))){
-            abort(403, 'Unauthorized action.');
-         
-        }
+
+
         $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10));
 
         $presences = Presence::all()->paginate($perPage);
@@ -27,36 +25,30 @@ class PresenceController extends Controller
 
     public function store(PresenceStoreRequest $request)
     {
-        
-        if (auth()->user()->cannot('manage_promo')) {
-            abort(403, 'Unauthorized action.');
-        }
+
+
         $presence = Presence::create($request->validated());
 
         return new PresenceResource($presence);
     }
 
-    public function show(Request $request, Presence $presence): Response
+    public function show(Request $request, Presence $presence)
     {
         return new PresenceResource($presence);
     }
-    
-    public function update(PresenceUpdateRequest $request, Presence $presence): Response
+
+    public function update(PresenceUpdateRequest $request, Presence $presence)
     {
-        if (auth()->user()->cannot('manage')) {
-            abort(403, 'Unauthorized action.');
-        }
+
         $presence->update($request->validated());
 
         return new PresenceResource($presence);
     }
 
-    public function destroy(Request $request, Presence $presence): Response
+    public function destroy(Request $request, Presence $presence)
     {
-        if (auth()->user()->cannot('manage')) {
-            abort(403, 'Unauthorized action.');
-        }
-        
+
+
 
         return response()->noContent();
     }

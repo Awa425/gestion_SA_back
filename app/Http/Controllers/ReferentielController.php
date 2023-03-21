@@ -15,27 +15,21 @@ use  App\Models\User ;
 class ReferentielController extends Controller
 {
 
-    public function index(Request $request)
+    public function index()
     {
-       
-        $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10)); 
-        $referentiels = Referentiel::where('is_active', true)->paginate($perPage);
-        return new ReferentielCollection($referentiels);
+        return new ReferentielCollection(Referentiel::ignoreRequest(['perpage'])
+        ->filter()
+        ->where('is_active', "=", 1)
+        ->orderByDesc('id')
+        ->paginate(request()
+            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+         );
     }
-
-    // // cette fonction permet de recuperer les promos d'un referentiel
-    // public function promosRef($id)
-    // {
-
-    //     $referentiel = Referentiel::findOrFail($id);
-    //     $promos = $referentiel->promos;
-    //     return response()->json($promos);
-    // }
 
     public function store(ReferentielStoreRequest $request)
     {
         $validatedData = $request->validated();
-        $u= array('userid' => auth()->user()->id);
+        $u= array('user_id' => auth()->user()->id);
         $referentiel = Referentiel::create(array_merge($validatedData,$u));
         return new ReferentielResource($referentiel);
 
@@ -49,7 +43,7 @@ class ReferentielController extends Controller
 
     public function update(ReferentielUpdateRequest $request, Referentiel $referentiel): ReferentielResource
     {
-        
+
         $referentiel->update($request->validated());
 
         return new ReferentielResource($referentiel);
