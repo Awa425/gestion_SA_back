@@ -21,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
+
         Gate::define('manage', function (User $user) {
             return User::isSuperAdmin($user) ;
         });

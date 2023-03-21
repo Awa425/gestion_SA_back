@@ -31,7 +31,7 @@ class Promo extends Model
         'date_fin_prevue',
         'date_fin_reel',
         'user_id',
-       
+
     ];
 
     /**
