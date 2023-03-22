@@ -5,16 +5,8 @@ namespace App\Http\Requests\import;
 use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
-use Illuminate\Support\Str;
 
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToModel;
-use App\Models\PromoReferentielApprenant;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\ApprenantController;
-use Illuminate\Validation\ValidationException;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Facades\Cache;
+
 
 
 use App\Http\Requests\ApprenantStoreRequest;
@@ -60,9 +52,13 @@ class ApprenantsImport implements ToModel, WithHeadingRow
     // }
     public function model(array $row)
     {
+
         
       
         $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
+
+        $matricule=$this->generate_matricule();
+
         $apprenant = new Apprenant([
             'matricule' => $matricule,
             'nom' => $row['nom'],
