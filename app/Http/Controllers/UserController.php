@@ -47,7 +47,7 @@ class UserController extends Controller
         $data['user_id'] = auth()->user()->id;
 
         $data['matricule'] = $this->generate_matricule($data['role_id']);
-        
+
         $user = User::create($data);
 
         return new UserResource($user);

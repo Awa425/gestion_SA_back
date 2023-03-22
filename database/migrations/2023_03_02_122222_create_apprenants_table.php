@@ -21,6 +21,7 @@ return new class extends Migration
             $table->date('date_naissance');
             $table->string('lieu_naissance', 255);
             $table->enum('genre', ['M', 'F']);
+            $table->mediumText('reserves')->nullable();
             $table->string('telephone', 255);
             $table->binary('photo')->nullable();
             $table->unsignedBigInteger('user_id');

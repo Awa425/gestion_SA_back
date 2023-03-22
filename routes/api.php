@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
    
    
 
-    Route::group(['prefix' => 'apprenants'], function (){
+    Route::group(['prefix' => 'apprenant'], function (){
 
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
     });
