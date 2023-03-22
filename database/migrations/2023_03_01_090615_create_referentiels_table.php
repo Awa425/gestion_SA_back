@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('libelle', 255)->unique();
             $table->string('description');
             $table->boolean('is_active')->default(1);
-            $table->unsignedBigInteger('userid');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
-            $table->foreign('userid')
+            $table->foreign('user_id')
             ->references('id')
             ->on('users') ;
         });

@@ -21,43 +21,26 @@ use App\Http\Resources\PromoReferentielApprenantResource;
 
 class ApprenantController extends Controller
 {
+    public function __construct()
+    {
+    }
     public function index(Request $request)
     {
 
-        
-
-        // if ($request->has('referentiel')) {
-        //     $referentiel_name = $request->input('referentiel');
-        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('referentiel', function ($query)  use ($referentiel_name) {
-        //        $query
-        //        ->whereIn('libelle', [$referentiel_name]);
-        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-        //      );
-        // }
-
-
-        // if ($request->has('promo')) {
-        //     $promo_name = $request->input('promo');
-        //     return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query)  use ($promo_name) {
-        //        $query
-        //        ->whereIn('libelle', [$promo_name]);
-        //    })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-        //      );
-        // }
-        
         return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('apprenant', function ($query) {
             $query
             ->filter()
             ->whereIn('is_active', [1]);
         })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
            );
-       
+
  }
 
 
 
-    public function generate_matricule($promo_libelle, $referentiel_libelle)
+    public static function generate_matricule($promo_libelle, $referentiel_libelle)
     {
+
 
         $promo_tabs = explode(' ', $promo_libelle);
         $referentiel_tabs = explode(' ', $referentiel_libelle);
@@ -78,6 +61,7 @@ class ApprenantController extends Controller
     public function store(ApprenantStoreRequest $request)
     {
 
+
         $data = $request->validatedAndFiltered();
 
         $data['password'] = bcrypt($data['password']);
@@ -85,6 +69,8 @@ class ApprenantController extends Controller
         $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
         $referentiel = Referentiel::where('id', '=', $request->referentiel_id)->select('libelle')->first();
         $data['matricule'] = $this->generate_matricule($promo['libelle'], $referentiel['libelle']);
+        $data['reserves'] = self::diff_array($request->all(), $request->validated(), null, (new Apprenant())->getFillable());
+
 
 
         //insert into apprenant
@@ -103,15 +89,17 @@ class ApprenantController extends Controller
 
         return new ApprenantResource($apprenant);
     }
+
+
     public function storeExcel(Request $request)
     {
 
         $request->validate([
-            "excel_file1" => 'required|mimes:xlsx,csv,xls',
+            "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
 
 
-        $file = $request->file('excel_file1');
+        $file = $request->file('excel_file');
         Excel::import(new ApprenantsImport(), $file);
         if (count($request->file()) > 0) {
             return response()->json([
@@ -126,9 +114,11 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
+
         return new PromoReferentielApprenantResource(PromoReferentielApprenant::whereHas('apprenant', function ($query) use ($apprenant) {
             $query->where('id', $apprenant['id']);
         })->first());
+
     }
 
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
@@ -154,5 +144,31 @@ class ApprenantController extends Controller
         ]);
 
         return response()->noContent();
+    }
+
+
+    public static function diff_array(array $tab1, array $tab2, $object = null, $arrayKeys = [])
+    {
+        $reserves = array_diff_key($tab1, $tab2);
+        return self::transformToReserved($reserves, $object, $arrayKeys);
+    }
+
+    public static function transformToReserved($array, $object = null, array $arrayKeys = [])
+    {
+
+        $reserve = "";
+
+        $keys = $arrayKeys;
+
+        if ($object) {
+            $keys = array_keys((array) $object);
+        }
+
+        foreach ($array as $key => $value) {
+            if (is_string($value) && !in_array($key, $keys)) {
+                $reserve .= $key . env('SEPARATOR_LABEL') . $value . env('SEPARATOR');
+            }
+        }
+        return $reserve;
     }
 }

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Referentiel extends Model
@@ -24,7 +27,16 @@ class Referentiel extends Model
         'libelle',
         'description',
         'is_active',
-        'userid',
+        'user_id',
+    ];
+
+    private static $whiteListFilter=[
+        'libelle',
+        'date_debut',
+        'date_fin_prevue',
+        'date_fin_reel',
+        'user_id',
+
     ];
 
     private static $whiteListFilter=[
@@ -39,7 +51,7 @@ class Referentiel extends Model
     protected $casts = [
         'id' => 'integer',
         'is_active' => 'boolean',
-        'userid' => 'integer',
+        'user_id' => 'integer',
     ];
 
     public function user(): BelongsTo

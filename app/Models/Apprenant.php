@@ -34,6 +34,8 @@ class Apprenant extends Model
         'user_id',
         'genre',
         'is_active',
+        'reserves',
+
     ];
 
     private static $whiteListFilter=[
@@ -47,6 +49,8 @@ class Apprenant extends Model
         'telephone',
         'user_id',
         'genre',
+        'reserves',
+
     ];
 
     /**
@@ -91,5 +95,5 @@ public function promoReferentiels()
     }
 
 
-   
+
 }
