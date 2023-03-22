@@ -8,6 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
@@ -87,15 +88,12 @@ class Apprenant extends Model
     return $this->hasMany(PromoReferentielApprenant::class);
 }
 
-public function promos()
-{
-    return $this->belongsToMany(Promo::class, 'promo_referentiel_apprenants');
-}
 
-public function referentiels()
-{
-    return $this->belongsToMany(Referentiel::class, 'promo_referentiel_apprenants');
-}
+public function promoReferentiels()
+    {
+        return $this->belongsToMany(PromoReferentiel::class);
+    }
+
 
 
 }

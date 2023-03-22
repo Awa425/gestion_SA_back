@@ -6,6 +6,7 @@ use App\Models\Apprenant;
 use App\Models\Referentiel;
 use App\Models\Promo;
 use App\Models\PromoReferentielApprenant;
+use App\Models\PromoReferentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Requests\ApprenantIndexRequest;
@@ -39,9 +40,6 @@ class ApprenantController extends Controller
 
     public static function generate_matricule($promo_libelle, $referentiel_libelle)
     {
-
-
-
 
 
         $promo_tabs = explode(' ', $promo_libelle);
@@ -80,9 +78,12 @@ class ApprenantController extends Controller
         $apprenant = Apprenant::create($data);
 
         //insert into promoReferentielApprenant
+        $promoReferentiel = PromoReferentiel::where([
+            ['promo_id', '=', $request->promo_id],
+            ['referentiel_id', '=', $request->referentiel_id]
+        ])->first();
         $promoReferentielApprenant = PromoReferentielApprenant::create([
-            "promo_id" => $request->promo_id,
-            "referentiel_id" => $request->referentiel_id,
+            "promo_referentiel_id" => $promoReferentiel['id'],
             "apprenant_id" => $apprenant->id,
         ]);
 

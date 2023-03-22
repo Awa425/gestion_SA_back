@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
+use App\Models\PromoReferentiel;
 use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
@@ -19,8 +20,7 @@ class PromoReferentielApprenantResource extends JsonResource
         return [
 
             'apprenant' => Apprenant::make($this->apprenant->toArray()),
-            'promo' => Promo::make($this->promo->toArray()),
-            'referentiel' => Referentiel::make($this->referentiel->toArray()),
+            'promoReferentiel' => new PromoReferentielResource($this->promoReferentiel),
 
         ];
     }

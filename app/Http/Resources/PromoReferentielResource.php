@@ -1,24 +1,24 @@
 <?php
 
 namespace App\Http\Resources;
+use App\Models\Promo;
 use App\Models\Referentiel;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PromoResource extends JsonResource
+class PromoReferentielResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
      */
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'libelle' => $this->libelle,
-            'date_debut' => $this->date_debut,
-            'date_fin_prevue' => $this->date_fin_prevue,
-            'date_fin_reel' => $this->date_fin_reel,
+        
+            'promo' => Promo::make($this->promo->toArray()),
+            'referentiel' => Referentiel::make($this->referentiel->toArray()),
 
         ];
     }
