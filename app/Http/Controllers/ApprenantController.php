@@ -37,7 +37,7 @@ class ApprenantController extends Controller
 
 
 
-    public function generate_matricule($promo_libelle, $referentiel_libelle)
+    public static function generate_matricule($promo_libelle, $referentiel_libelle)
     {
 
 

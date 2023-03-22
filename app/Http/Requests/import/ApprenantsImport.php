@@ -16,12 +16,8 @@ use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Cache;
 
-use Maatwebsite\Excel\Concerns\ToModel;
-use App\Models\PromoReferentielApprenant;
 
 use App\Http\Requests\ApprenantStoreRequest;
-use App\Http\Controllers\ApprenantController;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 
 class ApprenantsImport implements ToModel, WithHeadingRow
@@ -45,36 +41,28 @@ class ApprenantsImport implements ToModel, WithHeadingRow
         $this->promo_libelle = $this->promo->libelle;
         $this->referentiel_libelle = $this->referentiel->libelle;
     }
-    public function generate_matricule()
-    {
-        $promo_tabs = explode(' ', $this->promo_libelle);
-        $referentiel_tabs = explode(' ', $this->referentiel_libelle);
-        $promo_prefix = '';
-        $referentiel_prefix = '';
+    // public function generate_matricule($promo_li)
+    // {
+    //     $promo_tabs = explode(' ', $this->promo_libelle);
+    //     $referentiel_tabs = explode(' ', $this->referentiel_libelle);
+    //     $promo_prefix = '';
+    //     $referentiel_prefix = '';
 
-        foreach ($promo_tabs as $promo_tab) {
-            $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
-        }
-        foreach ($referentiel_tabs as $referentiel_tab) {
-            $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
-        }
-        $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
-        return $matricule;
-    }
+    //     foreach ($promo_tabs as $promo_tab) {
+    //         $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
+    //     }
+    //     foreach ($referentiel_tabs as $referentiel_tab) {
+    //         $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
+    //     }
+    //     $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
+    //     $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
+    //     return $matricule;
+    // }
     public function model(array $row)
     {
         
-        // $mat= $this->generate_matricule(request()->promo_id,request()->referentiel_id);
-        // $u = auth()->user()->id;
-
-        // $prefix = Str::upper(Str::substr($this->promo->libelle, 0, 2)) . Str::upper($this->referentiel->id);
-
-        // $promoIdentifier = $this->promoId;
-        // $referentielIdentifier = $this->referentielId;
-        // $date = now()->format('YmdHisu');
-        // $matricule = "{$prefix}_{$promoIdentifier}_{$referentielIdentifier}_{$date}";
-        $matricule=$this->generate_matricule();
+      
+        $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
         $apprenant = new Apprenant([
             'matricule' => $matricule,
             'nom' => $row['nom'],
