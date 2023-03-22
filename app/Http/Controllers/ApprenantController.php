@@ -20,6 +20,9 @@ use App\Http\Resources\PromoReferentielApprenantResource;
 
 class ApprenantController extends Controller
 {
+    public function __construct()
+    {
+    }
     public function index(Request $request)
     {
 
@@ -37,8 +40,8 @@ class ApprenantController extends Controller
     public function generate_matricule($promo_libelle, $referentiel_libelle)
     {
 
-       
-       
+
+
 
 
         $promo_tabs = explode(' ', $promo_libelle);
@@ -60,6 +63,7 @@ class ApprenantController extends Controller
     public function store(ApprenantStoreRequest $request)
     {
 
+
         $data = $request->validatedAndFiltered();
 
         $data['password'] = bcrypt($data['password']);
@@ -67,6 +71,8 @@ class ApprenantController extends Controller
         $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
         $referentiel = Referentiel::where('id', '=', $request->referentiel_id)->select('libelle')->first();
         $data['matricule'] = $this->generate_matricule($promo['libelle'], $referentiel['libelle']);
+        $data['reserves'] = self::diff_array($request->all(), $request->validated(), null, (new Apprenant())->getFillable());
+
 
 
         //insert into apprenant
@@ -82,9 +88,10 @@ class ApprenantController extends Controller
 
         return new ApprenantResource($apprenant);
     }
+
+
     public function storeExcel(Request $request)
     {
-
         $request->validate([
             "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
@@ -135,5 +142,31 @@ class ApprenantController extends Controller
         ]);
 
         return response()->noContent();
+    }
+
+
+    public static function diff_array(array $tab1, array $tab2, $object = null, $arrayKeys = [])
+    {
+        $reserves = array_diff_key($tab1, $tab2);
+        return self::transformToReserved($reserves, $object, $arrayKeys);
+    }
+
+    public static function transformToReserved($array, $object = null, array $arrayKeys = [])
+    {
+
+        $reserve = "";
+
+        $keys = $arrayKeys;
+
+        if ($object) {
+            $keys = array_keys((array) $object);
+        }
+
+        foreach ($array as $key => $value) {
+            if (is_string($value) && !in_array($key, $keys)) {
+                $reserve .= $key . env('SEPARATOR_LABEL') . $value . env('SEPARATOR');
+            }
+        }
+        return $reserve;
     }
 }

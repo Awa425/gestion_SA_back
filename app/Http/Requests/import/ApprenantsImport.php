@@ -5,11 +5,13 @@ namespace App\Http\Requests\import;
 use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use App\Models\PromoReferentielApprenant;
 
+use App\Http\Requests\ApprenantStoreRequest;
+use App\Http\Controllers\ApprenantController;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Str;
 
 class ApprenantsImport implements ToModel, WithHeadingRow
 {
@@ -52,6 +54,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             'lieu_naissance' => $row['lieu_naissance'],
             'genre' => $row['genre'],
             'user_id' => auth()->user()->id,
+            'reserves' => ApprenantController::diff_array($row, ((new ApprenantStoreRequest())->rules())),
         ]);
 
         $apprenant->save();

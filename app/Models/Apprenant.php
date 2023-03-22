@@ -33,6 +33,8 @@ class Apprenant extends Model
         'user_id',
         'genre',
         'is_active',
+        'reserves',
+
     ];
 
     private static $whiteListFilter=[
@@ -46,6 +48,8 @@ class Apprenant extends Model
         'telephone',
         'user_id',
         'genre',
+        'reserves',
+
     ];
 
     /**
@@ -93,5 +97,5 @@ public function referentiels()
     return $this->belongsToMany(Referentiel::class, 'promo_referentiel_apprenants');
 }
 
-   
+
 }
