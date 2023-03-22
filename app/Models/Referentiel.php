@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Referentiel extends Model
 {
     use HasFactory;
+    use Filterable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -20,6 +23,10 @@ class Referentiel extends Model
         'description',
         'is_active',
         'userid',
+    ];
+
+    private static $whiteListFilter=[
+        'libelle',
     ];
 
     /**
@@ -44,19 +51,14 @@ class Referentiel extends Model
         return $referentiel->promos;
     }
 
-    public function promoReferentielApprenants()
+    public function promoReferentiels()
 {
-    return $this->hasMany(PromoReferentielApprenant::class);
+    return $this->hasMany(PromoReferentiel::class);
 }
 
 public function promos()
 {
-    return $this->belongsToMany(Promo::class, 'promo_referentiel_apprenants');
-}
-
-public function apprenants()
-{
-    return $this->belongsToMany(Apprenant::class, 'promo_referentiel_apprenants');
+    return $this->belongsToMany(Promo::class, 'promo_referentiels');
 }
 
 }

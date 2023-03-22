@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PromoStoreRequest;
 use App\Http\Requests\PromoUpdateRequest;
-use App\Http\Requests\PromoIndexRequest;
 use App\Http\Resources\PromoCollection;
 use App\Http\Resources\PromoResource;
 use App\Models\Promo;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Resources\PromoReferentielApprenantCollection;
-use App\Http\Resources\PromoReferentielApprenantResource;
-use App\Models\PromoReferentielApprenant;
+use App\Http\Resources\PromoReferentielCollection;
+use App\Http\Resources\PromoReferentielResource;
+use App\Models\PromoReferentiel;
 
 
 class PromoController extends Controller
@@ -20,9 +19,7 @@ class PromoController extends Controller
     public function index(Request $request)
     {
 
-        
-       
-          return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('promo', function ($query) {
+       return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) {
             $query
             ->filter()
             ->whereIn('is_active', [1]);
@@ -32,16 +29,26 @@ class PromoController extends Controller
     }
 
 
+
+    public function add_referentiel(Request $request,Referentiel $referentiel)
+    { 
+        $promoReferentiel = PromoReferentiel::create([
+            "promo_id" => $request->promo_id,
+            "referentiel_id" => $referentiel['id'],
+        ]);
+       
+        //return new PromoResource($promo);
+    }
     public function show(Promo $promo)
     {
 
-       
-        return new PromoResource($promo);
+        return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) use ($promo) {
+            $query->where('id', $promo['id']);
+        })->get());
     }
 
     public function store(PromoStoreRequest $request)
     {
-
 
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;

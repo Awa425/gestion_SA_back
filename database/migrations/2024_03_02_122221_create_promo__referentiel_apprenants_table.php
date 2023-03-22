@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('promo_referentiel_apprenants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('promo_id');
-            $table->unsignedBigInteger('referentiel_id');
+            $table->unsignedBigInteger('promo_referentiel_id');
             $table->unsignedBigInteger('apprenant_id');
-            $table->foreign('promo_id')->references('id')->on('promos');
-            $table->foreign('referentiel_id')->references('id')->on('referentiels');
+            $table->foreign('promo_referentiel_id')->references('id')->on('promo_referentiels');
             $table->foreign('apprenant_id')->references('id')->on('apprenants');
             $table->timestamps();
         });

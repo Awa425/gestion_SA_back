@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PromoReferentielApprenant extends Model
+class PromoReferentiel extends Model
 {
     use HasFactory;
 
@@ -15,8 +15,8 @@ class PromoReferentielApprenant extends Model
      * @var array
      */
     protected $fillable = [
-        "promo_referentiel_id",
-        "apprenant_id",
+        "promo_id",
+        "referentiel_id",
     ];
 
     /**
@@ -28,13 +28,16 @@ class PromoReferentielApprenant extends Model
         'id' => 'integer',
     ];
 
-    public function promoReferentiel()
+
+
+  public function promo()
     {
-        return $this->belongsTo(PromoReferentiel::class);
+        return $this->belongsTo(Promo::class);
     }
 
-    public function apprenant()
+    public function referentiel()
     {
-        return $this->belongsTo(Apprenant::class);
+        return $this->belongsTo(Referentiel::class);
     }
+    
 }
