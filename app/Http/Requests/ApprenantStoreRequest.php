@@ -19,6 +19,7 @@ class ApprenantStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
@@ -29,7 +30,7 @@ class ApprenantStoreRequest extends FormRequest
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
             'genre' => ['required', 'in:M,F'],
             'photo' => ['nullable'],
-            
+
         ];
     }
     public function validatedAndFiltered()

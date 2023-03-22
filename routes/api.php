@@ -37,7 +37,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
         );
     Route::post('apprenants/{promo_id}/{referentiel_id}', [App\Http\Controllers\ApprenantController::class, 'store']);
 
-    Route::group(['prefix' => 'apprenants'], function (){
+    Route::group(['prefix' => 'apprenant'], function (){
 
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
     });
