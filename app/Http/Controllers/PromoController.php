@@ -30,14 +30,21 @@ class PromoController extends Controller
 
 
 
-    public function add_referentiel(Request $request,Referentiel $referentiel)
+    public function add_referentiel(Request $request,Referentiel ...$referentiels)
     { 
-        $promoReferentiel = PromoReferentiel::create([
-            "promo_id" => $request->promo_id,
-            "referentiel_id" => $referentiel['id'],
-        ]);
-       
-        //return new PromoResource($promo);
+        $referentiels = $referentiels ?: [];
+        foreach ($referentiels as $referentiel) {
+            PromoReferentiel::create([
+                "promo_id" => $promo['id'],
+                "referentiel_id" => $referentiel['id'],
+            ]);
+        }
+        return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) {
+            $query
+            ->filter()
+            ->whereIn('is_active', [1]);
+        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+           );
     }
     public function show(Promo $promo)
     {
@@ -47,15 +54,24 @@ class PromoController extends Controller
         })->get());
     }
 
-    public function store(PromoStoreRequest $request)
+    public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
     {
+        // if $referentiels is not provided, use an empty array
+        $referentiels = $referentiels ?: [];
 
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
-
         $promos['date_fin_reel']= array_key_exists('date_fin_reel', $promos) ? $promos['date_fin_reel'] : $promos['date_fin_prevue'];
- 
+        
         $promo = Promo::create($promos);
+
+       
+        foreach ($referentiels as $referentiel) {
+            PromoReferentiel::create([
+                "promo_id" => $promo['id'],
+                "referentiel_id" => $referentiel['id'],
+            ]);
+        }
        
 
         return new PromoResource($promo);
