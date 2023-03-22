@@ -5,16 +5,8 @@ namespace App\Http\Requests\import;
 use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
-use Illuminate\Support\Str;
 
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToModel;
-use App\Models\PromoReferentielApprenant;
-use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\ApprenantController;
-use Illuminate\Validation\ValidationException;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Illuminate\Support\Facades\Cache;
+
 
 use Maatwebsite\Excel\Concerns\ToModel;
 use App\Models\PromoReferentielApprenant;
@@ -64,16 +56,6 @@ class ApprenantsImport implements ToModel, WithHeadingRow
     }
     public function model(array $row)
     {
-        
-        // $mat= $this->generate_matricule(request()->promo_id,request()->referentiel_id);
-        // $u = auth()->user()->id;
-
-        // $prefix = Str::upper(Str::substr($this->promo->libelle, 0, 2)) . Str::upper($this->referentiel->id);
-
-        // $promoIdentifier = $this->promoId;
-        // $referentielIdentifier = $this->referentielId;
-        // $date = now()->format('YmdHisu');
-        // $matricule = "{$prefix}_{$promoIdentifier}_{$referentielIdentifier}_{$date}";
         $matricule=$this->generate_matricule();
         $apprenant = new Apprenant([
             'matricule' => $matricule,
