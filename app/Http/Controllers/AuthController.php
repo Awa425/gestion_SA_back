@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -22,14 +23,14 @@ class AuthController extends Controller
         // Check password
         if(!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
-                'message' => 'Bad creds'
+                'message' => 'Vérifiez vos informations'
             ], 401);
         }
 
         $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'user' => $user,
+            'user' => new UserResource($user),
             'token' => $token
         ];
 

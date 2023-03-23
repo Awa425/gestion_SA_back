@@ -22,8 +22,6 @@ class UserStoreRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:191'],
             'prenom' => ['required', 'string', 'max:191'],
-            'date_naissance' => ['nullable', 'string', 'max:191'],
-            'matricule' => ['nullable', 'string', 'max:191'],
             'email' => ['required', 'email', 'max:191'],
             'password' => ['required', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
             'photo' => ['nullable'],

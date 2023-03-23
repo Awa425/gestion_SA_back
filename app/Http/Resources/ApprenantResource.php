@@ -30,6 +30,8 @@ class ApprenantResource extends JsonResource
             'telephone' => $this->telephone,
             'user' => UserResource::make($this->user) ,
             'is_active' => $this->is_active,
+            'photo' => base64_encode($this->photo) != null ?  base64_encode($this->photo) : null,
+
 
         ];
     }

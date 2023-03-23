@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('prenom');
-            $table->string('date_naissance')->nullable();
-            $table->string('matricule')->nullable()->unique();
             $table->string('email')->unique();
             $table->string('password');
             $table->binary('photo')->nullable();
