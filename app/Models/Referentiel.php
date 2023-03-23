@@ -4,7 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Referentiel extends Model
@@ -34,6 +39,10 @@ class Referentiel extends Model
 
     ];
 
+    private static $whiteListFilter=[
+        'libelle',
+    ];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -56,19 +65,14 @@ class Referentiel extends Model
         return $referentiel->promos;
     }
 
-    public function promoReferentielApprenants()
+    public function promoReferentiels()
 {
-    return $this->hasMany(PromoReferentielApprenant::class);
+    return $this->hasMany(PromoReferentiel::class);
 }
 
 public function promos()
 {
-    return $this->belongsToMany(Promo::class, 'promo_referentiel_apprenants');
-}
-
-public function apprenants()
-{
-    return $this->belongsToMany(Apprenant::class, 'promo_referentiel_apprenants');
+    return $this->belongsToMany(Promo::class, 'promo_referentiels');
 }
 
 }
