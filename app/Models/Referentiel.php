@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -32,16 +31,9 @@ class Referentiel extends Model
 
     private static $whiteListFilter=[
         'libelle',
-        'date_debut',
-        'date_fin_prevue',
-        'date_fin_reel',
-        'user_id',
 
     ];
 
-    private static $whiteListFilter=[
-        'libelle',
-    ];
 
     /**
      * The attributes that should be cast to native types.
@@ -58,7 +50,7 @@ class Referentiel extends Model
     {
         return $this->belongsTo(User::class);
     }
-   
+
     public static function getPromosByReferentielId($referentielId)
     {
         $referentiel = self::find($referentielId);

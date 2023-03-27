@@ -3,19 +3,18 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Requests\PromoStoreRequest;
-use App\Http\Requests\PromoUpdateRequest;
-use App\Http\Resources\PromoCollection;
-use App\Http\Resources\PromoResource;
-
 use App\Models\Promo;
+use App\Models\Referentiel;
 use Illuminate\Http\Request;
 
+use App\Models\PromoReferentiel;
+use App\Http\Resources\PromoResource;
+
+use App\Http\Resources\PromoCollection;
+use App\Http\Requests\PromoStoreRequest;
+use App\Http\Requests\PromoUpdateRequest;
 use App\Http\Resources\PromoReferentielCollection;
 use App\Http\Resources\PromoReferentielResource;
-use App\Models\PromoReferentiel;
-
-
 
 class PromoController extends Controller
 {
@@ -23,24 +22,24 @@ class PromoController extends Controller
     {
 
 
-       return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) {
-            $query
-            ->filter()
-            ->whereIn('is_active', [1]);
-        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-
-           );
+        return new PromoCollection(Promo::ignoreRequest(['perpage'])
+        ->filter()
+        ->where('is_active', "=", 1)
+        ->orderByDesc('id')
+        ->paginate(request()
+            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+         );
 
     }
 
 
 
     public function add_referentiel(Request $request,Referentiel ...$referentiels)
-    { 
+    {
         $referentiels = $referentiels ?: [];
         foreach ($referentiels as $referentiel) {
             PromoReferentiel::create([
-                "promo_id" => $promo['id'],
+                "promo_id" => $request['promo_id'],
                 "referentiel_id" => $referentiel['id'],
             ]);
         }
@@ -64,23 +63,24 @@ class PromoController extends Controller
     public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
     {
         // if $referentiels is not provided, use an empty array
-        $referentiels = $referentiels ?: [];
-
+        $referentiels = $request->referentiels ?: [];
+        // dd($referentiels);
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
         $promos['date_fin_reel']= array_key_exists('date_fin_reel', $promos) ? $promos['date_fin_reel'] : $promos['date_fin_prevue'];
 
-        
+
         $promo = Promo::create($promos);
 
-       
-        foreach ($referentiels as $referentiel) {
-            PromoReferentiel::create([
-                "promo_id" => $promo['id'],
-                "referentiel_id" => $referentiel['id'],
-            ]);
+        if (count($referentiels) >0) {
+            foreach ($referentiels as $referentiel) {
+                PromoReferentiel::create([
+                    "promo_id" => $promo['id'],
+                    "referentiel_id" => $referentiel,
+                ]);
+            }
         }
-       
+
 
         return new PromoResource($promo);
 
