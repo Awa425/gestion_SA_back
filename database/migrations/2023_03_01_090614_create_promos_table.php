@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('date_debut');
             $table->date('date_fin_prevue');
             $table->date('date_fin_reel');
+            $table->boolean('is_ongoing')->default(1);
             $table->boolean('is_active')->default(1);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
