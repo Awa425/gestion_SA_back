@@ -22,12 +22,12 @@ class PromoController extends Controller
     {
 
 
-        return new PromoCollection(Promo::ignoreRequest(['perpage'])
+        return new PromoCollection(Promo::ignoreRequest(['per_page'])
         ->filter()
         ->where('is_active', "=", 1)
         ->orderByDesc('id')
         ->paginate(request()
-            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+            ->get('per_page', env('DEFAULT_PAGINATION')), ['*'], 'page')
          );
 
     }
