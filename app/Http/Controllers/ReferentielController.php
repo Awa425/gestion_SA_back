@@ -19,8 +19,8 @@ class ReferentielController extends Controller
     {
         return new ReferentielCollection(Referentiel::ignoreRequest(['perpage'])
         ->filter()
-        ->where('is_active', "=", 1)
-        ->orderByDesc('id')
+        // ->where('is_active', "=", 1)
+        ->orderByDesc('is_active')
         ->paginate(request()
             ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
          );
@@ -51,10 +51,11 @@ class ReferentielController extends Controller
 
     public function destroy(Request $request, Referentiel $referentiel): Response
     {
-       $res= $referentiel->update([
-            'is_active' => false,
+         $referentiel->update([
+            'is_active' => !$referentiel->is_active,
         ]);
-
-        return response()->noContent();
+    
+        return response()->json(['message' => 'Désactiver avec succès'], 200);
     }
+    
 }
