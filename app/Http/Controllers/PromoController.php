@@ -22,13 +22,9 @@ class PromoController extends Controller
     {
 
 
-        return new PromoCollection(Promo::ignoreRequest(['perpage'])
-        ->filter()
-        ->where('is_active', "=", 1)
-        ->orderByDesc('id')
-        ->paginate(request()
-            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-         );
+       return new PromoCollection(Promo::ignoreRequest(['perpage'])
+       ->filter()
+       ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
 
     }
 
@@ -52,19 +48,21 @@ class PromoController extends Controller
     }
     public function show(Promo $promo)
     {
-
-
+        //dd($promo->referentiels());
+        
+      
         return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) use ($promo) {
-            $query->where('id', $promo['id']);
-        })->get());
+            $query->where('id', $promo->id);
+        })
+        ->get());
 
     }
 
     public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
     {
         // if $referentiels is not provided, use an empty array
-        $referentiels = $request->referentiels ?: [];
-        // dd($referentiels);
+        $referentiels = $referentiels ?: [];
+
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
         $promos['date_fin_reel']= array_key_exists('date_fin_reel', $promos) ? $promos['date_fin_reel'] : $promos['date_fin_prevue'];
@@ -99,7 +97,8 @@ class PromoController extends Controller
     {
 
         $promo->update([
-            'is_active' => 0
+            'is_active' => 0,
+            'is_ongoing' => 0,
         ]);
 
         return response()->noContent();

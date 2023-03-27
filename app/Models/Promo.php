@@ -26,6 +26,7 @@ class Promo extends Model
         'date_fin_reel',
         'is_active',
         'user_id',
+        'is_ongoing',
     ];
     private static $whiteListFilter=[
         'libelle',

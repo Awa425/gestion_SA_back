@@ -19,6 +19,10 @@ class PromoResource extends JsonResource
             'date_debut' => $this->date_debut,
             'date_fin_prevue' => $this->date_fin_prevue,
             'date_fin_reel' => $this->date_fin_reel,
+            'is_ongoing' => $this->is_ongoing,
+            'is_active' => $this->is_active,
+            'referentiels' => ReferentielCollection::make($this->promo_referentiels)
+
 
         ];
     }
