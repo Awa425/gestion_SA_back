@@ -26,6 +26,7 @@ class PromoController extends Controller
        ->filter()
        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
 
+
     }
 
 
