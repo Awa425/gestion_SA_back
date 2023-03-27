@@ -51,10 +51,7 @@ class PromoController extends Controller
         //dd($promo->referentiels());
         
       
-        return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) use ($promo) {
-            $query->where('id', $promo->id);
-        })
-        ->get());
+        return new PromoResource($promo);
 
     }
 
