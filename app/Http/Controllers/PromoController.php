@@ -14,7 +14,6 @@ use App\Http\Resources\PromoCollection;
 use App\Http\Requests\PromoStoreRequest;
 use App\Http\Requests\PromoUpdateRequest;
 use App\Http\Resources\PromoReferentielCollection;
-use App\Http\Resources\PromoReferentielResource;
 
 class PromoController extends Controller
 {
@@ -49,9 +48,7 @@ class PromoController extends Controller
     }
     public function show(Promo $promo)
     {
-        //dd($promo->referentiels());
-        
-      
+        dd($promo->with('referentiels')->get());
         return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) use ($promo) {
             $query->where('id', $promo->id);
         })
