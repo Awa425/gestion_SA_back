@@ -1,33 +1,27 @@
 version: '3.8'
-
- 
-
 services:
-  webserver:
-    image: nginx:1.21.6-alpine
-    container_name: webserver
-    restart: unless-stopped
-    ports:
-      - "60:60"
-    volumes:
-      - ./:/var/www
-      - .docker/nginx:/etc/nginx/conf.d
-    networks:
-      app-network:
-
-  backend:
-    build:
-      context: docker/php
-      dockerfile: dockerfile
-    container_name: backend
-    volumes:
-      - ./:/var/www
-      - .docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      app-network:
-  
-      
-  laravel.test:
+    webserver:
+        image: 'nginx:1.21.6-alpine'
+        container_name: webserver
+        restart: unless-stopped
+        ports:
+            - '60:60'
+        volumes:
+            - './:/var/www'
+            - '.docker/nginx:/etc/nginx/conf.d'
+        networks:
+            app-network: null
+    backend:
+        build:
+            context: docker/php
+            dockerfile: dockerfile
+        container_name: backend
+        volumes:
+            - './:/var/www'
+            - '.docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini'
+        networks:
+            app-network: null
+    laravel.test:
         build:
             context: ./docker/8.2
             dockerfile: Dockerfile
@@ -50,13 +44,13 @@ services:
             - sail
         depends_on:
             - mysql
-  mysql:
+    mysql:
         image: 'mysql/mysql-server:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
             MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MYSQL_ROOT_HOST: "%"
+            MYSQL_ROOT_HOST: '%'
             MYSQL_DATABASE: '${DB_DATABASE}'
             MYSQL_USER: '${DB_USERNAME}'
             MYSQL_PASSWORD: '${DB_PASSWORD}'
@@ -67,22 +61,18 @@ services:
         networks:
             - sail
         healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+            test:
+                - CMD
+                - mysqladmin
+                - ping
+                - '-p${DB_PASSWORD}'
             retries: 3
             timeout: 5s
 networks:
     sail:
         driver: bridge
-    app-network:
+    app-network: null
 volumes:
     sail-mysql:
         driver: local
-    app-data:
-
-
-   
-
-    
-
-
-  
+    app-data: null

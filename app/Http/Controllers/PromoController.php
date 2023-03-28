@@ -32,7 +32,7 @@ class PromoController extends Controller
 
     public function add_referentiel(Request $request,Referentiel ...$referentiels)
     {
-        $referentiels = $referentiels ?: [];
+        $referentiels = $request->referentiels ?: [];
         foreach ($referentiels as $referentiel) {
             PromoReferentiel::create([
                 "promo_id" => $request['promo_id'],
@@ -59,21 +59,18 @@ class PromoController extends Controller
     public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
     {
         // if $referentiels is not provided, use an empty array
-        $referentiels = $referentiels ?: [];
+        $referentiels =$request->referentiels ?: [];
 
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
         $promos['date_fin_reel']= array_key_exists('date_fin_reel', $promos) ? $promos['date_fin_reel'] : $promos['date_fin_prevue'];
-
-
+      
+        
         $promo = Promo::create($promos);
 
         if (count($referentiels) >0) {
             foreach ($referentiels as $referentiel) {
-                PromoReferentiel::create([
-                    "promo_id" => $promo['id'],
-                    "referentiel_id" => $referentiel,
-                ]);
+              $promo->referentiels()->attach($referentiel);
             }
         }
 
