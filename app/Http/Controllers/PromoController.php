@@ -30,22 +30,22 @@ class PromoController extends Controller
 
 
 
-    public function add_referentiel(Request $request,Referentiel ...$referentiels)
-    {
-        $referentiels = $request->referentiels ?: [];
-        foreach ($referentiels as $referentiel) {
-            PromoReferentiel::create([
-                "promo_id" => $request['promo_id'],
-                "referentiel_id" => $referentiel['id'],
-            ]);
-        }
-        return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) {
-            $query
-            ->filter()
-            ->whereIn('is_active', [1]);
-        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
-           );
-    }
+    // public function add_referentiel(Request $request,Referentiel ...$referentiels)
+    // {
+    //     $referentiels = $request->referentiels ?: [];
+    //     foreach ($referentiels as $referentiel) {
+    //         PromoReferentiel::create([
+    //             "promo_id" => $request['promo_id'],
+    //             "referentiel_id" => $referentiel['id'],
+    //         ]);
+    //     }
+    //     return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) {
+    //         $query
+    //         ->filter()
+    //         ->whereIn('is_active', [1]);
+    //     })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+    //        );
+    // }
     public function show(Promo $promo)
     {
         //dd($promo->referentiels());
@@ -68,9 +68,9 @@ class PromoController extends Controller
         $promo = Promo::create($promos);
 
         if (count($referentiels) >0) {
-            foreach ($referentiels as $referentiel) {
-              $promo->referentiels()->attach($referentiel);
-            }
+           
+              $promo->promoReferentielApprenants()->attach($referentiels);
+            
         }
 
 
@@ -78,11 +78,16 @@ class PromoController extends Controller
 
     }
 
-    public function update(PromoUpdateRequest $request, Promo $promo)
+    public function update(PromoUpdateRequest $request, Promo $promo,Referentiel ...$referentiels)
     {
-
+        // if $referentiels is not provided, use an empty array
+        $referentiels =$request->referentiels ?: [];
         $promo->update($request->validatedAndFiltered());
-
+        if (count($referentiels) >0) {
+           
+            $promo->referentiels()->sync($referentiels);
+          
+      }
         return new PromoResource($promo);
 
     }

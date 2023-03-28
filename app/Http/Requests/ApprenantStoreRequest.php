@@ -30,6 +30,7 @@ class ApprenantStoreRequest extends FormRequest
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
             'genre' => ['required', 'in:M,F'],
             'photo' => ['nullable'],
+            'reserves' => ['nullable'],
 
         ];
     }

@@ -91,7 +91,7 @@ class Apprenant extends Model
 
 public function promoReferentiels()
     {
-        return $this->belongsToMany(PromoReferentiel::class);
+        return $this->belongsToMany(PromoReferentiel::class,'promo_referentiel_apprenants');
     }
 
 
