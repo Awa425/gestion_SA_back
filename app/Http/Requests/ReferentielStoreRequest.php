@@ -21,7 +21,7 @@ class ReferentielStoreRequest extends FormRequest
     {
         return [
             'libelle' => ['required', 'string', 'max:255', 'unique:referentiels,libelle'],
-            'description' => ['sometimes|required', 'string'],
+            'description' => ['nullable', 'string'],
         ];
     }
 }

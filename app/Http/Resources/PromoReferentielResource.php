@@ -15,7 +15,7 @@ class PromoReferentielResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        dd($this->resource);
+    
 
         return [
         
