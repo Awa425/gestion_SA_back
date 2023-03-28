@@ -17,7 +17,7 @@ class ReferentielResource extends JsonResource
             'libelle' => $this->libelle,
             'description' => $this->description,
             'is_active' => $this->is_active,
-            'user_id' => UserResource::make($this->user),
+            'user_id' => $this->userid,
         ];
     }
 }

@@ -82,10 +82,8 @@ class ApprenantController extends Controller
             ['promo_id', '=', $request->promo_id],
             ['referentiel_id', '=', $request->referentiel_id]
         ])->first();
-        $promoReferentielApprenant = PromoReferentielApprenant::create([
-            "promo_referentiel_id" => $promoReferentiel['id'],
-            "apprenant_id" => $apprenant->id,
-        ]);
+        $apprenant->promoReferentiels()->attach($promoReferentiel);
+        
 
         return new ApprenantResource($apprenant);
     }
