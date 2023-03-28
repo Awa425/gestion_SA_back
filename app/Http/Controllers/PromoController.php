@@ -48,13 +48,9 @@ class PromoController extends Controller
     }
     public function show(Promo $promo)
     {
-        dd($promo->with('referentiels')->get());
-        return new PromoReferentielCollection(PromoReferentiel::whereHas('promo', function ($query) use ($promo) {
-            $query->where('id', $promo->id);
-        })
-        ->get());
+        return new PromoResource($promo);
 
-    }
+    }   
 
     public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
     {
@@ -64,8 +60,8 @@ class PromoController extends Controller
         $promos = $request->validatedAndFiltered();
         $promos['user_id'] = auth()->user()->id;
         $promos['date_fin_reel']= array_key_exists('date_fin_reel', $promos) ? $promos['date_fin_reel'] : $promos['date_fin_prevue'];
-      
-        
+
+
         $promo = Promo::create($promos);
 
         if (count($referentiels) >0) {
