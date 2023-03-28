@@ -9,7 +9,11 @@ use App\Models\Referentiel;
 
 
 
+use App\Models\PromoReferentiel;
+use Maatwebsite\Excel\Concerns\ToModel;
 use App\Http\Requests\ApprenantStoreRequest;
+use App\Http\Controllers\ApprenantController;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 
 class ApprenantsImport implements ToModel, WithHeadingRow
@@ -57,7 +61,6 @@ class ApprenantsImport implements ToModel, WithHeadingRow
       
         $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
 
-        $matricule=$this->generate_matricule();
 
         $apprenant = new Apprenant([
             'matricule' => $matricule,
@@ -88,7 +91,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             $apprenant->save();
             $apprenant->promoReferentiels()->attach($promoReferentiel);
 
-        return [$promoReferentielApprenant,$apprenant];
+        return [$apprenant];
     }
     public function rules(): array
     {
