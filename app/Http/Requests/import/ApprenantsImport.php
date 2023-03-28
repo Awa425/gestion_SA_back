@@ -73,15 +73,22 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             'reserves' => ApprenantController::diff_array($row, ((new ApprenantStoreRequest())->rules())),
         ]);
 
-        $apprenant->save();
+        $promoReferentiel = PromoReferentiel::where([
+            ['promo_id', '=', $this->promoId],
+            ['referentiel_id', '=', $this->referentielId]
+        ])->first();
 
-        $promoReferentielApprenant = new PromoReferentielApprenant([
-            "referentiel_id" => $this->referentielId,
-            "promo_id" => $this->promoId,
-            "apprenant_id" => $apprenant->id,
-        ]);
+        
+        // $promoReferentielApprenant = new PromoReferentielApprenant([
+            //     "referentiel_id" => $this->referentielId,
+            //     "promo_id" => $this->promoId,
+            //     "apprenant_id" => $apprenant->id,
+            // ]);
+            
+            $apprenant->save();
+            $apprenant->promoReferentiels()->attach($promoReferentiel);
 
-        return [$promoReferentielApprenant];
+        return [$promoReferentielApprenant,$apprenant];
     }
     public function rules(): array
     {
