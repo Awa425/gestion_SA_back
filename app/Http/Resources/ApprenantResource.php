@@ -24,7 +24,7 @@ class ApprenantResource extends JsonResource
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'email' => $this->email,
-            'date_naissance' => $this->date_naissance,
+            'date_naissance' => $this->date_naissance->format('Y-m-d'),
             'lieu_naissance' => $this->lieu_naissance,
             'genre' => $this->genre,
             'telephone' => $this->telephone,

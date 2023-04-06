@@ -27,11 +27,9 @@ class ApprenantController extends Controller
     public function index(Request $request)
     {
 
-        return new PromoReferentielApprenantCollection(PromoReferentielApprenant::whereHas('apprenant', function ($query) {
-            $query
+        return new ApprenantCollection(Apprenant::where('is_active','=',1) 
             ->filter()
-            ->whereIn('is_active', [1]);
-        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+            ->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
            );
 
  }
