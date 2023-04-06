@@ -61,7 +61,8 @@ class ApprenantController extends Controller
 
 
         $data = $request->validatedAndFiltered();
-
+        $data['password']= array_key_exists('password', $data) ?  $data['password'] : "Passer@3";
+        
         $data['password'] = bcrypt($data['password']);
         $data['user_id'] = auth()->user()->id;
         $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
@@ -132,14 +133,15 @@ class ApprenantController extends Controller
         return new ApprenantResource($apprenant);
     }
 
-    public function destroy(Request $request, Apprenant $apprenant): Response
+    public function destroy(Request $request, Apprenant $apprenant)
     {
 
         $apprenant->update([
+
             'is_active' => !$apprenant->is_active,
         ]);
 
-        return response()->noContent();
+        return response()->json(['message' => 'Désactiver avec succès'], 200);
     }
 
 

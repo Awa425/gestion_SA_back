@@ -48,7 +48,11 @@ class Promo_Referentiel_ApprenantController extends Controller
             ['promo_id', '=',$request->promo_id],
             ['referentiel_id', '=', $request->referentiel_id]])->pluck('id');
           
-        $promoReferentielApprenant= PromoReferentielApprenant::where('promo_referentiel_id', '=', $promoReferentiel)->get();
+        $promoReferentielApprenant= PromoReferentielApprenant::whereHas('apprenant', function ($query) {
+            $query
+            ->filter()
+            ->whereIn('is_active', [1]);
+        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page');
 
         return new PromoReferentielApprenantCollection($promoReferentielApprenant);
     }

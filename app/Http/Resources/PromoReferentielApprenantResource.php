@@ -15,12 +15,8 @@ class PromoReferentielApprenantResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request)
     {
-        return [
-
-            'apprenant' => Apprenant::make($this->apprenant->toArray())
-
-        ];
+        return Apprenant::make($this->apprenant->toArray());
     }
 }
