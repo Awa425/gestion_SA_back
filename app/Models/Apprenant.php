@@ -23,6 +23,7 @@ class Apprenant extends Model
      * @var array
      */
     protected $fillable = [
+        'id',
         'matricule',
         'nom',
         'prenom',
@@ -69,9 +70,16 @@ class Apprenant extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'date_naissance' => 'date',
+        'date_naissance' => 'date:Y-m-d',
         'is_active' => 'boolean',
     ];
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+        $data['id'] = $this->id;
+        return $data;
+    }
 
     public function presence(): HasOne
     {
