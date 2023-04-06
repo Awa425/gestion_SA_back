@@ -8,6 +8,7 @@ use App\Http\Resources\PromoReferentielApprenantCollection;
 use App\Http\Resources\PromoReferentielApprenantResource;
 
 use App\Models\PromoReferentielApprenant;
+use App\Models\PromoReferentiel;
 
 
 use Illuminate\Http\Request;
@@ -40,6 +41,18 @@ class Promo_Referentiel_ApprenantController extends Controller
 
         return new PromoReferentielApprenantResource($promoReferentielApprenant);
     }
+
+    public function getApprenant(Request $request)
+    {
+        $promoReferentiel=PromoReferentiel::where([
+            ['promo_id', '=',$request->promo_id],
+            ['referentiel_id', '=', $request->referentiel_id]])->pluck('id');
+          
+        $promoReferentielApprenant= PromoReferentielApprenant::where('promo_referentiel_id', '=', $promoReferentiel)->get();
+
+        return new PromoReferentielApprenantCollection($promoReferentielApprenant);
+    }
+
 
     public function destroy(Request $request, Promo_Referentiel_Apprenant $promoReferentielApprenant): Response
     {

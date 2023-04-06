@@ -49,7 +49,7 @@ class ReferentielController extends Controller
         return new ReferentielResource($referentiel);
     }
 
-    public function destroy(Request $request, Referentiel $referentiel): Response
+    public function destroy(Request $request, Referentiel $referentiel)
     {
          $referentiel->update([
             'is_active' => !$referentiel->is_active,
