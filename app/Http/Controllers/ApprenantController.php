@@ -138,7 +138,7 @@ class ApprenantController extends Controller
     {
 
         $apprenant->update([
-            'is_active' => 0
+            'is_active' => !$apprenant->is_active,
         ]);
 
         return response()->noContent();

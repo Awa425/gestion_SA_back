@@ -67,9 +67,9 @@ class UserController extends Controller
 
         $validatedData = $request->validatedAndFiltered();
 
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
-        }
+        // if (isset($validatedData['password'])) {
+        //     $validatedData['password'] = bcrypt($validatedData['password']);
+        // }
         $user->update($validatedData);
 
         return new UserResource($user);
