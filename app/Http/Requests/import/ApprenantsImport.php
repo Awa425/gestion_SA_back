@@ -9,7 +9,11 @@ use App\Models\Referentiel;
 
 
 
+use App\Models\PromoReferentiel;
+use Maatwebsite\Excel\Concerns\ToModel;
 use App\Http\Requests\ApprenantStoreRequest;
+use App\Http\Controllers\ApprenantController;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 
 class ApprenantsImport implements ToModel, WithHeadingRow
@@ -57,7 +61,6 @@ class ApprenantsImport implements ToModel, WithHeadingRow
       
         $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
 
-        $matricule=$this->generate_matricule();
 
         $apprenant = new Apprenant([
             'matricule' => $matricule,
@@ -73,15 +76,22 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             'reserves' => ApprenantController::diff_array($row, ((new ApprenantStoreRequest())->rules())),
         ]);
 
-        $apprenant->save();
+        $promoReferentiel = PromoReferentiel::where([
+            ['promo_id', '=', $this->promoId],
+            ['referentiel_id', '=', $this->referentielId]
+        ])->first();
 
-        $promoReferentielApprenant = new PromoReferentielApprenant([
-            "referentiel_id" => $this->referentielId,
-            "promo_id" => $this->promoId,
-            "apprenant_id" => $apprenant->id,
-        ]);
+        
+        // $promoReferentielApprenant = new PromoReferentielApprenant([
+            //     "referentiel_id" => $this->referentielId,
+            //     "promo_id" => $this->promoId,
+            //     "apprenant_id" => $apprenant->id,
+            // ]);
+            
+            $apprenant->save();
+            $apprenant->promoReferentiels()->attach($promoReferentiel);
 
-        return [$promoReferentielApprenant];
+        return [$apprenant];
     }
     public function rules(): array
     {
