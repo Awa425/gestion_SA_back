@@ -50,7 +50,28 @@ class PromoController extends Controller
     {
         return new PromoResource($promo);
 
-    }   
+    } 
+    
+    
+    public function addReferentiel(Request $request, $id)
+{
+    // Find the promo record by ID
+    $promo = Promo::find($id);
+
+    // Check if the promo record exists
+    if ($promo === null) {
+        return response()->json(['error' => 'Promo not found'], 404);
+    }
+
+    // Get the referentiel IDs from the request
+    $referentielIds = $request->input('referentiels', []);
+
+    // Attach the referentiels to the promo
+    $promo->referentiels()->attach($referentielIds);
+
+    // Return the updated promo record
+    return new PromoResource($promo);
+}  
 
     public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
     {
@@ -66,7 +87,7 @@ class PromoController extends Controller
 
         if (count($referentiels) >0) {
            
-              $promo->promoReferentielApprenants()->attach($referentiels);
+              $promo->referentiels()->attach($referentiels);
             
         }
 
