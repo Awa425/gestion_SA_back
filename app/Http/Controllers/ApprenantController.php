@@ -137,7 +137,8 @@ class ApprenantController extends Controller
     {
 
         $apprenant->update([
-            'is_active' => !$apprenant->is_active
+
+            'is_active' => !$apprenant->is_active,
         ]);
 
         return response()->json(['message' => 'Désactiver avec succès'], 200);

@@ -21,9 +21,11 @@ class UserController extends Controller
  
         return new UserCollection(User::ignoreRequest(['perpage'])
         ->filter()
-        ->where('isActive', '=', '1')
-        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
-          
+        // ->where('is_active', "=", 1)
+        ->orderByDesc('isActive')
+        ->paginate(request()
+            ->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
+         );
     }
 
     public function generate_matricule($role_id)
@@ -65,21 +67,21 @@ class UserController extends Controller
 
         $validatedData = $request->validatedAndFiltered();
 
-        if (isset($validatedData['password'])) {
-            $validatedData['password'] = bcrypt($validatedData['password']);
-        }
+        // if (isset($validatedData['password'])) {
+        //     $validatedData['password'] = bcrypt($validatedData['password']);
+        // }
         $user->update($validatedData);
 
         return new UserResource($user);
     }
 
-    public function destroy(Request $request, User $user): Response
+    public function destroy(Request $request, User $user)
     {
     
-    $user->update([
-        'isActive' => 0
-    ]);
-
-    return response()->noContent();
+        $user->update([
+            'isActive' => !$user->isActive,
+        ]);
+    
+        return response()->json(['message' => 'Désactiver avec succès'], 200);
     }
 }

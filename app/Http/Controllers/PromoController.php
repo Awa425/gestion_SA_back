@@ -121,15 +121,18 @@ class PromoController extends Controller
 
     }
 
-    public function destroy( Promo $promo)
+    public function destroy(Request $request, Promo $promo)
     {
 
         $promo->update([
             'is_active' => !$promo->is_active,
+
             'is_ongoing' => !$promo->is_ongoing,
         ]);
 
         return response()->json(['message' => 'Désactiver avec succès'], 200);
+
+
 
     }
 }
