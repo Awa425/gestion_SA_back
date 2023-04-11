@@ -23,6 +23,7 @@ class PromoController extends Controller
 
        return new PromoCollection(Promo::ignoreRequest(['perpage'])
        ->filter()
+       ->where('is_active','=',1) 
        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
 
 
@@ -51,7 +52,17 @@ class PromoController extends Controller
         return new PromoResource($promo);
 
     } 
+
+    public function Referentiel(Request $request, $promo_id)
+{
     
+    $referentielsNotLinked = Referentiel::whereNotIn('id', function ($query) use ($promo_id){
+        $query->select('referentiel_id')
+            ->from('promo_referentiels')
+            ->where('promo_id', $promo_id);
+    })->get();
+    return $referentielsNotLinked;
+}
     
     public function addReferentiel(Request $request, $id)
 {
@@ -114,11 +125,11 @@ class PromoController extends Controller
     {
 
         $promo->update([
-            'is_active' => 0,
-            'is_ongoing' => 0,
+            'is_active' => !$promo->is_active,
+            'is_ongoing' => !$promo->is_ongoing,
         ]);
 
-        return response()->noContent();
+        return response()->json(['message' => 'Désactiver avec succès'], 200);
 
     }
 }
