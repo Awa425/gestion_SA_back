@@ -52,7 +52,7 @@ class Promo_Referentiel_ApprenantController extends Controller
             $query
             ->filter()
             ->whereIn('is_active', [1]);
-        })->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page');
+        })->where('promo_referentiel_id', '=', $promoReferentiel)->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page');
 
         return new PromoReferentielApprenantCollection($promoReferentielApprenant);
     }
