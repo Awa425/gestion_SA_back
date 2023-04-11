@@ -63,6 +63,16 @@ class PromoController extends Controller
     })->get();
     return $referentielsNotLinked;
 }
+public function ReferentielLinked(Request $request, $promo_id)
+{
+    
+    $referentielsLinked = Referentiel::whereIn('id', function ($query) use ($promo_id){
+        $query->select('referentiel_id')
+            ->from('promo_referentiels')
+            ->where('promo_id', $promo_id);
+    })->get();
+    return $referentielsLinked;
+}
     
     public function addReferentiel(Request $request, $id)
 {
@@ -79,6 +89,26 @@ class PromoController extends Controller
 
     // Attach the referentiels to the promo
     $promo->referentiels()->attach($referentielIds);
+
+    // Return the updated promo record
+    return new PromoResource($promo);
+}  
+
+public function removeReferentiel(Request $request, $id)
+{
+    // Find the promo record by ID
+    $promo = Promo::find($id);
+
+    // Check if the promo record exists
+    if ($promo === null) {
+        return response()->json(['error' => 'Promo not found'], 404);
+    }
+
+    // Get the referentiel IDs from the request
+    $referentielIds = $request->input('referentiels', []);
+
+    // Attach the referentiels to the promo
+    $promo->referentiels()->detach($referentielIds);
 
     // Return the updated promo record
     return new PromoResource($promo);
