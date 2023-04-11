@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Promo_Referentiel_ApprenantStoreRequest;
-use App\Http\Requests\Promo_Referentiel_ApprenantUpdateRequest;
-use App\Http\Resources\PromoReferentielApprenantCollection;
-use App\Http\Resources\PromoReferentielApprenantResource;
-
-use App\Models\PromoReferentielApprenant;
-use App\Models\PromoReferentiel;
-
-
+use App\Models\Promo;
+use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\PromoReferentiel;
+use App\Http\Resources\PromoResource;
+use App\Models\PromoReferentielApprenant;
+
+
+use App\Http\Resources\ReferentielResource;
+use App\Http\Resources\PromoReferentielApprenantResource;
+use App\Http\Resources\PromoReferentielApprenantCollection;
+use App\Http\Requests\Promo_Referentiel_ApprenantStoreRequest;
+use App\Http\Requests\Promo_Referentiel_ApprenantUpdateRequest;
 
 class Promo_Referentiel_ApprenantController extends Controller
 {
@@ -47,14 +50,20 @@ class Promo_Referentiel_ApprenantController extends Controller
         $promoReferentiel=PromoReferentiel::where([
             ['promo_id', '=',$request->promo_id],
             ['referentiel_id', '=', $request->referentiel_id]])->pluck('id');
-          
+            $promo = Promo::find($request->promo_id);
+            $referentiel = Referentiel::find($request->referentiel_id);
+
         $promoReferentielApprenant= PromoReferentielApprenant::whereHas('apprenant', function ($query) {
             $query
             ->filter()
             ->whereIn('is_active', [1]);
-        })->where('promo_referentiel_id', '=', $promoReferentiel)->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page');
+        })->where(['promo_referentiel_id'=> $promoReferentiel])->get();
 
-        return new PromoReferentielApprenantCollection($promoReferentielApprenant);
+        return [
+            "promo"=> new PromoResource($promo),
+            "referentiel"=> new ReferentielResource($referentiel),
+            "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant)
+        ];
     }
 
 
