@@ -49,6 +49,7 @@ class PromoController extends Controller
     // }
     public function show(Promo $promo)
     {
+    
         return new PromoResource($promo);
 
     } 
@@ -59,7 +60,10 @@ class PromoController extends Controller
     $referentielsNotLinked = Referentiel::whereNotIn('id', function ($query) use ($promo_id){
         $query->select('referentiel_id')
             ->from('promo_referentiels')
-            ->where('promo_id', $promo_id);
+            ->where([
+                ['promo_id', $promo_id],
+                ['is_active', '=', 1],
+            ]);
     })->get();
     return $referentielsNotLinked;
 }
@@ -69,7 +73,10 @@ public function ReferentielLinked(Request $request, $promo_id)
     $referentielsLinked = Referentiel::whereIn('id', function ($query) use ($promo_id){
         $query->select('referentiel_id')
             ->from('promo_referentiels')
-            ->where('promo_id', $promo_id);
+            ->where([
+                ['promo_id', $promo_id],
+                ['is_active', '=', 1],
+            ]);
     })->get();
     return $referentielsLinked;
 }
@@ -85,10 +92,22 @@ public function ReferentielLinked(Request $request, $promo_id)
     }
 
     // Get the referentiel IDs from the request
-    $referentielIds = $request->input('referentiels', []);
+    $referentielIds = $request->input('referentiels');
 
-    // Attach the referentiels to the promo
-    $promo->referentiels()->attach($referentielIds);
+   
+        $promoReferentiel = PromoReferentiel::where([
+                ['referentiel_id', $referentielIds],
+                ['promo_id', $promo->id],
+            ])->first();
+        if ($promoReferentiel !== null) {
+            $promoReferentiel->update(['is_active' => 1]);
+        }
+        else{
+            $promo->referentiels()->attach($referentielIds);
+        }
+    
+    
+   
 
     // Return the updated promo record
     return new PromoResource($promo);
@@ -105,13 +124,22 @@ public function removeReferentiel(Request $request, $id)
     }
 
     // Get the referentiel IDs from the request
-    $referentielIds = $request->input('referentiels', []);
+    $referentielIds = $request->input('referentiels');
 
-    // Attach the referentiels to the promo
-    $promo->referentiels()->detach($referentielIds);
+    
+    
+        $promoReferentiel = PromoReferentiel::where([
+                ['referentiel_id', $referentielIds],
+                ['promo_id', $promo->id],
+            ])->first();
+        if ($promoReferentiel !== null) {
+            $promoReferentiel->update(['is_active' => 0]);
+        }
+    
+    
+    
 
-    // Return the updated promo record
-    return new PromoResource($promo);
+    return response()->json(['message' => 'Désactiver avec succès'], 200);
 }  
 
     public function store(PromoStoreRequest $request,Referentiel ...$referentiels)
