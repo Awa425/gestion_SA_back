@@ -7,6 +7,7 @@ use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\PromoReferentiel;
+use App\Models\Apprenant;
 use App\Http\Resources\PromoResource;
 use App\Models\PromoReferentielApprenant;
 
@@ -44,7 +45,7 @@ class Promo_Referentiel_ApprenantController extends Controller
 
         return new PromoReferentielApprenantResource($promoReferentielApprenant);
     }
-
+    
     public function getApprenant(Request $request)
     {
         $promoReferentiel=PromoReferentiel::where([
@@ -58,11 +59,55 @@ class Promo_Referentiel_ApprenantController extends Controller
             ->filter()
             ->whereIn('is_active', [1]);
         })->where(['promo_referentiel_id'=> $promoReferentiel])->get();
-
+        $numActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
+        ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
+        ->where('promo_referentiels.referentiel_id',$request->referentiel_id)
+        ->where('apprenants.is_active', 1)
+        ->count();
+        $numInactiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
+        ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
+        ->where('promo_referentiels.referentiel_id',$request->referentiel_id)
+        ->where('apprenants.is_active', 0)
+        ->count();
         return [
             "promo"=> new PromoResource($promo),
             "referentiel"=> new ReferentielResource($referentiel),
-            "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant)
+            "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant),
+            "numActiveApprenants" =>$numActiveApprenants,
+            "numInactiveApprenants" =>$numInactiveApprenants
+        ];
+    }
+
+
+    public function getApprenantNotActif(Request $request)
+    {
+        $promoReferentiel=PromoReferentiel::where([
+            ['promo_id', '=',$request->promo_id],
+            ['referentiel_id', '=', $request->referentiel_id]])->pluck('id');
+            $promo = Promo::find($request->promo_id);
+            $referentiel = Referentiel::find($request->referentiel_id);
+
+        $promoReferentielApprenant= PromoReferentielApprenant::whereHas('apprenant', function ($query) {
+            $query
+            ->filter()
+            ->whereIn('is_active', [0]);
+        })->where(['promo_referentiel_id'=> $promoReferentiel])->get();
+        $numActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
+        ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
+        ->where('promo_referentiels.referentiel_id',$request->referentiel_id)
+        ->where('apprenants.is_active', 1)
+        ->count();
+        $numInactiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
+        ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
+        ->where('promo_referentiels.referentiel_id',$request->referentiel_id)
+        ->where('apprenants.is_active', 0)
+        ->count();
+        return [
+            "promo"=> new PromoResource($promo),
+            "referentiel"=> new ReferentielResource($referentiel),
+            "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant), 
+            "numActiveApprenants" =>$numActiveApprenants,
+            "numInactiveApprenants" =>$numInactiveApprenants
         ];
     }
 
