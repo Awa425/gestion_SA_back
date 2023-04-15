@@ -1,8 +1,14 @@
 <?php
 
+use App\Models\User;
+use App\Models\Apprenant;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use Laravel\Sanctum\PersonalAccessToken;
+use App\Http\Resources\ApprenantResource;
 use App\Http\Controllers\ApprenantController;
 
 /*
@@ -20,10 +26,20 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('apprenant/login', [App\Http\Controllers\ApprenantAuth::class, 'login']);
 
 
+Route::get('/apprenant', function (Request $request) {
+    // =dd($request->headers->all()["authorization"][0]);
+    $user = explode(" ",$request->headers->all()["authorization"][0]);
+    $token = PersonalAccessToken::findToken($user[1]);
+    //  dd($token->tokenable->id);
+    return new ApprenantResource(Apprenant::find($token->tokenable->id));
 
+ });
 
 
 Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
+
+
+
     Route::apiResources(
         [
 
@@ -31,7 +47,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'referentiels'=> App\Http\Controllers\ReferentielController::class,
             'apprenants'=> App\Http\Controllers\ApprenantController::class,
             'visiteurs'=> App\Http\Controllers\VisiteurController::class,
-            'user' => App\Http\Controllers\UserController::class,
+            'users' => App\Http\Controllers\UserController::class,
 
             ]
         );
@@ -42,9 +58,9 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'addReferentiel']);
     Route::put('pages/promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'removeReferentiel']);
    // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
-  
-   
-   
+
+
+
 
     Route::group(['prefix' => 'apprenant'], function (){
 
