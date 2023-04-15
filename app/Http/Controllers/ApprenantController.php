@@ -12,6 +12,7 @@ use Illuminate\Http\Response;
 use App\Http\Requests\ApprenantIndexRequest;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Resources\ApprenantResource;
+use App\Http\Resources\PromoReferentielResource;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
@@ -111,10 +112,14 @@ class ApprenantController extends Controller
 
     public function show(Apprenant $apprenant)
     {
+        $promoReferentielId=PromoReferentielApprenant::where(['apprenant_id'=> $apprenant->id])->first('promo_referentiel_id');
+        $promoReferentiel= PromoReferentiel::where(['id'=> $promoReferentielId->promo_referentiel_id])->first();
+        
+        return[
+            "apprenant"=> new ApprenantResource($apprenant),
+            "promoReferentiel"=> new PromoReferentielResource($promoReferentiel)
+        ];
 
-        return new PromoReferentielApprenantResource(PromoReferentielApprenant::whereHas('apprenant', function ($query) use ($apprenant) {
-            $query->where('id', $apprenant['id']);
-        })->first());
 
     }
 
