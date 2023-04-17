@@ -5,10 +5,7 @@ namespace App\Http\Requests\import;
 use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
-
-
-
-
+use Carbon\Carbon;
 use App\Models\PromoReferentiel;
 use Maatwebsite\Excel\Concerns\ToModel;
 use App\Http\Requests\ApprenantStoreRequest;
@@ -37,29 +34,14 @@ class ApprenantsImport implements ToModel, WithHeadingRow
         $this->promo_libelle = $this->promo->libelle;
         $this->referentiel_libelle = $this->referentiel->libelle;
     }
-    // public function generate_matricule($promo_li)
-    // {
-    //     $promo_tabs = explode(' ', $this->promo_libelle);
-    //     $referentiel_tabs = explode(' ', $this->referentiel_libelle);
-    //     $promo_prefix = '';
-    //     $referentiel_prefix = '';
-
-    //     foreach ($promo_tabs as $promo_tab) {
-    //         $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
-    //     }
-    //     foreach ($referentiel_tabs as $referentiel_tab) {
-    //         $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
-    //     }
-    //     $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
-    //     $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
-    //     return $matricule;
-    // }
+   
     public function model(array $row)
     {
 
         
       
         $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
+        $date_naissance = Carbon::parse($row['date_naissance'])->toDateString();
 
 
         $apprenant = new Apprenant([
@@ -69,7 +51,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             'email' => $row['email'],
             'telephone' => $row['telephone'],
             'password' => $this->password,
-            'date_naissance' => $row['date_naissance'],
+            'date_naissance' =>  $date_naissance,
             'lieu_naissance' => $row['lieu_naissance'],
             'genre' => $row['genre'],
             'user_id' => auth()->user()->id,
@@ -99,11 +81,14 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             '*.nom' => ['required', 'string', 'max:255'],
             '*.prenom' => ['required', 'string', 'max:255'],
             '*.email' => ['required', 'email', 'max:255', 'unique:apprenants,email'],
-            '*.telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
-            '*.password' => ['required', 'string', 'max:255'],
+            '*.password' => ['sometimes', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
             '*.date_naissance' => ['required', 'date'],
             '*.lieu_naissance' => ['required', 'string', 'max:255'],
-            '*.genre' => ['required', 'in:M,F'],
+            '*.telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:9'],
+            '*.cni' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
+            '*.genre' => ['required', 'in:Masculin,Feminin'],
+            '*.photo' => ['nullable'],
+            '*.reserves' => ['nullable'],
         ];
     }
 }
