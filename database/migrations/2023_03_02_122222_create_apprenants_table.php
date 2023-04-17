@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('apprenants', function (Blueprint $table) {
             $table->id();
             $table->string('matricule', 255);
+            $table->string('cni', 255)->unique();
             $table->string('nom', 255);
             $table->string('prenom', 255);
             $table->string('email', 255)->unique();

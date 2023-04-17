@@ -28,7 +28,8 @@ class ApprenantStoreRequest extends FormRequest
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:9'],
-            'genre' => ['required', 'in:M,F'],
+            'cni' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
+            'genre' => ['required', 'in:Masculin,Feminin'],
             'photo' => ['nullable'],
             'reserves' => ['nullable'],
 
@@ -36,7 +37,7 @@ class ApprenantStoreRequest extends FormRequest
     }
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone'];
+        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni'];
         return $this->only($allowedFields);
     }
 }
