@@ -34,12 +34,12 @@ class ApprenantsImport implements ToModel, WithHeadingRow
         $this->promo_libelle = $this->promo->libelle;
         $this->referentiel_libelle = $this->referentiel->libelle;
     }
-   
+
     public function model(array $row)
     {
 
-        
-      
+
+
         $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
         $date_naissance = Carbon::parse($row['date_naissance'])->toDateString();
 
@@ -63,13 +63,6 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             ['referentiel_id', '=', $this->referentielId]
         ])->first();
 
-        
-        // $promoReferentielApprenant = new PromoReferentielApprenant([
-            //     "referentiel_id" => $this->referentielId,
-            //     "promo_id" => $this->promoId,
-            //     "apprenant_id" => $apprenant->id,
-            // ]);
-            
             $apprenant->save();
             $apprenant->promoReferentiels()->attach($promoReferentiel);
 
@@ -89,6 +82,8 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             '*.genre' => ['required', 'in:Masculin,Feminin'],
             '*.photo' => ['nullable'],
             '*.reserves' => ['nullable'],
+            '*.genre' => ['required'],
+
         ];
     }
 }
