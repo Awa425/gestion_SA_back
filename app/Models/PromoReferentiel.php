@@ -18,6 +18,7 @@ class PromoReferentiel extends Model
     protected $fillable = [
         "promo_id",
         "referentiel_id",
+        "is_active",
     ];
 
     /**

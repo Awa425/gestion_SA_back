@@ -60,7 +60,7 @@ class Promo extends Model
     
     public function referentiels()
     {
-        return $this->belongsToMany(Referentiel::class, 'promo_referentiels');
+        return $this->belongsToMany(Referentiel::class, 'promo_referentiels')->wherePivot('is_active', 1);;
     }
     
   

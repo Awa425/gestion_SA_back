@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ApprenantResource;
 use App\Models\Apprenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class ApprenantAuth extends Controller
 {
+
 
 
     public function login(Request $request) {
@@ -17,30 +19,23 @@ class ApprenantAuth extends Controller
         ]);
 
         // Check email
-        $apprennant = Apprenant::where('email', $fields['email'])->first();
+        $user = Apprenant::where('email', $fields['email'])->first();
 
         // Check password
-        if(!$apprennant || !Hash::check($fields['password'], $apprennant->password)) {
+        if(!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
-                'message' => 'Bad creds'
+                'message' => 'Vérifiez vos informations'
             ], 401);
         }
 
-        $token = $apprennant->createToken('mytoken')->plainTextToken;
+        $token = $user->createToken('myapptoken')->plainTextToken;
 
         $response = [
-            'apprennant' => $apprennant,
+            'user' => new ApprenantResource($user),
             'token' => $token
         ];
 
         return response($response, 201);
     }
 
-    public function logout(Request $request) {
-        auth()->apprennant()->tokens()->delete();
-
-        return [
-            'message' => 'Logged out'
-        ];
-    }
 }

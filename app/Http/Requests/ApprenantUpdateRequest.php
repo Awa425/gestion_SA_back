@@ -27,16 +27,17 @@ class ApprenantUpdateRequest extends FormRequest
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
+            'cni' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
             'reserves' => ['nullable'],
             'photo' => ['nullable'],
-            'genre' => ['required', 'in:M,F'],
+            'genre' => ['required', 'in:Masculin,Feminin'],
 
         ];
     }
 
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone'];
+        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni'];
         return $this->only($allowedFields);
     }
 }

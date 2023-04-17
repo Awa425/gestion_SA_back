@@ -36,6 +36,7 @@ class Apprenant extends Model
         'genre',
         'is_active',
         'reserves',
+        'cni',
 
     ];
 
@@ -51,6 +52,7 @@ class Apprenant extends Model
         'user_id',
         'genre',
         'reserves',
+        'cni',
 
     ];
 
