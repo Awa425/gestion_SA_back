@@ -37,28 +37,12 @@ class ApprenantsImport implements ToModel, WithHeadingRow
         $this->promo_libelle = $this->promo->libelle;
         $this->referentiel_libelle = $this->referentiel->libelle;
     }
-    // public function generate_matricule($promo_li)
-    // {
-    //     $promo_tabs = explode(' ', $this->promo_libelle);
-    //     $referentiel_tabs = explode(' ', $this->referentiel_libelle);
-    //     $promo_prefix = '';
-    //     $referentiel_prefix = '';
 
-    //     foreach ($promo_tabs as $promo_tab) {
-    //         $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
-    //     }
-    //     foreach ($referentiel_tabs as $referentiel_tab) {
-    //         $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
-    //     }
-    //     $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
-    //     $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
-    //     return $matricule;
-    // }
     public function model(array $row)
     {
 
-        
-      
+
+
         $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
 
 
@@ -81,13 +65,6 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             ['referentiel_id', '=', $this->referentielId]
         ])->first();
 
-        
-        // $promoReferentielApprenant = new PromoReferentielApprenant([
-            //     "referentiel_id" => $this->referentielId,
-            //     "promo_id" => $this->promoId,
-            //     "apprenant_id" => $apprenant->id,
-            // ]);
-            
             $apprenant->save();
             $apprenant->promoReferentiels()->attach($promoReferentiel);
 
@@ -103,7 +80,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow
             '*.password' => ['required', 'string', 'max:255'],
             '*.date_naissance' => ['required', 'date'],
             '*.lieu_naissance' => ['required', 'string', 'max:255'],
-            '*.genre' => ['required', 'in:M,F'],
+            '*.genre' => ['required'],
         ];
     }
 }
