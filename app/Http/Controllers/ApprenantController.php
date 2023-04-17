@@ -97,16 +97,40 @@ class ApprenantController extends Controller
         ]);
 
 
-        $file = $request->file('excel_file');
-        Excel::import(new ApprenantsImport(), $file);
-        if (count($request->file()) > 0) {
+        // $file = $request->file('excel_file');
+        // Excel::import(new ApprenantsImport(), $file);
+        // if (count($request->file()) > 0) {
+        //     return response()->json([
+        //         'message' => 'Insertion en masse reussie',
+        //     ], 201);
+        // }
+        // return response()->json([
+        //     'message' => 'Erreur lors de l\'insertion en masse',
+        // ], 401);
+        try {
+            $file = $request->file('excel_file');
+            Excel::import(new ApprenantsImport(), $file);
+        
             return response()->json([
-                'message' => 'Insertion en masse reussie',
+                'message' => 'Insertion en masse réussie',
             ], 201);
+        
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                $message = "Erreur de duplication d'entrée";
+            } else {
+                $message = $e->getMessage();
+            }
+        
+            return response()->json([
+                'message' => 'Erreur lors de l\'insertion en masse : ' . $message,
+            ], 401);
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de l\'insertion en masse : ' . $e->getMessage(),
+            ], 401);
         }
-        return response()->json([
-            'message' => 'Erreur lors de l\'insertion en masse',
-        ], 401);
     }
 
 
