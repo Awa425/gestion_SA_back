@@ -37,6 +37,7 @@ class Apprenant extends Model
         'is_active',
         'reserves',
         'cni',
+        'photo',
 
     ];
 
