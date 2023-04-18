@@ -23,7 +23,6 @@ class PromoResource extends JsonResource
             'is_active' => $this->is_active,
             'referentiels' => ReferentielResource::collection($this->referentiels),
 
-
         ];
     }
 }
