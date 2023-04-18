@@ -37,7 +37,7 @@ class ApprenantUpdateRequest extends FormRequest
 
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni'];
+        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni','photo'];
         return $this->only($allowedFields);
     }
 }
