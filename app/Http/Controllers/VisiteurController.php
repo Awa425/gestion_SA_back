@@ -14,8 +14,8 @@ class VisiteurController extends Controller
 {
     public function index(Request $request)
     {
-        
-       
+
+
 
         return new VisiteurCollection(Visiteur::ignoreRequest(['perpage'])
         ->filter()
@@ -24,8 +24,8 @@ class VisiteurController extends Controller
 
     public function store(VisiteurStoreRequest $request)
     {
-        
-       
+
+
         $data = $request->validatedAndFiltered();
         $data['user_id'] = auth()->user()->id;
         $visiteur = Visiteur::create($data);
@@ -35,13 +35,13 @@ class VisiteurController extends Controller
 
     public function show(Request $request, Visiteur $visiteur)
     {
-        
+
         return new VisiteurResource($visiteur);
     }
 
     public function update(VisiteurUpdateRequest $request, Visiteur $visiteur)
     {
-       
+
         $validatedData = $request->validatedAndFiltered();
         $visiteur->update($validatedData);
 

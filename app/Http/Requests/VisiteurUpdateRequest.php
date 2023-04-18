@@ -22,13 +22,13 @@ class VisiteurUpdateRequest extends FormRequest
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'INE' => ['required', 'integer','digits:13'],
+            'cni' => ['required', 'string','digits:13'],
             'motif' => ['required', 'string', 'max:255'],
         ];
     }
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'INE', 'motif'];
+        $allowedFields = ['nom', 'prenom', 'cni', 'motif'];
         return $this->only($allowedFields);
     }
 }
