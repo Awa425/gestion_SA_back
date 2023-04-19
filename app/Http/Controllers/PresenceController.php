@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Presence;
 use App\Models\Apprenant;
 use Illuminate\Http\Request;
@@ -16,12 +17,7 @@ class PresenceController extends Controller
 {
     public function index(Request $request)
     {
-
-
-        $perPage = $request->input('per_page', env('DEFAULT_PAGINATION', 10));
-
-        $presences = Presence::all()->paginate($perPage);
-
+        $presences =Presence::whereDate('created_at', Carbon::today())->get();
         return new PresenceCollection($presences);
     }
 
