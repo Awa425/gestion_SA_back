@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('apprenants', function (Blueprint $table) {
             $table->id();
             $table->string('matricule', 255);
-            $table->string('cni', 255)->unique();
+            $table->string('cni', 255)->unique()->nullable();
             $table->string('nom', 255);
             $table->string('prenom', 255);
             $table->string('email', 255)->unique();
             $table->string('password', 255);
-            $table->date('date_naissance');
-            $table->string('lieu_naissance', 255);
-            $table->string('genre');
+            $table->date('date_naissance')->nullable();
+            $table->string('lieu_naissance', 255)->nullable();
+            $table->string('genre')->nullable();
             $table->mediumText('reserves')->nullable();
-            $table->string('telephone', 255);
+            $table->string('telephone', 255)->nullable();
             $table->binary('photo')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

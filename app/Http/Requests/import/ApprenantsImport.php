@@ -2,19 +2,28 @@
 
 namespace App\Http\Requests\import;
 
+use Carbon\Carbon;
 use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
-use Carbon\Carbon;
 use App\Models\PromoReferentiel;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\SkipsErrors;
 use App\Http\Requests\ApprenantStoreRequest;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\SkipsOnError;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Http\Controllers\ApprenantController;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
 
 
-class ApprenantsImport implements ToModel, WithHeadingRow
+class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnError, SkipsEmptyRows, ToCollection
 {
+    use Importable, SkipsErrors, SkipsFailures;
 
     private $promoId;
     private $referentielId;
@@ -71,19 +80,24 @@ class ApprenantsImport implements ToModel, WithHeadingRow
     public function rules(): array
     {
         return [
-            '*.nom' => ['required', 'string', 'max:255'],
-            '*.prenom' => ['required', 'string', 'max:255'],
-            '*.email' => ['required', 'email', 'max:255', 'unique:apprenants,email'],
-            '*.password' => ['sometimes', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
-            '*.date_naissance' => ['required', 'date'],
-            '*.lieu_naissance' => ['required', 'string', 'max:255'],
-            '*.telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:9'],
-            '*.cni' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
-            '*.genre' => ['required', 'in:Masculin,Feminin'],
-            '*.photo' => ['nullable'],
-            '*.reserves' => ['nullable'],
-            '*.genre' => ['required'],
+            'nom' => 'required|string|max:255',
+            'prenom' => 'required|string|max:255',
+            'email' => 'required|email',
+            'password' => 'sometimes|regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            'date_naissance' => 'required|date',
+            'lieu_naissance' => 'sometimes|required|nullable',
+            'telephone' => 'required|nullable',
+            'cni' => 'sometimes|required|numeric|nullable',
+            'genre' => 'required|string|nullable',
+            'photo'=> 'sometimes|required|mimes:png,jpg,jpeg,gif,webp',
 
         ];
+    }
+
+      /**
+     * @param  Collection  $collection
+     */
+    public function collection(Collection $collection)
+    {
     }
 }
