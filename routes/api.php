@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Presence;
 use App\Models\Apprenant;
 use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Http\Resources\ApprenantResource;
+use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 
 /*
@@ -67,5 +69,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::group(['prefix' => 'apprenant'], function (){
 
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
+        Route::post('presence/detail' , [PresenceController::class,'detail_apprenant']);
+
     });
 });

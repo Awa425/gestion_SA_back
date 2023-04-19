@@ -20,7 +20,7 @@ class ReferentielUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'libelle' => ['required', 'string', 'max:255', 'unique:referentiels,libelle'],
+            'libelle' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
         ];
     }
