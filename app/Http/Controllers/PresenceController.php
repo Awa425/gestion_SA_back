@@ -27,12 +27,22 @@ class PresenceController extends Controller
 
     public function store(PresenceStoreRequest $request)
     {
+        $matricule = $request->matricule;
+        $apprenant = Apprenant::where('matricule', $matricule)->first();
 
+        if (!$apprenant) {
+            return response()->json(['error' => 'Apprenant not found'], 404);
+        }
+        
+        $data = $request->validated();
+        $data['date_heure_arriver'] = $request->date_heure_arriver;
+        $data['apprenant_id'] = $apprenant->id;
 
-        $presence = Presence::create($request->validated());
+        $presence = Presence::create($data);
 
-        return new PresenceResource($presence);
+        return new ApprenantResource($apprenant);
     }
+
 
     public function show(Request $request, Presence $presence)
     {
@@ -54,15 +64,5 @@ class PresenceController extends Controller
 
         return response()->noContent();
     }
-    public function detail_apprenant(Request $request)
-    {
-        $matricule = $request->matricule;
-        $apprenant = Apprenant::where('matricule', $matricule)->first();
-
-        if ($apprenant) {
-            return new ApprenantResource($apprenant);
-        } else {
-            return response()->json(['error' => 'Apprenant not found'], 404);
-        }
-    }
+   
 }
