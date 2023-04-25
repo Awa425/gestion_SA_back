@@ -1,15 +1,20 @@
 <?php
 
 use App\Models\User;
+use App\Models\Presence;
 use App\Models\Apprenant;
 use Illuminate\Http\Request;
+use App\Models\PromoReferentiel;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use Laravel\Sanctum\PersonalAccessToken;
 use App\Http\Resources\ApprenantResource;
+use App\Models\PromoReferentielApprenant;
+use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
+use App\Http\Resources\PromoReferentielResource;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +36,18 @@ Route::get('/apprenant', function (Request $request) {
     $user = explode(" ",$request->headers->all()["authorization"][0]);
     $token = PersonalAccessToken::findToken($user[1]);
     //  dd($token->tokenable->id);
-    return new ApprenantResource(Apprenant::find($token->tokenable->id));
+
+    $apprenant = Apprenant::find($token->tokenable->id);
+    $promoReferentielId=PromoReferentielApprenant::where(['apprenant_id'=> $apprenant->id])->first();
+    $promoReferentiel= PromoReferentiel::where(['id'=> $promoReferentielId->promo_referentiel_id])->first();
+
+
+    return[
+        "apprenant"=> new ApprenantResource($apprenant),
+        "promoReferentiel"=> new PromoReferentielResource($promoReferentiel)
+    ];
+
+
 
  });
 
@@ -68,5 +84,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::group(['prefix' => 'apprenant'], function (){
 
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
+
     });
 });

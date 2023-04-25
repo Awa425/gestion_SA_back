@@ -28,7 +28,7 @@ class ApprenantController extends Controller
     public function index(Request $request)
     {
 
-        return new ApprenantCollection(Apprenant::where('is_active','=',1) 
+        return new ApprenantCollection(Apprenant::where('is_active','=',1)
             ->filter()
             ->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
            );
@@ -66,7 +66,7 @@ class ApprenantController extends Controller
 
         $data = $request->validatedAndFiltered();
         $data['password']= array_key_exists('password', $data) ?  $data['password'] : "Passer@3";
-        
+
         $data['password'] = bcrypt($data['password']);
         $data['user_id'] = auth()->user()->id;
         $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
@@ -86,7 +86,7 @@ class ApprenantController extends Controller
             ['referentiel_id', '=', $request->referentiel_id]
         ])->first();
         $apprenant->promoReferentiels()->attach($promoReferentiel);
-        
+
 
         return new ApprenantResource($apprenant);
     }
@@ -98,18 +98,30 @@ class ApprenantController extends Controller
         $request->validate([
             "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
+        try {
+            $file = $request->file('excel_file');
+            Excel::import(new ApprenantsImport(), $file);
 
-
-        $file = $request->file('excel_file');
-        Excel::import(new ApprenantsImport(), $file);
-        if (count($request->file()) > 0) {
             return response()->json([
-                'message' => 'Insertion en masse reussie',
+                'message' => 'Insertion en masse réussie',
             ], 201);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                $message = "Erreur de duplication d'entrée";
+            } else {
+                $message = $e->getMessage();
+            }
+
+            return response()->json([
+                'message' => 'Erreur lors de l\'insertion en masse : ' . $message,
+            ], 401);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de l\'insertion en masse : ' . $e->getMessage(),
+            ], 401);
         }
-        return response()->json([
-            'message' => 'Erreur lors de l\'insertion en masse',
-        ], 401);
     }
 
 
@@ -117,7 +129,7 @@ class ApprenantController extends Controller
     {
         $promoReferentielId=PromoReferentielApprenant::where(['apprenant_id'=> $apprenant->id])->first('promo_referentiel_id');
         $promoReferentiel= PromoReferentiel::where(['id'=> $promoReferentielId->promo_referentiel_id])->first();
-        
+
         return[
             "apprenant"=> new ApprenantResource($apprenant),
             "promoReferentiel"=> new PromoReferentielResource($promoReferentiel)

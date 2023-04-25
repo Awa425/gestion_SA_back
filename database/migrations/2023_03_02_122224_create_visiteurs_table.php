@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nom', 255);
             $table->string('prenom', 255);
+
             $table->string('INE', 255)->unique();
+
             $table->string('motif', 255);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')

@@ -17,8 +17,8 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-       
- 
+
+
         return new UserCollection(User::ignoreRequest(['perpage'])
         ->filter()
         // ->where('is_active', "=", 1)
@@ -30,7 +30,7 @@ class UserController extends Controller
 
     public function generate_matricule($role_id)
     {
-        
+
         $role = Role::where('id', '=', $role_id)->select('libelle')->first();
         $role_prefix = $role['libelle'];
         $role_prefix =substr($role_prefix, 0, 3);
@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-        
+
 
         $data = $request->validatedAndFiltered();
 
@@ -57,13 +57,13 @@ class UserController extends Controller
 
     public function show(Request $request, User $user)
     {
-        
+
         return new UserResource($user);
     }
 
     public function update(UserUpdateRequest $request, User $user)
     {
-       
+
 
         $validatedData = $request->validatedAndFiltered();
 
@@ -77,11 +77,11 @@ class UserController extends Controller
 
     public function destroy(Request $request, User $user)
     {
-    
+
         $user->update([
             'isActive' => !$user->isActive,
         ]);
-    
+
         return response()->json(['message' => 'Désactiver avec succès'], 200);
     }
 }
