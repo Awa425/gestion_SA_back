@@ -36,6 +36,7 @@ class Apprenant extends Model
         'genre',
         'is_active',
         'reserves',
+        'motif',
         'cni',
         'photo',
 

@@ -22,7 +22,9 @@ class VisiteurUpdateRequest extends FormRequest
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'cni' => ['required', 'string','digits:13'],
+
+            'INE' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
+
             'motif' => ['required', 'string', 'max:255'],
         ];
     }

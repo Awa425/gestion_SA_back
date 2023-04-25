@@ -43,9 +43,15 @@ class PromoController extends Controller
     ->where('promo_referentiels.promo_id',$promo->id)
     ->where('apprenants.is_active', 1)
     ->count();
+    $numInActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
+    ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
+    ->where('promo_referentiels.promo_id',$promo->id)
+    ->where('apprenants.is_active', 0)
+    ->count();
         return[
             "promo"=> new PromoResource($promo),
-            "nombre_apprenant"=> $numActiveApprenants
+            "nombre_apprenant"=> $numActiveApprenants,
+            "nombre_apprenant_inactive"=> $numInActiveApprenants,
         ];
 
     }

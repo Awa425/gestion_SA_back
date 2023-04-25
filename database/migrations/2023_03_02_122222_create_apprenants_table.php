@@ -19,9 +19,12 @@ return new class extends Migration
             $table->string('prenom', 255);
             $table->string('email', 255)->unique();
             $table->string('password', 255);
-            $table->date('date_naissance')->nullable();
-            $table->string('lieu_naissance', 255)->nullable();
-            $table->string('genre')->nullable();
+
+            $table->date('date_naissance');
+            $table->string('lieu_naissance', 255);
+            $table->string('genre');
+            $table->string('motif', 255)->nullable();
+
             $table->mediumText('reserves')->nullable();
             $table->string('telephone', 255)->nullable();
             $table->binary('photo')->nullable();
