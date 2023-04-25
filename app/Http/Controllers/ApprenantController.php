@@ -36,6 +36,9 @@ class ApprenantController extends Controller
  }
 
 
+ 
+
+
 
     public static function generate_matricule($promo_libelle, $referentiel_libelle)
     {
@@ -137,13 +140,25 @@ class ApprenantController extends Controller
 
         return new ApprenantResource($apprenant);
     }
+    
+    public function activateApprenant(Request $request, Apprenant $apprenant)
+    {
 
+
+        $apprenant->update([
+            'is_active' => !$apprenant->is_active,
+            'motif' => null,
+        ]);
+
+        return new ApprenantResource($apprenant);
+    }
     public function destroy(Request $request, Apprenant $apprenant)
     {
 
         $apprenant->update([
 
             'is_active' => !$apprenant->is_active,
+            'motif' => $request->motif,
         ]);
 
         return response()->json(['message' => 'Désactiver avec succès'], 200);

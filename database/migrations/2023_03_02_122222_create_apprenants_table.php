@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('date_naissance');
             $table->string('lieu_naissance', 255);
             $table->string('genre');
+            $table->string('motif', 255)->nullable();
             $table->mediumText('reserves')->nullable();
             $table->string('telephone', 255);
             $table->binary('photo')->nullable();

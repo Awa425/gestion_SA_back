@@ -32,12 +32,13 @@ class ApprenantStoreRequest extends FormRequest
             'genre' => ['required', 'in:Masculin,Feminin'],
             'photo' => ['nullable'],
             'reserves' => ['nullable'],
+            'motif' => ['nullable'],
 
         ];
     }
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni','photo'];
+        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni','photo','reserves','motif'];
         return $this->only($allowedFields);
     }
 }

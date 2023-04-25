@@ -28,6 +28,7 @@ class ApprenantResource extends JsonResource
             'lieu_naissance' => $this->lieu_naissance,
             'genre' => $this->genre,
             'telephone' => $this->telephone,
+            'motif' => $this->motif,
             'user' => UserResource::make($this->user) ,
             'is_active' => $this->is_active,
             'photo' => base64_encode($this->photo) != null ?  base64_encode($this->photo) : null,
