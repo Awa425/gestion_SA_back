@@ -41,7 +41,7 @@ class ReferentielController extends Controller
         return new ReferentielResource($referentiel);
     }
 
-    public function update(ReferentielUpdateRequest $request, Referentiel $referentiel): ReferentielResource
+    public function update(ReferentielUpdateRequest $request, Referentiel $referentiel)
     {
 
         $referentiel->update($request->validated());
