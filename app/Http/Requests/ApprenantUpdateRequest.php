@@ -27,7 +27,7 @@ class ApprenantUpdateRequest extends FormRequest
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['required', 'string', 'max:255'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' , 'min:10'],
-            'cni' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
+            'cni' => ['required' , 'regex:/^([0-9]*)$/' ],
             'reserves' => ['nullable'],
             'motif' => ['nullable'],
             'photo' => ['nullable'],

@@ -28,7 +28,7 @@ class ApprenantStoreRequest extends FormRequest
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['nullable', 'string'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/'],
-            'cni' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
+            'cni' => ['required' , 'regex:/^([0-9]*)$/' ],
             'genre' => ['required'],
             'photo' => ['nullable'],
             'reserves' => ['nullable'],
