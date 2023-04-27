@@ -30,7 +30,7 @@ class VisiteurUpdateRequest extends FormRequest
     }
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'cni', 'motif'];
+        $allowedFields = ['nom', 'prenom', 'INE', 'motif'];
         return $this->only($allowedFields);
     }
 }
