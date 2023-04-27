@@ -36,7 +36,7 @@ class ApprenantController extends Controller
  }
 
 
- 
+
 
 
 
@@ -65,7 +65,7 @@ class ApprenantController extends Controller
 
 
         $data = $request->validatedAndFiltered();
-        $data['password']= array_key_exists('password', $data) ?  $data['password'] : "Passer@3";
+        $data['password']= array_key_exists('password', $data) ?  $data['password'] : "Passer";
 
         $data['password'] = bcrypt($data['password']);
         $data['user_id'] = auth()->user()->id;
@@ -152,7 +152,7 @@ class ApprenantController extends Controller
 
         return new ApprenantResource($apprenant);
     }
-    
+
     public function activateApprenant(Request $request, Apprenant $apprenant)
     {
 
