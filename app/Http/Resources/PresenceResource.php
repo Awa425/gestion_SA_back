@@ -15,7 +15,7 @@ class PresenceResource extends JsonResource
         return [
             'id' => $this->id,
             'date_heure_arriver' => $this->date_heure_arriver,
-            'apprenants' => ApprenantCollection::make($this->whenLoaded('apprenants')),
+            'apprenants' => ApprenantResource::make($this->whenLoaded('apprenants')),
         ];
     }
 }

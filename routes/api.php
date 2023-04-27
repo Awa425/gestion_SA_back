@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'apprenants'=> App\Http\Controllers\ApprenantController::class,
             'visiteurs'=> App\Http\Controllers\VisiteurController::class,
             'users' => App\Http\Controllers\UserController::class,
+            'presences' => App\Http\Controllers\PresenceController::class,
 
             ]
         );

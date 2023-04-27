@@ -17,7 +17,7 @@ class PresenceController extends Controller
 {
     public function index(Request $request)
     {
-        $presences =Presence::whereDate('created_at', Carbon::today())->get();
+        $presences =Presence::whereDate('date_heure_arriver', Carbon::today())->get();
         return new PresenceCollection($presences);
     }
 
