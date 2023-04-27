@@ -20,7 +20,7 @@ class Visiteur extends Model
     protected $fillable = [
         'nom',
         'prenom',
-        'cni',
+        'INE',
         'motif',
         'user_id',
     ];
@@ -28,7 +28,7 @@ class Visiteur extends Model
     private static $whiteListFilter=[
         'nom',
         'prenom',
-        'cni',
+        'INE',
         'motif',
         'user_id',
 
@@ -41,7 +41,7 @@ class Visiteur extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'cni' => 'integer',
+        'INE' => 'integer',
     ];
 
     public function user(): BelongsTo

@@ -18,7 +18,7 @@ class VisiteurResource extends JsonResource
             'id' => $this->id,
             'nom' => $this->nom,
             'prenom' => $this->prenom,
-            'cni' => $this->cni,
+            'INE' => $this->INE,
             'motif' => $this->motif,
             'user' => $this->user_id,
         ];

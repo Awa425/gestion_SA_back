@@ -23,14 +23,14 @@ class VisiteurUpdateRequest extends FormRequest
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
 
-            'INE' => ['required' , 'regex:/^([0-9]*)$/' , 'min:17'],
+            'INE' => ['required' , 'regex:/^([0-9]*)$/' ],
 
             'motif' => ['required', 'string', 'max:255'],
         ];
     }
     public function validatedAndFiltered()
     {
-        $allowedFields = ['nom', 'prenom', 'cni', 'motif'];
+        $allowedFields = ['nom', 'prenom', 'INE', 'motif'];
         return $this->only($allowedFields);
     }
 }
