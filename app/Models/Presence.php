@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Apprenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 
 class Presence extends Model
 {
@@ -30,8 +34,9 @@ class Presence extends Model
         'date_heure_arriver' => 'datetime',
     ];
 
-    public function apprenants(): HasMany
+    public function apprenants()
     {
-        return $this->hasMany(Apprenant::class);
+        return $this->belongsToMany(Apprenant::class, 'apprenant_presence', 'presence_id', 'apprenant_id');
     }
+    
 }
