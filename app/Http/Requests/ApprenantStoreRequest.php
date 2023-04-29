@@ -23,7 +23,7 @@ class ApprenantStoreRequest extends FormRequest
         return [
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'email'],
+            'email' => ['required', 'email', 'max:255'],
             'password' => ['sometimes', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['nullable', 'string'],

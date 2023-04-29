@@ -28,6 +28,7 @@ class ApprenantResource extends JsonResource
             'lieu_naissance' => $this->lieu_naissance,
             'genre' => $this->genre,
             'telephone' => $this->telephone,
+            'cni' => $this->cni,
             'motif' => $this->motif,
             'user' => UserResource::make($this->user) ,
             'is_active' => $this->is_active,
