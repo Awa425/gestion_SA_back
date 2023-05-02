@@ -17,9 +17,9 @@ class VisiteurController extends Controller
 
 
 
-        return new VisiteurCollection(Visiteur::ignoreRequest(['perpage'])
-        ->filter()
-        ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
+        return new VisiteurCollection(Visiteur::
+        filter()
+        ->get());
     }
 
     public function store(VisiteurStoreRequest $request)
