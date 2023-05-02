@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('presences', function (Blueprint $table) {
             $table->id();
             $table->dateTime('date_heure_arriver');
-            $table->unsignedBigInteger('apprenant_id');
-            $table->foreign('apprenant_id')->references('id')->on('apprenants');
             $table->timestamps();
         });
     }

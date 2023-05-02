@@ -20,13 +20,18 @@ class PresenceController extends Controller
         $date = $request->input('date');
 
         if (!empty($date)) {
-            $presences = Presence::whereDate('date_heure_arriver', $date)->with('apprenants')->get();
+            $presences = Presence::whereDate('date_heure_arriver', $date)
+                                ->with(['apprenants'])
+                                ->get();
         } else {
-            $presences = Presence::whereDate('date_heure_arriver', Carbon::today())->with('apprenants')->get();
+            $presences = Presence::whereDate('date_heure_arriver', Carbon::today())
+                                ->with(['apprenants'])
+                                ->get();
         }
 
         return new PresenceCollection($presences);
     }
+
 
     
 
@@ -45,22 +50,22 @@ class PresenceController extends Controller
             return response()->json(['error' => 'Apprenant not found'], 404);
         }
     
-        $presenceExiste = Presence::where('apprenant_id', $apprenant->id)
-                                    ->whereDate('date_heure_arriver', $dateArrivee->toDateString())
-                                    ->exists();
-    
-        if ($presenceExiste) {
-            return response()->json(['error' => 'Presence already exists'], 400);
+        $presence = Presence::where('date_heure_arriver', $dateArrivee)->first();
+        if (!$presence) {
+            $presence = new Presence();
+            $presence->date_heure_arriver = $dateArrivee;
+            $presence->save();
         }
     
-        $presence = new Presence();
-        $presence->date_heure_arriver = $dateArrivee;
-        $presence->apprenant_id = $apprenant->id ; 
-        $presence->save();
+        if ($presence->apprenants->contains($apprenant)) {
+            return response()->json(['error' => 'Apprenant deja present'], 404);
+        }
         $presence->apprenants()->attach($apprenant->id);
+        
     
         return new ApprenantResource($apprenant);
     }
+    
     
 
 

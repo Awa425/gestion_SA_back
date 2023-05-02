@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Apprenant;
+use App\Models\ApprenantPresence;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,8 +21,7 @@ class Presence extends Model
      * @var array
      */
     protected $fillable = [
-        'date_heure_arriver',
-        'apprenant_id'
+        'date_heure_arriver'
     ];
 
     /**
@@ -36,7 +36,11 @@ class Presence extends Model
 
     public function apprenants()
     {
-        return $this->belongsToMany(Apprenant::class, 'apprenant_presence', 'presence_id', 'apprenant_id');
+        return $this->belongsToMany(Apprenant::class)
+                    ->withTimestamps()
+                    ->withPivot('created_at');
     }
     
+
+
 }
