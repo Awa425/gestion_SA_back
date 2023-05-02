@@ -33,20 +33,20 @@ class Promo_Referentiel_ApprenantController extends Controller
 
         return new PromoReferentielApprenantResource($promoReferentielApprenant);
     }
-    
+
     public function show(Request $request, Promo_Referentiel_Apprenant $promoReferentielApprenant): PromoReferentielApprenantResource
     {
         return new PromoReferentielApprenantResource($promoReferentielApprenant);
     }
 
-    
+
     public function update(Promo_Referentiel_ApprenantUpdateRequest $request, Promo_Referentiel_Apprenant $promoReferentielApprenant): PromoReferentielApprenantResource
     {
         $promoReferentielApprenant->update($request->validated());
 
         return new PromoReferentielApprenantResource($promoReferentielApprenant);
     }
-    
+
     public function getApprenant(Request $request)
     {
         $promoReferentiel=PromoReferentiel::where([
@@ -75,7 +75,8 @@ class Promo_Referentiel_ApprenantController extends Controller
             "referentiel"=> new ReferentielResource($referentiel),
             "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant),
             "numActiveApprenants" =>$numActiveApprenants,
-            "numInactiveApprenants" =>$numInactiveApprenants
+            "numInactiveApprenants" =>$numInactiveApprenants,
+
         ];
     }
 
@@ -93,7 +94,7 @@ class Promo_Referentiel_ApprenantController extends Controller
             ->filter()
             ->whereIn('is_active', [0]);
         })->where(['promo_referentiel_id'=> $promoReferentiel])
-         ->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page');
+         ->get();
         $numActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
         ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
         ->where('promo_referentiels.referentiel_id',$request->referentiel_id)
@@ -109,7 +110,7 @@ class Promo_Referentiel_ApprenantController extends Controller
             "referentiel"=> new ReferentielResource($referentiel),
             "numActiveApprenants" =>$numActiveApprenants,
             "numInactiveApprenants" =>$numInactiveApprenants,
-            "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant), 
+            "apprenants"=>new PromoReferentielApprenantCollection($promoReferentielApprenant),
         ];
     }
 

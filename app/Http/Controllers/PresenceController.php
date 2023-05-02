@@ -17,6 +17,7 @@ class PresenceController extends Controller
 {
     public function index(Request $request)
     {
+
         $date = $request->input('date');
 
         if (!empty($date)) {
@@ -33,9 +34,10 @@ class PresenceController extends Controller
     }
 
 
-    
+  
 
-    
+
+
 
     public function store(Request $request)
     {
@@ -45,7 +47,7 @@ class PresenceController extends Controller
         }
         $matricule = $request->matricule;
         $apprenant = Apprenant::where('matricule', $matricule)->first();
-    
+
         if (!$apprenant) {
             return response()->json(['error' => 'Apprenant not found'], 404);
         }
@@ -66,7 +68,7 @@ class PresenceController extends Controller
         return new ApprenantResource($apprenant);
     }
     
-    
+   
 
 
     public function show(Request $request, Presence $presence)

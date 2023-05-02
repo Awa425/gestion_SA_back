@@ -23,10 +23,10 @@ class PromoController extends Controller
     {
 
 
-       return new PromoCollection(Promo::ignoreRequest(['perpage'])
-       ->filter()
+       return new PromoCollection(Promo::
+       filter()
        ->where('is_active','=',1)
-       ->paginate(env('DEFAULT_PAGINATION'), ['*'], 'page'));
+       ->get());
 
 
     }

@@ -2,29 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Promo;
 use App\Models\Apprenant;
 use App\Models\Referentiel;
-use App\Models\Promo;
-use App\Models\PromoReferentielApprenant;
-use App\Models\PromoReferentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Requests\ApprenantIndexRequest;
+use App\Models\PromoReferentiel;
 use Maatwebsite\Excel\Facades\Excel;
+use Intervention\Image\Facades\Image;
 use App\Http\Resources\ApprenantResource;
-use App\Http\Resources\PromoReferentielResource;
+use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\ApprenantCollection;
+use App\Http\Requests\ApprenantIndexRequest;
 use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Requests\import\ApprenantsImport;
-use App\Http\Resources\PromoReferentielApprenantCollection;
-use App\Http\Resources\PromoReferentielApprenantResource;
+use App\Http\Resources\PromoReferentielResource;
+
 
 class ApprenantController extends Controller
 {
-    public function __construct()
-    {
-    }
+
     public function index(Request $request)
     {
 
@@ -35,6 +33,20 @@ class ApprenantController extends Controller
 
  }
 
+
+ public static function getImageResize(Request $request)
+ {
+     $img = [];
+     if (  count($request->files->keys()) > 0 && $request->hasFile($request->files->keys()[0])) {
+         $file = $request->file($request->files->keys()[0]);
+         $imageType = $file->getClientOriginalExtension();
+         $image_resize = Image::make($file)->resize( 100, 100, function ( $constraint ) {
+             $constraint->aspectRatio();
+         })->encode( $imageType );
+         $img[$request->files->keys()[0]] = $image_resize;
+     }
+     return $img;
+ }
 
 
 
@@ -66,6 +78,9 @@ class ApprenantController extends Controller
 
         $data = $request->validatedAndFiltered();
         $data['password']= array_key_exists('password', $data) ?  $data['password'] : "Passer";
+        $photo = $this->getImageResize($request);
+        $data['photo'] = count($photo) > 0 ? $photo['photo'] : null;
+
 
         $data['password'] = bcrypt($data['password']);
         $data['user_id'] = auth()->user()->id;
