@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('apprenant_id');
             $table->unsignedBigInteger('presence_id');
-            $table->timestamps();
-    
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->nullable();    
             $table->foreign('apprenant_id')->references('id')->on('apprenants')->onDelete('cascade');
             $table->foreign('presence_id')->references('id')->on('presences')->onDelete('cascade');
         });

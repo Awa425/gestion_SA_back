@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Models\Presence;
+use App\Models\ApprenantPresence;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -90,7 +91,6 @@ class Apprenant extends Model
     {
         return $this->belongsToMany(Presence::class, 'apprenant_presence', 'apprenant_id', 'presence_id');
     }
-
 
     public function user(): BelongsTo
     {
