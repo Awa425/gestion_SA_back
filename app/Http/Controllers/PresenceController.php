@@ -18,23 +18,16 @@ class PresenceController extends Controller
     public function index(Request $request)
     {
 
-        $date = $request->input('date');
+        $date = !empty($request->input('date')) ? $request->input('date') : Carbon::today();
 
-        if (!empty($date)) {
-            $presences = Presence::whereDate('date_heure_arriver', $date)
-                                ->with(['apprenants'])
-                                ->get();
-        } else {
-            $presences = Presence::whereDate('date_heure_arriver', Carbon::today())
-                                ->with(['apprenants'])
-                                ->get();
-        }
-
+        $presences = Presence::whereDate('date_heure_arriver', $date)
+                            ->with(['apprenants'])
+                            ->get();
         return new PresenceCollection($presences);
     }
 
 
-  
+
 
 
 
@@ -51,24 +44,24 @@ class PresenceController extends Controller
         if (!$apprenant) {
             return response()->json(['error' => 'Apprenant not found'], 404);
         }
-    
+
         $presence = Presence::where('date_heure_arriver', $dateArrivee)->first();
         if (!$presence) {
             $presence = new Presence();
             $presence->date_heure_arriver = $dateArrivee;
             $presence->save();
         }
-    
+
         if ($presence->apprenants->contains($apprenant)) {
             return response()->json(['error' => 'Apprenant deja present'], 404);
         }
         $presence->apprenants()->attach($apprenant->id);
-        
-    
+
+
         return new ApprenantResource($apprenant);
     }
-    
-   
+
+
 
 
     public function show(Request $request, Presence $presence)
