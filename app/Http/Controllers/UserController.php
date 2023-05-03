@@ -41,13 +41,15 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-
-
         $data = $request->validatedAndFiltered();
 
-        $data['password'] = bcrypt($data['password']);
-        $data['user_id'] = auth()->user()->id;
+        if (empty($data['password'])) {
+            $data['password'] = bcrypt('passer');
+        } else {
+            $data['password'] = bcrypt($data['password']);
+        }
 
+        $data['user_id'] = auth()->user()->id;
         $data['matricule'] = $this->generate_matricule($data['role_id']);
 
         $user = User::create($data);
