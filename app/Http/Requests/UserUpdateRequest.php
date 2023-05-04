@@ -31,7 +31,7 @@ class UserUpdateRequest extends FormRequest
             'email_verified_at' => ['nullable'],
             'user_id' => ['nullable', 'integer'],
             'adresse' => ['nullable', 'string', 'max:191'],
-            'role_id' => ['required', 'integer'],
+            'role_id' => ['nullable', 'integer'],
             'remember_token' => ['nullable', 'string', 'max:100'],
         ];
     }
