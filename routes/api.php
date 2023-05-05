@@ -28,20 +28,15 @@ use App\Http\Resources\PromoReferentielResource;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('apprenant/login', [App\Http\Controllers\ApprenantAuth::class, 'login']);
+// Route::post('apprenant/login', [App\Http\Controllers\ApprenantAuth::class, 'login']);
 
 
 Route::get('/apprenant', function (Request $request) {
-    // =dd($request->headers->all()["authorization"][0]);
     $user = explode(" ",$request->headers->all()["authorization"][0]);
     $token = PersonalAccessToken::findToken($user[1]);
-    //  dd($token->tokenable->id);
-
     $apprenant = Apprenant::find($token->tokenable->id);
     $promoReferentielId=PromoReferentielApprenant::where(['apprenant_id'=> $apprenant->id])->first();
     $promoReferentiel= PromoReferentiel::where(['id'=> $promoReferentielId->promo_referentiel_id])->first();
-
-
     return[
         "apprenant"=> new ApprenantResource($apprenant),
         "promoReferentiel"=> new PromoReferentielResource($promoReferentiel)

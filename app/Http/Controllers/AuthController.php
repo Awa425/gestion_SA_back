@@ -2,40 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\ApprenantResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
 
 
-    public function login(Request $request) {
-        $fields = $request->validate([
-            'email' => 'required|string',
-            'password' => 'required|string'
-        ]);
 
-        // Check email
-        $user = User::where('email', $fields['email'])->first();
+    public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
 
-        // Check password
-        if(!$user || !Hash::check($fields['password'], $user->password)) {
-            return response([
-                'message' => 'Vérifiez vos informations'
-            ], 401);
-        }
-
-        $token = $user->createToken('myapptoken')->plainTextToken;
-
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $token = $user->createToken('User Token')->plainTextToken;
         $response = [
             'user' => new UserResource($user),
             'token' => $token
         ];
-
         return response($response, 201);
+    } elseif (Auth::guard('apprenant')->attempt($credentials)) {
+        $user = Auth::guard('apprenant')->user();
+        $token = $user->createToken('apprenant Token')->plainTextToken;
+        $response = [
+            'user' => new ApprenantResource($user),
+            'token' => $token
+        ];
+        return response($response, 201);
+    } else {
+        return response()->json(['error' => 'Unauthenticated'], 401);
     }
+}
 
     public function logout(Request $request) {
         auth()->user()->tokens()->delete();

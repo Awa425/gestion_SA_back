@@ -34,10 +34,7 @@ class PresenceController extends Controller
 
     public function store(Request $request)
     {
-        $dateArrivee = Carbon::createFromFormat('Y-m-d H:i:s', $request->input('date_heure_arriver'));
-        if (!$dateArrivee) {
-            return response()->json(['error' => 'Invalid date format'], 400);
-        }
+
         $matricule = $request->matricule;
         $apprenant = Apprenant::where('matricule', $matricule)->first();
 
@@ -45,10 +42,10 @@ class PresenceController extends Controller
             return response()->json(['error' => 'Apprenant not found'], 404);
         }
 
-        $presence = Presence::where('date_heure_arriver', $dateArrivee)->first();
+        $presence = Presence::where('date_heure_arriver', Carbon::today())->first();
         if (!$presence) {
             $presence = new Presence();
-            $presence->date_heure_arriver = $dateArrivee;
+            $presence->date_heure_arriver = Carbon::today();
             $presence->save();
         }
 
