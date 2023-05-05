@@ -153,6 +153,17 @@ class ApprenantController extends Controller
 
     }
 
+    public function search(Request $request)
+    {
+        
+        $apprenant= Apprenant::where('matricule','=', $request->matricule)->first('id');
+
+      
+        return $apprenant;
+
+
+    }
+
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
 

@@ -41,13 +41,15 @@ class UserController extends Controller
 
     public function store(UserStoreRequest $request)
     {
-
-
         $data = $request->validatedAndFiltered();
 
-        $data['password'] = bcrypt($data['password']);
-        $data['user_id'] = auth()->user()->id;
+        if (empty($data['password'])) {
+            $data['password'] = bcrypt('passer');
+        } else {
+            $data['password'] = bcrypt($data['password']);
+        }
 
+        $data['user_id'] = auth()->user()->id;
         $data['matricule'] = $this->generate_matricule($data['role_id']);
 
         $user = User::create($data);
@@ -63,13 +65,12 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, User $user)
     {
-
-
         $validatedData = $request->validatedAndFiltered();
 
-        // if (isset($validatedData['password'])) {
-        //     $validatedData['password'] = bcrypt($validatedData['password']);
-        // }
+        if (!empty($validatedData['password'])) {
+            $validatedData['password'] = bcrypt($validatedData['password']);
+        } 
+
         $user->update($validatedData);
 
         return new UserResource($user);
