@@ -73,6 +73,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'addReferentiel']);
     Route::put('pages/promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'removeReferentiel']);
     Route::post('apprenants/search', [App\Http\Controllers\ApprenantController::class, 'search']);
+    Route::post('apprenants/reset', [App\Http\Controllers\ApprenantController::class, 'reset']);
    // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
 
 
