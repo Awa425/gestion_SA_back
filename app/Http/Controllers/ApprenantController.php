@@ -164,6 +164,22 @@ class ApprenantController extends Controller
 
     }
 
+    public function reset(Request $request)
+    {
+        
+        $apprenant = Apprenant::find($request->id);
+        
+        $apprenant->update([
+
+            'password' => bcrypt("Passer"),
+           
+        ]);
+
+        return $apprenant;
+
+
+    }
+
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
 

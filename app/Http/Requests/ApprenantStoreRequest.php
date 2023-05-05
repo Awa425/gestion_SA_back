@@ -24,7 +24,7 @@ class ApprenantStoreRequest extends FormRequest
             'nom' => ['required', 'string', 'max:255'],
             'prenom' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
-            'password' => ['sometimes', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
+            'password' => ['sometimes', 'max:255',],
             'date_naissance' => ['required', 'date'],
             'lieu_naissance' => ['nullable', 'string'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/'],
