@@ -49,7 +49,9 @@ Route::get('/apprenant', function (Request $request) {
 
 Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
 
-
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+       });
 
     Route::apiResources(
         [
