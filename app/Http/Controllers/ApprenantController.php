@@ -23,6 +23,38 @@ use App\Http\Resources\PromoReferentielResource;
 class ApprenantController extends Controller
 {
 
+    /**
+      * @OA\Info(
+ *     description="This is an example API",
+ *     version="1.0.0",
+ *     title="Example API"
+ * )
+     * @OA\Get(
+     *    path="/api/apprenants",
+     *    operationId="index",
+     *    tags={"apprenants"},
+     *    summary="Get list of apprenants",
+     *    description="Get list of apprenants",
+     *    security={{"bearerAuth":{}}}, 
+     *    @OA\Parameter(name="limit", in="query", description="limit", required=false,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Parameter(name="page", in="query", description="the page number", required=false,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Parameter(name="order", in="query", description="order  accepts 'asc' or 'desc'", required=false,
+     *        @OA\Schema(type="string")
+     *    ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
+
     public function index(Request $request)
     {
 
@@ -32,7 +64,36 @@ class ApprenantController extends Controller
            );
 
  }
-
+  /**
+     * @OA\Post(
+     *      path="/api/apprenants",
+     *      operationId="store",
+     *      tags={"apprenants"},
+     *      summary="Store apprenant in DB",
+     *      description="Store apprenant in DB",
+     *    security={{"bearerAuth":{}}}, 
+     *      @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *            required={"nom", "content", "status"},
+     *            @OA\Property(property="nom", type="string", format="string", example="nom"),
+     *            @OA\Property(property="prenom", type="string", format="string", example="prenom"),
+     *            @OA\Property(property="email", type="string", format="string", example="email"),
+     *            @OA\Property(property="date_naissance", type="date", format="string", example="date_naissance"),
+     *            @OA\Property(property="telephone", type="string", format="string", example="telephone"),
+     *            @OA\Property(property="cni", type="string", format="string", example="cni"),
+     *            @OA\Property(property="genre", type="string", format="string", example="genre"),
+     *         ),
+     *      ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=""),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
 
  public static function getImageResize(Request $request)
  {
@@ -138,7 +199,28 @@ class ApprenantController extends Controller
             ], 401);
         }
     }
-
+ /**
+     * @OA\Get(
+     *    path="/api/apprenants/{id}",
+     *    operationId="show",
+     *    tags={"apprenants"},
+     *    summary="Get Apprenant Detail",
+     *    security={{"bearerAuth":{}}}, 
+     *    description="Get Apprenant Detail",
+     *    @OA\Parameter(name="id", in="path", description="Id of Apprenant", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\JsonContent(
+     *          @OA\Property(property="status_code", type="integer", example="200"),
+     *          @OA\Property(property="data",type="object")
+     *           ),
+     *        )
+     *       )
+     *  )
+     */
 
     public function show(Apprenant $apprenant)
     {
@@ -180,6 +262,40 @@ class ApprenantController extends Controller
 
     }
 
+     /**
+     * @OA\Put(
+     *     path="/api/apprenants/{id}",
+     *     operationId="update",
+     *     tags={"apprenants"},
+     *     summary="Update apprenant in DB",
+     *    security={{"bearerAuth":{}}}, 
+     *     description="Update apprenant in DB",
+     *     @OA\Parameter(name="id", in="path", description="Id of apprenant", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(
+     *           required={"nom", "content", "status"},
+     *           @OA\Property(property="nom", type="string", format="string", example="nom"),
+     *            @OA\Property(property="prenom", type="string", format="string", example="prenom"),
+     *            @OA\Property(property="email", type="string", format="string", example="email"),
+     *            @OA\Property(property="date_naissance", type="date", format="string", example="date_naissance"),
+     *            @OA\Property(property="telephone", type="string", format="string", example="telephone"),
+     *            @OA\Property(property="cni", type="string", format="string", example="cni"),
+     *            @OA\Property(property="genre", type="string", format="string", example="genre"),
+     *        ),
+     *     ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status_code", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
+
     public function update(ApprenantUpdateRequest $request, Apprenant $apprenant)
     {
 
@@ -206,6 +322,30 @@ class ApprenantController extends Controller
 
         return new ApprenantResource($apprenant);
     }
+
+
+     /**
+     * @OA\Delete(
+     *    path="/api/apprenants/{id}",
+     *    operationId="destroy",
+     *    tags={"apprenants"},
+     *    summary="Delete Apprenant",
+     *    security={{"bearerAuth":{}}}, 
+     *    description="Delete Apprenant",
+     *    @OA\Parameter(name="id", in="path", description="Id of Apprenant", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *         @OA\Property(property="status_code", type="integer", example="200"),
+     *         @OA\Property(property="data",type="object")
+     *          ),
+     *       )
+     *      )
+     *  )
+     */
     public function destroy(Request $request, Apprenant $apprenant)
     {
 

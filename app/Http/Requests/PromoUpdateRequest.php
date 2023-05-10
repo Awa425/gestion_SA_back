@@ -26,6 +26,7 @@ class PromoUpdateRequest extends FormRequest
             'date_fin_reel' => ['sometimes', 'date'],    
         ];
     }
+    
     public function validatedAndFiltered()
     {
         $allowedFields = ['libelle', 'date_debut', 'date_fin_prevue', 'date_fin_reel'];

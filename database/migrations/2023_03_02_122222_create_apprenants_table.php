@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password', 255);
 
             $table->date('date_naissance');
-            $table->string('lieu_naissance', 255);
+            $table->string('lieu_naissance', 255)->nullable();
             $table->string('genre');
             $table->string('motif', 255)->nullable();
 

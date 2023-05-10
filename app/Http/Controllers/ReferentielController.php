@@ -14,6 +14,33 @@ use  App\Models\User ;
 
 class ReferentielController extends Controller
 {
+     /**
+      
+     * @OA\Get(
+     *    path="/api/referentiels",
+     *    operationId="  index  ",
+     *    tags={"referentiels"},
+     *    summary="Get list of referentiels",
+     *    description="Get list of referentiels",
+     *    security={{"bearerAuth":{}}}, 
+     *    @OA\Parameter(name="limit", in="query", description="limit", required=false,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Parameter(name="page", in="query", description="the page number", required=false,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Parameter(name="order", in="query", description="order  accepts 'asc' or 'desc'", required=false,
+     *        @OA\Schema(type="string")
+     *    ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
 
     public function index()
     {
@@ -26,6 +53,32 @@ class ReferentielController extends Controller
          );
     }
 
+    /**
+     * @OA\Post(
+     *      path="/api/referentiels",
+     *      operationId="  store  ",
+     *      tags={"referentiels"},
+     *      summary="Store referentiel in DB",
+     *      description="Store referentiel in DB",
+     *    security={{"bearerAuth":{}}}, 
+     *      @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *            required={"libelle", "content", "status"},
+     *            @OA\Property(property="libelle", type="string", format="string", example="libelle"),
+     *            @OA\Property(property="description", type="string", format="string", example="description"),
+     *         ),
+     *      ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=""),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
+
     public function store(ReferentielStoreRequest $request)
     {
         $validatedData = $request->validated();
@@ -36,11 +89,61 @@ class ReferentielController extends Controller
 
     }
 
+    /**
+     * @OA\Get(
+     *    path="/api/referentiels/{id}",
+     *    operationId="  show  ",
+     *    tags={"referentiels"},
+     *    summary="Get referentiel Detail",
+     *    security={{"bearerAuth":{}}}, 
+     *    description="Get referentiel Detail",
+     *    @OA\Parameter(name="id", in="path", description="Id of referentiel", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\JsonContent(
+     *          @OA\Property(property="status_code", type="integer", example="200"),
+     *          @OA\Property(property="data",type="object")
+     *           ),
+     *        )
+     *       )
+     *  )
+     */
+
     public function show(Request $request, Referentiel $referentiel)
     {
         return new ReferentielResource($referentiel);
     }
-
+/**
+     * @OA\Put(
+     *     path="/api/referentiels/{id}",
+     *     operationId="  update  ",
+     *     tags={"referentiels"},
+     *     summary="Update referentiel in DB",
+     *    security={{"bearerAuth":{}}}, 
+     *     description="Update referentiel in DB",
+     *     @OA\Parameter(name="id", in="path", description="Id of referentiel", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(
+     *          required={"libelle", "content", "status"},
+     *            @OA\Property(property="libelle", type="string", format="string", example="libelle"),
+     *            @OA\Property(property="description", type="string", format="string", example="description"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status_code", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
     public function update(ReferentielUpdateRequest $request, Referentiel $referentiel)
     {
 
@@ -48,6 +151,28 @@ class ReferentielController extends Controller
 
         return new ReferentielResource($referentiel);
     }
+    /**
+         * @OA\Delete(
+         *    path="/api/referentiels/{id}",
+         *    operationId="  destroy  ",
+         *    tags={"referentiels"},
+         *    summary="Delete referentiel",
+         *    security={{"bearerAuth":{}}}, 
+         *    description="Delete referentiel",
+         *    @OA\Parameter(name="id", in="path", description="Id of referentiel", required=true,
+         *        @OA\Schema(type="integer")
+         *    ),
+         *    @OA\Response(
+         *         response=200,
+         *         description="Success",
+         *         @OA\JsonContent(
+         *         @OA\Property(property="status_code", type="integer", example="200"),
+         *         @OA\Property(property="data",type="object")
+         *          ),
+         *       )
+         *      )
+         *  )
+         */
 
     public function destroy(Request $request, Referentiel $referentiel)
     {

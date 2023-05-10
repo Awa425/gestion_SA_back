@@ -25,7 +25,7 @@ class ApprenantUpdateRequest extends FormRequest
             'email' => ['required', 'email', 'max:255'],
             'password' => ['sometimes', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
             'date_naissance' => ['required', 'date'],
-            'lieu_naissance' => ['required', 'string', 'max:255'],
+            'lieu_naissance' => ['nullable', 'string', 'max:255'],
             'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/' ],
             'cni' => ['required' , 'regex:/^([0-9]*)$/' ],
             'reserves' => ['nullable'],
