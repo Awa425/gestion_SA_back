@@ -19,6 +19,33 @@ use App\Http\Resources\PromoReferentielCollection;
 
 class PromoController extends Controller
 {
+       /**
+      
+     * @OA\Get(
+     *    path="/api/promos",
+     *    operationId=" index",
+     *    tags={"promos"},
+     *    summary="Get list of promos",
+     *    description="Get list of promos",
+     *    security={{"bearerAuth":{}}}, 
+     *    @OA\Parameter(name="limit", in="query", description="limit", required=false,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Parameter(name="page", in="query", description="the page number", required=false,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Parameter(name="order", in="query", description="order  accepts 'asc' or 'desc'", required=false,
+     *        @OA\Schema(type="string")
+     *    ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
     public function index(Request $request)
     {
 
@@ -32,7 +59,32 @@ class PromoController extends Controller
     }
 
 
-
+/**
+     * @OA\Post(
+     *      path="/api/promos",
+     *      operationId=" store",
+     *      tags={"promos"},
+     *      summary="Store promo in DB",
+     *      description="Store promo in DB",
+     *    security={{"bearerAuth":{}}}, 
+     *      @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *            required={"libelle", "content", "status"},
+     *            @OA\Property(property="libelle", type="string", format="string", example="libelle"),
+     *            @OA\Property(property="date_debut", type="string", format="date", example="date_debut"),
+     *            @OA\Property(property="date_fin_prevue", type="string", format="date", example="date_fin_prevue"),
+     *         ),
+     *      ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status", type="integer", example=""),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
 
     public function show(Promo $promo)
     {
@@ -55,7 +107,28 @@ class PromoController extends Controller
         ];
 
     }
-
+ /**
+     * @OA\Get(
+     *    path="/api/promos/{id}",
+     *    operationId=" show",
+     *    tags={"promos"},
+     *    summary="Get promo Detail",
+     *    security={{"bearerAuth":{}}}, 
+     *    description="Get promo Detail",
+     *    @OA\Parameter(name="id", in="path", description="Id of promo", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success",
+     *          @OA\JsonContent(
+     *          @OA\Property(property="status_code", type="integer", example="200"),
+     *          @OA\Property(property="data",type="object")
+     *           ),
+     *        )
+     *       )
+     *  )
+     */
 
     public function Referentiel(Request $request, $promo_id)
 {
@@ -182,6 +255,36 @@ public function removeReferentiel(Request $request, $id)
 
     }
 
+      /**
+     * @OA\Put(
+     *     path="/api/promos/{id}",
+     *     operationId=" update",
+     *     tags={"promos"},
+     *     summary="Update promo in DB",
+     *    security={{"bearerAuth":{}}}, 
+     *     description="Update promo in DB",
+     *     @OA\Parameter(name="id", in="path", description="Id of promo", required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(
+     *           required={"libelle", "content", "status"},
+     *             @OA\Property(property="libelle", type="string", format="string", example="libelle"),
+     *            @OA\Property(property="date_debut", type="string", format="date", example="date_debut"),
+     *            @OA\Property(property="date_fin_prevue", type="string", format="date", example="date_fin_prevue"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *          response=200, description="Success",
+     *          @OA\JsonContent(
+     *             @OA\Property(property="status_code", type="integer", example="200"),
+     *             @OA\Property(property="data",type="object")
+     *          )
+     *       )
+     *  )
+     */
+
     public function update(PromoUpdateRequest $request, Promo $promo,Referentiel ...$referentiels)
     {
         // if $referentiels is not provided, use an empty array
@@ -195,6 +298,29 @@ public function removeReferentiel(Request $request, $id)
         return new PromoResource($promo);
 
     }
+
+     /**
+     * @OA\Delete(
+     *    path="/api/promos/{id}",
+     *    operationId=" destroy",
+     *    tags={"promos"},
+     *    summary="Delete promo",
+     *    security={{"bearerAuth":{}}}, 
+     *    description="Delete promo",
+     *    @OA\Parameter(name="id", in="path", description="Id of promo", required=true,
+     *        @OA\Schema(type="integer")
+     *    ),
+     *    @OA\Response(
+     *         response=200,
+     *         description="Success",
+     *         @OA\JsonContent(
+     *         @OA\Property(property="status_code", type="integer", example="200"),
+     *         @OA\Property(property="data",type="object")
+     *          ),
+     *       )
+     *      )
+     *  )
+     */
 
     public function destroy(Request $request, Promo $promo)
     {
