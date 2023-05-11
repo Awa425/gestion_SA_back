@@ -102,6 +102,10 @@ class Apprenant extends Authenticatable
     public function promoReferentielApprenants()
 {
     return $this->hasMany(PromoReferentielApprenant::class);
+} 
+public function absence()
+{
+    return $this->hasMany(Absence::class);
 }
 
 
