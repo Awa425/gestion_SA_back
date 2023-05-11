@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Carbon\Carbon;
-use App\Models\Presence;
+use App\Http\Controllers\AbsenceController;
+use Illuminate\Http\Request;
 
 class AbsenceInsertion extends Command
 {
@@ -27,14 +27,11 @@ class AbsenceInsertion extends Command
      */
     public function handle(): void
     {
-        $presence = Presence::where('date_heure_arriver', Carbon::now())->first();
+        $absenceController = new AbsenceController();
+        $request = new Request();
 
-        if (!$presence) {
-            $presence = new Presence();
-            $presence->date_heure_arriver = Carbon::now();
-            $presence->save();
-        }
+        $absenceController->store($request);
 
-        $this->info('La commande bien executer');
+        $this->info('La commande a été exécutée avec succès.');
     }
 }
