@@ -5,7 +5,6 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Carbon\Carbon;
-use App\Models\Presence;
 
 class Kernel extends ConsoleKernel
 {
@@ -14,7 +13,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('app:absence-insertion')->everyTwoMinutes();
+        $schedule->command('app:absence-insertion')->dailyAt('16:00');   
     }
     
     // protected function schedule(Schedule $schedule)
