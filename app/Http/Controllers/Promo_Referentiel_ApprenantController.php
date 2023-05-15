@@ -58,7 +58,7 @@ class Promo_Referentiel_ApprenantController extends Controller
         $promoReferentielApprenant= PromoReferentielApprenant::whereHas('apprenant', function ($query) {
             $query
             ->filter()
-            ->whereIn('is_active', [1]);
+            ->whereIn('is_active', [1,0]);
         })->where(['promo_referentiel_id'=> $promoReferentiel])->get();
         $numActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
         ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
@@ -92,7 +92,7 @@ class Promo_Referentiel_ApprenantController extends Controller
         $promoReferentielApprenant= PromoReferentielApprenant::whereHas('apprenant', function ($query) {
             $query
             ->filter()
-            ->whereIn('is_active', [0]);
+            ->whereIn('is_active', [0])->where('motif', '!=', null);
         })->where(['promo_referentiel_id'=> $promoReferentiel])
          ->get();
         $numActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
