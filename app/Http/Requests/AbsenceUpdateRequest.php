@@ -20,8 +20,10 @@ class AbsenceUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date_absence' => ['required'],
-            'apprenant_id' => ['required']
+            'date_absence' => ['nullable'],
+            'apprenant_id' => ['required'],
+            'justifier' => ['nullable'],
+            'motif' => ['required'],
         ];
     }
 }

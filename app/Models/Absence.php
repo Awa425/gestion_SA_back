@@ -18,6 +18,8 @@ class Absence extends Model
         'id',
         'apprenant_id',
         'date_absence',
+        'justifier',
+        'motif',
     ];
 
     /**
@@ -27,7 +29,7 @@ class Absence extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'date_absence' => 'date',
+        'date_absence' =>'date:Y-m-d',
     ];
 
     

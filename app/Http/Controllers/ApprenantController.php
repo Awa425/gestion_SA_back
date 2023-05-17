@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Promo;
 use App\Models\Apprenant;
+use App\Models\Absence;
 use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -226,10 +227,12 @@ class ApprenantController extends Controller
     {
         $promoReferentielId=PromoReferentielApprenant::where(['apprenant_id'=> $apprenant->id])->first('promo_referentiel_id');
         $promoReferentiel= PromoReferentiel::where(['id'=> $promoReferentielId->promo_referentiel_id])->first();
+        $apprenantAbsence= Absence::where(['apprenant_id'=> $apprenant->id])->get();
 
         return[
             "apprenant"=> new ApprenantResource($apprenant),
-            "promoReferentiel"=> new PromoReferentielResource($promoReferentiel)
+            "promoReferentiel"=> new PromoReferentielResource($promoReferentiel),
+            "apprenantAbsence"=> $apprenantAbsence
         ];
 
 
