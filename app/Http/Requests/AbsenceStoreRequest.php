@@ -21,7 +21,9 @@ class AbsenceStoreRequest extends FormRequest
     {
         return [
             'date_absence' => ['required'],
-            'apprenant_id' => ['required']
+            'apprenant_id' => ['required'],
+            'justifier' => ['nullable'],
+            'motif' => ['nullable'],
         ];
     }
 }

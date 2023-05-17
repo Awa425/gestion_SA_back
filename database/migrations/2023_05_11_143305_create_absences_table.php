@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('apprenant_id');
             $table->date('date_absence');
+            $table->boolean('justifier')->default(0);
+            $table->string('motif', 255)->nullable();
             $table->foreign('apprenant_id')->references('id')->on('apprenants');
             $table->timestamps();
         });
