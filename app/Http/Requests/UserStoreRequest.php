@@ -23,7 +23,7 @@ class UserStoreRequest extends FormRequest
             'name' => ['required', 'string', 'max:191'],
             'prenom' => ['required', 'string', 'max:191'],
             'email' => ['required', 'email', 'max:191'],
-            'password' => ['nullable', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
+            'password' => ['nullable','string'],
             'photo' => ['nullable'],
             'telephone' => ['nullable', 'string', 'max:191'],
             'email_verified_at' => ['nullable'],
