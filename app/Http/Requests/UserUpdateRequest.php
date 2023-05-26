@@ -25,7 +25,7 @@ class UserUpdateRequest extends FormRequest
             'date_naissance' => ['nullable', 'string', 'max:191'],
             'matricule' => ['nullable', 'string', 'max:191'],
             'email' => ['required', 'email', 'max:191'],
-            'password' => ['nullable', 'regex:/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',],
+            'password' => ['nullable'],
             'photo' => ['nullable'],
             'telephone' => ['nullable', 'string', 'max:191'],
             'email_verified_at' => ['nullable'],
