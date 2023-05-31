@@ -51,9 +51,7 @@ class PromoController extends Controller
     {
 
 
-       return new PromoCollection(Promo::
-       filter()
-       ->get());
+        return new PromoCollection(Promo::filter()->orderBy('created_at', 'desc')->get());
 
 
     }
@@ -178,11 +176,12 @@ public function ReferentielLinked(Request $request, $promo_id)
                 ['promo_id', $promo->id],
             ])->first();
         if ($promoReferentiel !== null) {
-            $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielIds) {
+            $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielIds, $promo) {
                 $query->select('apprenant_id')
                     ->from('promo_referentiel_apprenants')
                     ->join('promo_referentiels', 'promo_referentiel_apprenants.promo_referentiel_id', '=', 'promo_referentiels.id')
-                    ->where('promo_referentiels.referentiel_id', '=', $referentielIds);
+                    ->where('promo_referentiels.referentiel_id', '=', $referentielIds)
+                    ->where('promo_referentiels.promo_id', '=', $promo->id);
             })->first();
 
             if ($apprenantsToUpdate) {
@@ -227,11 +226,12 @@ public function removeReferentiel(Request $request, $id)
                 ['referentiel_id', $referentielIds],
                 ['promo_id', $promo->id],
             ])->first();
-            $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielIds) {
+            $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielIds, $promo) {
                 $query->select('apprenant_id')
                     ->from('promo_referentiel_apprenants')
                     ->join('promo_referentiels', 'promo_referentiel_apprenants.promo_referentiel_id', '=', 'promo_referentiels.id')
-                    ->where('promo_referentiels.referentiel_id', '=', $referentielIds);
+                    ->where('promo_referentiels.referentiel_id', '=', $referentielIds)
+                    ->where('promo_referentiels.promo_id', '=', $promo->id);
             })->first();
 
             if ($apprenantsToUpdate) {
@@ -269,8 +269,45 @@ public function removeReferentiel(Request $request, $id)
               $promo->referentiels()->attach($referentiels);
 
         }
-
-
+        //disable last promo
+        $previouspromo=Promo::where('id', '<>', $promo->id)
+        ->orderBy('created_at', 'desc')
+        ->limit(1)
+        ->first();
+        if($previouspromo){
+            $referentielIds=PromoReferentiel::where('promo_id',$previouspromo->id)->pluck('referentiel_id');
+                if( $referentielIds){
+                    foreach($referentielIds as $referentielId){
+                        $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielId, $previouspromo) {
+                            $query->select('apprenant_id')
+                                ->from('promo_referentiel_apprenants')
+                                ->join('promo_referentiels', 'promo_referentiel_apprenants.promo_referentiel_id', '=', 'promo_referentiels.id')
+                                ->where('promo_referentiels.referentiel_id', '=', $referentielId)
+                                ->where('promo_referentiels.promo_id', '=', $previouspromo->id);
+                        })->first();
+            
+                        if ($apprenantsToUpdate) {
+                            Apprenant::whereIn('id', function($query) use($referentielId, $previouspromo) {
+                                $query->select('apprenant_id')
+                                    ->from('promo_referentiel_apprenants')
+                                    ->join('promo_referentiels', 'promo_referentiel_apprenants.promo_referentiel_id', '=', 'promo_referentiels.id')
+                                    ->where('promo_referentiels.referentiel_id', '=', $referentielId)
+                                    ->where('promo_referentiels.promo_id', '=', $previouspromo->id);
+                            })->update(['is_active' => 0]);
+                        }
+                     }
+                    }
+    
+    
+           $promoReferentiels=PromoReferentiel::where('promo_id',$previouspromo->id)->update(
+                            ['is_active' => 0]);
+            $previouspromo->update([
+                'is_active' => !$previouspromo->is_active,
+    
+                'is_ongoing' => !$previouspromo->is_ongoing,
+            ]);
+    
+        }
         return new PromoResource($promo);
 
     }
@@ -348,11 +385,12 @@ public function removeReferentiel(Request $request, $id)
         $referentielIds=PromoReferentiel::where('promo_id',$promo->id)->pluck('referentiel_id');
             if( $referentielIds){
                 foreach($referentielIds as $referentielId){
-                    $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielId) {
+                    $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielId, $promo) {
                         $query->select('apprenant_id')
                             ->from('promo_referentiel_apprenants')
                             ->join('promo_referentiels', 'promo_referentiel_apprenants.promo_referentiel_id', '=', 'promo_referentiels.id')
-                            ->where('promo_referentiels.referentiel_id', '=', $referentielId);
+                            ->where('promo_referentiels.referentiel_id', '=', $referentielId)
+                            ->where('promo_referentiels.promo_id', '=', $promo->id);
                     })->first();
         
                     if ($apprenantsToUpdate) {
@@ -381,11 +419,12 @@ public function removeReferentiel(Request $request, $id)
         $referentielIds=PromoReferentiel::where('promo_id',$promo->id)->pluck('referentiel_id');
             if( $referentielIds){
                 foreach($referentielIds as $referentielId){
-                    $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielId) {
+                    $apprenantsToUpdate = Apprenant::whereIn('id', function($query) use($referentielId, $promo) {
                         $query->select('apprenant_id')
                             ->from('promo_referentiel_apprenants')
                             ->join('promo_referentiels', 'promo_referentiel_apprenants.promo_referentiel_id', '=', 'promo_referentiels.id')
-                            ->where('promo_referentiels.referentiel_id', '=', $referentielId);
+                            ->where('promo_referentiels.referentiel_id', '=', $referentielId)
+                            ->where('promo_referentiels.promo_id', '=', $promo->id);
                     })->first();
         
                     if ($apprenantsToUpdate) {
