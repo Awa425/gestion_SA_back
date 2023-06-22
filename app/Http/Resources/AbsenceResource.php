@@ -16,7 +16,7 @@ class AbsenceResource extends JsonResource
 {
     return [
         'id' => $this->id,
-        'date_absence' => $this->date_absence,
+        'date_absence' => $this->date_absence->format('Y-m-d'),
         'justifier' => $this->justifier,
         'motif' => $this->motif,
         'apprenant' => ApprenantResource::make($this->apprenant),

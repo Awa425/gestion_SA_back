@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class Absence extends Model
 {
+    use Filterable;
     use HasFactory;
 
     /**
@@ -20,6 +22,14 @@ class Absence extends Model
         'date_absence',
         'justifier',
         'motif',
+    ];
+
+    private static $whiteListFilter=[
+        'apprenant_id',
+        'date_absence',
+        'justifier',
+        'motif',
+
     ];
 
     /**
