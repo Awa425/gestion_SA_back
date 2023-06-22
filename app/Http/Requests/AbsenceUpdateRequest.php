@@ -21,7 +21,6 @@ class AbsenceUpdateRequest extends FormRequest
     {
         return [
             'date_absence' => ['nullable'],
-            'apprenant_id' => ['required'],
             'justifier' => ['nullable'],
             'motif' => ['required'],
         ];

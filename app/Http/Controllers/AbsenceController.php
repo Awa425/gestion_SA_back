@@ -8,6 +8,8 @@ use App\Models\Presence;
 use App\Models\Absence;
 use App\Models\Apprenant;
 use App\Models\ApprenantPresence;
+use App\Models\PromoReferentiel;
+use App\Models\PromoReferentielApprenant;
 use Illuminate\Http\Response;
 use App\Http\Resources\AbsenceResource;
 use App\Http\Resources\ApprenantResource;
@@ -27,8 +29,38 @@ class AbsenceController extends Controller
         return new AbsenceCollection($absence);
     }
 
+    
+    public function getAbsences(Request $request)
+    {
 
+        $promoReferentiel = PromoReferentiel::where('promo_id', $request->promo_id)
+        ->where('referentiel_id', $request->referentiel_id)
+        ->first();
 
+        $apprenantIds = PromoReferentielApprenant::where('promo_referentiel_id', $promoReferentiel->id)
+            ->pluck('apprenant_id');
+
+        $date = !empty($request->input('date')) ? $request->input('date') : Carbon::yesterday();
+        $absences = Absence::whereIn('apprenant_id', $apprenantIds)
+        ->filter()                
+        ->get();
+
+        
+        return new AbsenceCollection($absences);
+    }
+
+    public function getAbsence(Request $request)
+    {
+
+        
+       
+        $absence = Absence::where('id', $request->id)
+        ->filter()                
+        ->first();
+
+        
+        return new AbsenceResource($absence);
+    }
 
 
 
@@ -73,7 +105,11 @@ class AbsenceController extends Controller
     public function update(AbsenceUpdateRequest $request, Absence $absence)
     {
 
-        $absence->update($request->validated());
+        $absence->update([
+            'justifier' => 1,
+
+            'motif' => $request->motif,
+        ]);
 
         return new AbsenceResource($absence);
     }
