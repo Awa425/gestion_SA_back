@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('promo_id');
             $table->unsignedBigInteger('referentiel_id');
-            $table->boolean('is_active')->default(1);
             $table->foreign('promo_id')->references('id')->on('promos');
             $table->foreign('referentiel_id')->references('id')->on('referentiels');
+            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
+
     }
 
     /**

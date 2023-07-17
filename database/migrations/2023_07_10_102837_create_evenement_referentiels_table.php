@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('evenement_referentiels', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreign('evenement_id')
+            $table->foreignId('evenement_id')
             ->references('id')
             ->on('evenements') ;
-            $table->foreign('promo_referentiel_id')
-            ->references('id')
-            ->on('promo_referentiels') ;
+            $table->foreignId('promo_referentiel_id')->constrained('promo_referentiels');
+
         });
     }
 

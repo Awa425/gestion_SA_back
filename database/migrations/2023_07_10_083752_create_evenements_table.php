@@ -19,10 +19,12 @@ return new class extends Migration
             $table->date('event_date');
             $table->date('notfication_date');
             $table->time('event_time');
-            $table->foreign('user_id')
+            $table->foreignId('user_id')
             ->references('id')
             ->on('users') ;
             $table->timestamps();
+            $table->boolean('is_active')->default(0);
+
         });
     }
 
