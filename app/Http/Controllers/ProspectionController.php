@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProspectionRequest;
+use App\Http\Resources\ProspectionResource;
 use App\Models\Prospection;
 use Illuminate\Http\Request;
 
@@ -13,14 +15,17 @@ class ProspectionController extends Controller
     public function index()
     {
         //
+        return ProspectionResource::collection(Prospection::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProspectionRequest $request)
     {
         //
+        $prospection = Prospection::create($request->validated());
+        return new ProspectionResource($prospection);
     }
 
     /**
@@ -29,6 +34,7 @@ class ProspectionController extends Controller
     public function show(Prospection $prospection)
     {
         //
+        dd($prospection->insertion());
     }
 
     /**

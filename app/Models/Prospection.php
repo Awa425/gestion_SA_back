@@ -12,4 +12,11 @@ class Prospection extends Model
     protected $guarded = [
         'id'
     ];
+
+
+
+    public function insertion()
+    {
+        return $this->hasMany(InsertionApprenant::class);
+    }
 }

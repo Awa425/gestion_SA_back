@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('adresse');
             $table->mediumText('commentaire');
             $table->timestamp('date');
-            $table->integer('nbre');
+            $table->integer('nbre')->nullable();
             $table->boolean('is_active')->default(1);
             $table->timestamps();
         });

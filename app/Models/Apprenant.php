@@ -46,7 +46,7 @@ class Apprenant extends Authenticatable
 
     ];
 
-    private static $whiteListFilter=[
+    private static $whiteListFilter = [
         'matricule',
         'nom',
         'prenom',
@@ -100,20 +100,23 @@ class Apprenant extends Authenticatable
     }
 
     public function promoReferentielApprenants()
-{
-    return $this->hasMany(PromoReferentielApprenant::class);
-} 
-public function absence()
-{
-    return $this->hasMany(Absence::class);
-}
-
-
-public function promoReferentiels()
     {
-        return $this->belongsToMany(PromoReferentiel::class,'promo_referentiel_apprenants');
+        return $this->hasMany(PromoReferentielApprenant::class);
+    }
+    public function absence()
+    {
+        return $this->hasMany(Absence::class);
     }
 
 
+    public function promoReferentiels()
+    {
+        return $this->belongsToMany(PromoReferentiel::class, 'promo_referentiel_apprenants');
+    }
 
+
+    public function insertion()
+    {
+        return $this->hasMany(InsertionApprenant::class);
+    }
 }
