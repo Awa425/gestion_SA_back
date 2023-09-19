@@ -14,6 +14,7 @@ use App\Http\Resources\ApprenantResource;
 use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Resources\PromoReferentielResource;
 
 /*
@@ -93,4 +94,14 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
 
     });
+
+    // Dashboard
+    Route::get('dashboard/promos', [DashboardController::class, 'promos']);
+    Route::get('dashboard/apprenats', [DashboardController::class, 'apprenants']);
+    Route::get('dashboard/apprenats/actuel', [DashboardController::class, 'apprenantActuel']);
+    Route::get('dashboard/apprenats/feminin', [DashboardController::class, 'numbApprenantFeminin']);
+    Route::get('dashboard/apprenats/masculin', [DashboardController::class, 'numbApprenantGarcon']);
+    Route::get('dashboard/referenciel', [DashboardController::class, 'referenciel']);
+
+    
 });
