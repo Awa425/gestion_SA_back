@@ -15,6 +15,7 @@ use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PromoController;
 use App\Http\Resources\PromoReferentielResource;
 
 /*
@@ -96,12 +97,19 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     });
 
     // Dashboard
+    Route::get('dashboard/referentiels/apprenants', [DashboardController::class,'getnbrAppByRef']);
+    Route::get('dashboard/promos/nonActive', [DashboardController::class, 'allPromoNonActiveAndApp']);
     Route::get('dashboard/promos', [DashboardController::class, 'promos']);
     Route::get('dashboard/apprenats', [DashboardController::class, 'apprenants']);
     Route::get('dashboard/apprenats/actuel', [DashboardController::class, 'apprenantActuel']);
     Route::get('dashboard/apprenats/feminin', [DashboardController::class, 'numbApprenantFeminin']);
     Route::get('dashboard/apprenats/masculin', [DashboardController::class, 'numbApprenantGarcon']);
     Route::get('dashboard/referenciel', [DashboardController::class, 'referenciel']);
+    Route::get('dashboard/apprenats/feminin/{idPromo}', [DashboardController::class, 'getNumAppFemByPromoId']);
+    Route::get('dashboard/apprenats/masculin/{idPromo}', [DashboardController::class, 'getNumAppMasByPromoId']);
+    Route::get('dashboard/apprenats/{idPromo}',[DashboardController::class, 'getNumAppByPromo']);
+
+    // Route::get('dashboard/apprenats/{genre}/{idPromo}', [DashboardController::class, 'getNumAppByGenreAndPromoId']);
 
     
 });
