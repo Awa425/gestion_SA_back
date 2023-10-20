@@ -57,7 +57,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
 
     Route::apiResources(
         [
-
             'promos'=> App\Http\Controllers\PromoController::class,
             'referentiels'=> App\Http\Controllers\ReferentielController::class,
             'apprenants'=> App\Http\Controllers\ApprenantController::class,
@@ -67,6 +66,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'absences' => App\Http\Controllers\AbsenceController::class,
             'prospections' => App\Http\Controllers\ProspectionController::class,
             'insertions' => App\Http\Controllers\InsertionApprenantController::class,
+            'events'=>App\Http\Controllers\EventController::class
 
             ]
         );

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Apprenant;
+use App\Models\Referentiel;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,9 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Apprenant::factory(10)->create();
-
+        
         // $this->call(RoleSeeder::class);
         // $this->call(UserSeeder::class);
+        // $this->call(PromoSeeder::class);
+        // $this->call(Referentiel::class);
+        
+        Apprenant::factory(10)->create();
+
     }
 }

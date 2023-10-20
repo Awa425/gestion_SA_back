@@ -106,14 +106,14 @@ class DashboardController extends Controller
         $promoActuel=Promo::where('is_active',1)->first();
         
         $idsPromoRef= PromoReferentiel::where('promo_id',$promoActuel->id)->pluck('id');
-        $iddevData=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>2])->first();
-        $iddevWeb=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>3])->first();
-        $refDig=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>1])->first();
-
+        $iddevData=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>3])->first();
+        $iddevWeb=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>1])->first();
+        $refDig=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>2])->first();
+        
         return response([
-            'ref_dig'=>PromoReferentielApprenant::where('promo_referentiel_id',$refDig->id)->count(),
-            'dev_web'=>PromoReferentielApprenant::where('promo_referentiel_id',$iddevWeb->id)->count(),
-            'dev_data'=>PromoReferentielApprenant::where('promo_referentiel_id',$iddevData->id)->count(),
+            'ref_dig'=>PromoReferentielApprenant::where('promo_referentiel_id', $refDig ? $refDig->id : 0)->count(),
+            'dev_web'=>PromoReferentielApprenant::where('promo_referentiel_id',$iddevWeb ? $iddevWeb->id : 0)->count(),
+            'dev_data'=>PromoReferentielApprenant::where('promo_referentiel_id',$iddevData? $iddevData->id :0)->count(),
         ]);
     }
 
