@@ -16,8 +16,9 @@ return new class extends Migration
             $table->timestamps();
             $table->foreignId('evenement_id')
             ->references('id')
-            ->on('evenements') ;
-            $table->foreignId('promo_referentiel_id')->constrained('promo_referentiels');
+            ->on('evenements')
+            ->cascadeOnDelete() ;
+            $table->foreignId('promo_referentiel_id')->constrained('promo_referentiels')->cascadeOnDelete();
 
         });
     }

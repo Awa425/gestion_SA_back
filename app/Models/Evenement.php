@@ -27,7 +27,11 @@ class Evenement extends Model
     }
     public function referentiels()
     {
-        return $this->belongsToMany(Referentiel::class,'evenement_referentiels','evenement_id', 'promo_referentiel_id');
+        return $this->belongsToMany(Referentiel::class,'evenement_referentiels','evenement_id', 'promo_referentiel_id')->withPivot('promo_referentiel_id');
+    }
+    public function evenement_referentiels()
+    {
+        return $this->hasMany(EvenementReferentiel::class);
     }
     public function scopeIdsPromoRef(Builder $builder)
     {

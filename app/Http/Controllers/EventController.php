@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        return EvenementResource::collection(Evenement::all());
     }
 
     /**
@@ -38,7 +38,8 @@ class EventController extends Controller
                  'event_date'=>$request->event_date,
                  'notfication_date'=>$request->notfication_date,
                  'event_time'=>$request->event_time,
-                 'user_id'=>$request->user_id
+                 'user_id'=>$request->user_id,
+                 'is_active'=>1
              ]);
              $event->referentiels()->attach($idsPromoReferentiel);
              return new EvenementResource($event);
@@ -49,24 +50,37 @@ class EventController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Evenement $evenement)
+    public function show(Evenement $event)
     {
-        //
+        if ($event) {
+            return EvenementResource::make($event);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Evenement $evenement)
+    public function update(Request $request, Evenement $event)
     {
-        //
+        $promoActive=Promo::where('is_active',1)->first();
+        $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
+                            ->whereIn('referentiel_id',$request->referentiel_id)
+                            ->pluck('id');
+        $event->update($request->only(
+            "subject", "photo", "description", "event_date","notfication_date",'event_time'));
+
+        $event->referentiels()->sync($idsPromoReferentiel);
+        return new EvenementResource($event);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Evenement $evenement)
+    public function destroy(Evenement $event)
     {
-        //
+        if ($event) {
+            $event->delete();
+            return new EvenementResource($event);
+        }
     }
 }

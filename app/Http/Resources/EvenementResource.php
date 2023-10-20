@@ -22,7 +22,9 @@ class EvenementResource extends JsonResource
             'notfication_date'=>$this->notfication_date,
             'event_time'=>$this->event_time,
             'user_id'=>$this->user_id,
-            'referentiels'=>$this->referentiels
+            'referentiels'=> EvenementReferentielResource::collection($this->evenement_referentiels)->map(function($ref){
+                return $ref->promo_referentiel->referentiel;
+            })
         ];
 }
 }
