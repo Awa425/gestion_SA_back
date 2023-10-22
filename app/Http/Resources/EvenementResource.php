@@ -15,6 +15,7 @@ class EvenementResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'subject'=>$this->subject,
             'photo'=>$this->photo,
             'description'=>$this->description,
@@ -22,8 +23,9 @@ class EvenementResource extends JsonResource
             'notfication_date'=>$this->notfication_date,
             'event_time'=>$this->event_time,
             'user_id'=>$this->user_id,
-            'referentiels'=> EvenementReferentielResource::collection($this->evenement_referentiels)->map(function($ref){
-                return $ref->promo_referentiel->referentiel;
+            'referentiels'=> EvenementReferentielResource::collection($this->evenement_referentiels)
+                            ->map(function($ref){
+                                return $ref->promo_referentiel->referentiel;
             })
         ];
 }

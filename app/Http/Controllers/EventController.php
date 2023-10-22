@@ -26,7 +26,7 @@ class EventController extends Controller
     {
         $promoActive=Promo::where('is_active',1)->first();
         $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
-                            ->whereIn('referentiel_id',$request->referentiel_id)
+                            ->whereIn('referentiel_id',$request->referentiels_id)
                             ->pluck('id');
  
         return DB::transaction( function () use($request, $idsPromoReferentiel) {
@@ -64,7 +64,7 @@ class EventController extends Controller
     {
         $promoActive=Promo::where('is_active',1)->first();
         $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
-                            ->whereIn('referentiel_id',$request->referentiel_id)
+                            ->whereIn('referentiel_id',$request->referentiels_id)
                             ->pluck('id');
         $event->update($request->only(
             "subject", "photo", "description", "event_date","notfication_date",'event_time'));
