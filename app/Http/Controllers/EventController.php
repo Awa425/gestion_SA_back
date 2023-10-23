@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EvenementRequest;
 use App\Http\Resources\EvenementResource;
+use App\Jobs\verifyEventComingJob;
+use App\Models\Apprenant;
 use App\Models\Promo;
 use App\Models\Evenement;
+use App\Models\EvenementReferentiel;
 use Illuminate\Http\Request;
 use App\Models\PromoReferentiel;
+use App\Models\PromoReferentielApprenant;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+
+use function PHPSTORM_META\map;
 
 class EventController extends Controller
 {
@@ -17,26 +25,28 @@ class EventController extends Controller
     public function index()
     {
         return EvenementResource::collection(Evenement::all());
+        // return $this->getAppRefEvent();
+ 
     }
-
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(EvenementRequest $request)
     {
         $promoActive=Promo::where('is_active',1)->first();
         $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
                             ->whereIn('referentiel_id',$request->referentiels_id)
                             ->pluck('id');
- 
-        return DB::transaction( function () use($request, $idsPromoReferentiel) {
 
+        return DB::transaction( function () use($request, $idsPromoReferentiel) {
+            $notDate=Carbon::parse($request->event_date)->subDays(3)->format('Y-m-d');
+            // return $notDate;
             $event= Evenement::firstOrCreate([
                  'subject'=>$request->subject,
                  'photo'=>$request->photo,
                  'description'=>$request->description,
                  'event_date'=>$request->event_date,
-                 'notfication_date'=>$request->notfication_date,
+                 'notfication_date'=>$notDate,
                  'event_time'=>$request->event_time,
                  'user_id'=>$request->user_id,
                  'is_active'=>1
@@ -82,5 +92,11 @@ class EventController extends Controller
             $event->delete();
             return new EvenementResource($event);
         }
+    }
+    public function annulerEvent($idEvent){
+        Evenement::annuleOrRestoreEvent($idEvent,0);
+    }
+    public function restoreEvent($idEvent){
+        Evenement::annuleOrRestoreEvent($idEvent,1);
     }
 }

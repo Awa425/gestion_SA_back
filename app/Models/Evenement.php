@@ -6,18 +6,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 class Evenement extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
+    use Notifiable;
     protected $fillable=[
         'subject',
         'description',
         'event_date',
         'event_time',
         'photo',
-        'motification_date',
+        'notfication_date',
         'user_id',
     ];
 
@@ -27,7 +30,8 @@ class Evenement extends Model
     }
     public function referentiels()
     {
-        return $this->belongsToMany(Referentiel::class,'evenement_referentiels','evenement_id', 'promo_referentiel_id')->withPivot('promo_referentiel_id');
+        return $this->belongsToMany(Referentiel::class,'evenement_referentiels','evenement_id',
+        'promo_referentiel_id')->withPivot('promo_referentiel_id');
     }
     public function evenement_referentiels()
     {
@@ -39,7 +43,10 @@ class Evenement extends Model
                        ->where('is_active',1)
                        ->first() ;
        return $builder->from('promo_referentiels')->where('promo_id',$promoActive->id);
-                       
         
+    }
+    public function scopeAnnuleOrRestoreEvent(Builder $builder,$idEvent,$etat){
+        return $builder->where('id',$idEvent)
+                       ->update(['is_active'=>$etat]);
     }
 }

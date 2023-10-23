@@ -19,7 +19,7 @@ use App\Http\Requests\ApprenantStoreRequest;
 use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Requests\import\ApprenantsImport;
 use App\Http\Resources\PromoReferentielResource;
-
+use App\Notifications\SendEventNotification;
 
 class ApprenantController extends Controller
 {
@@ -164,7 +164,7 @@ class ApprenantController extends Controller
         ])->first();
         $apprenant->promoReferentiels()->attach($promoReferentiel);
 
-
+    
         return new ApprenantResource($apprenant);
     }
 

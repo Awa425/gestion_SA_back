@@ -15,6 +15,7 @@ use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\PromoController;
 use App\Http\Resources\PromoReferentielResource;
 
@@ -111,5 +112,8 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
 
     // Route::get('dashboard/apprenats/{genre}/{idPromo}', [DashboardController::class, 'getNumAppByGenreAndPromoId']);
 
-    
+    //Evenements
+    Route::put('events/{idEvent}/annulation',[EventController::class,'annulerEvent']);
+    Route::put('events/{idEvent}/restauration',[EventController::class,'restoreEvent']);
+
 });
