@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Evenement extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
     protected $fillable=[
         'subject',
         'description',
@@ -27,7 +28,8 @@ class Evenement extends Model
     }
     public function referentiels()
     {
-        return $this->belongsToMany(Referentiel::class,'evenement_referentiels','evenement_id', 'promo_referentiel_id')->withPivot('promo_referentiel_id');
+        return $this->belongsToMany(Referentiel::class,'evenement_referentiels','evenement_id',
+        'promo_referentiel_id')->withPivot('promo_referentiel_id');
     }
     public function evenement_referentiels()
     {
