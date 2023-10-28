@@ -37,9 +37,9 @@ class PresenceController extends Controller
 
         $matricule = $request->matricule;
         $apprenant = Apprenant::where('matricule', $matricule)->first();
-
+        // dd($apprenant);
         if (!$apprenant) {
-            return response()->json(['error' => 'Apprenant not found'], 404);
+            return response()->json(['error' => 'L\'apprenant n\'existe pas dans la base!'], 404);
         }
 
         $presence = Presence::where('date_heure_arriver', Carbon::today())->first();
@@ -50,12 +50,18 @@ class PresenceController extends Controller
         }
 
         if ($presence->apprenants->contains($apprenant)) {
-            return response()->json(['error' => 'Apprenant deja present'], 404);
+            return response()->json([
+                'message' => 'Apprenant deja present',
+                'apprenant'=> new ApprenantResource($apprenant)
+            ]);
         }
         $presence->apprenants()->attach($apprenant->id);
 
 
-        return new ApprenantResource($apprenant);
+        return response()->json([
+                'message' => 'Scan avec succés!',
+                'apprenant'=> new ApprenantResource($apprenant)
+            ]);
     }
 
 
