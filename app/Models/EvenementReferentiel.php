@@ -14,5 +14,8 @@ class EvenementReferentiel extends Model
         'event_id',
         'promo_refentiel_id',
     ];
-
+    public function promo_referentiel()
+    {
+        return $this->belongsTo(PromoReferentiel::class);
+    } 
 }

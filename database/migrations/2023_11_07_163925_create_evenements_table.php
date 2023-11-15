@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('evenements', function (Blueprint $table) {
             $table->id();
             $table->string('subject');
-            $table->binary('photo');
+            $table->binary('photo')->nullable();
             $table->mediumText('description');
             $table->date('event_date');
             $table->date('notfication_date');
@@ -23,8 +23,8 @@ return new class extends Migration
             ->references('id')
             ->on('users') ;
             $table->timestamps();
-            $table->boolean('is_active')->default(0);
-
+            $table->boolean('is_active')->default(1);
+            $table->date('deleted_at')->nullable();
         });
     }
 

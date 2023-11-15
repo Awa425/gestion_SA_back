@@ -15,6 +15,8 @@ use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\PromoController;
 use App\Http\Resources\PromoReferentielResource;
 
 /*
@@ -56,7 +58,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
 
     Route::apiResources(
         [
-
             'promos'=> App\Http\Controllers\PromoController::class,
             'referentiels'=> App\Http\Controllers\ReferentielController::class,
             'apprenants'=> App\Http\Controllers\ApprenantController::class,
@@ -66,6 +67,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'absences' => App\Http\Controllers\AbsenceController::class,
             'prospections' => App\Http\Controllers\ProspectionController::class,
             'insertions' => App\Http\Controllers\InsertionApprenantController::class,
+            'events'=>App\Http\Controllers\EventController::class
 
             ]
         );
@@ -96,12 +98,22 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     });
 
     // Dashboard
+    Route::get('dashboard/referentiels/apprenants', [DashboardController::class,'getnbrAppByRef']);
+    Route::get('dashboard/promos/nonActive', [DashboardController::class, 'allPromoNonActiveAndApp']);
     Route::get('dashboard/promos', [DashboardController::class, 'promos']);
     Route::get('dashboard/apprenats', [DashboardController::class, 'apprenants']);
     Route::get('dashboard/apprenats/actuel', [DashboardController::class, 'apprenantActuel']);
     Route::get('dashboard/apprenats/feminin', [DashboardController::class, 'numbApprenantFeminin']);
     Route::get('dashboard/apprenats/masculin', [DashboardController::class, 'numbApprenantGarcon']);
     Route::get('dashboard/referenciel', [DashboardController::class, 'referenciel']);
+    Route::get('dashboard/apprenats/feminin/{idPromo}', [DashboardController::class, 'getNumAppFemByPromoId']);
+    Route::get('dashboard/apprenats/masculin/{idPromo}', [DashboardController::class, 'getNumAppMasByPromoId']);
+    Route::get('dashboard/apprenats/{idPromo}',[DashboardController::class, 'getNumAppByPromo']);
 
-    
+    // Route::get('dashboard/apprenats/{genre}/{idPromo}', [DashboardController::class, 'getNumAppByGenreAndPromoId']);
+
+    //Evenements
+    Route::put('events/{idEvent}/annulation',[EventController::class,'annulerEvent']);
+    Route::put('events/{idEvent}/restauration',[EventController::class,'restoreEvent']);
+
 });

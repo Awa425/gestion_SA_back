@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('app:absence-insertion')->dailyAt('16:00');   
+        $schedule->command('app:absence-insertion')->dailyAt('16:00');
+        $schedule->command('app:send-event-notifications')->everyMinute();
     }
     
     // protected function schedule(Schedule $schedule)
