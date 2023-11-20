@@ -17,8 +17,8 @@ class EmploieDuTempsResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "cours"=>$this->nom_cours,
-            "date"=>$this->date_cours,
+            "nom_cours"=>$this->nom_cours,
+            "date_cours"=>$this->date_cours,
             "heure_debut"=>$this->heure_debut,
             "heure_fin"=>$this->heure_fin,
             "idRef"=>PromoReferentiel::where('id',$this->promo_referentiel_id)->pluck('referentiel_id')[0],
