@@ -56,7 +56,9 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
        });
-
+       
+    Route::get('promos/promoActuel',[PromoController::class, 'getPromoActuel']);
+    
     Route::apiResources(
         [
             'promos'=> App\Http\Controllers\PromoController::class,
@@ -70,7 +72,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'insertions' => App\Http\Controllers\InsertionApprenantController::class,
             'events'=>App\Http\Controllers\EventController::class,
             'emploieDuTemps'=>App\Http\Controllers\EmploieDuTempController::class,
-
             ]
         );
     Route::get('emploieDuTemps/ref/{idRef}/promo/{idPromo}', [EmploieDuTempController::class,'getCoursByIdRefAndIdPromo']);

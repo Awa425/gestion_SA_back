@@ -27,21 +27,41 @@ class EmploieDuTempController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function validerEmploieDutemps($idPromo,$heure_deb,$heure_fin,$promoRefId,$dateCours){
+        if (Promo::where('is_active',1)->pluck('id')[0]!=$idPromo) {
+            return false;
+        }
+        $cours = EmploieDuTemp::where(['date_cours'=>$dateCours,'promo_referentiel_id'=>$promoRefId])->get();
+        $hrDeb=strtotime($heure_deb);
+        $hrFin=strtotime($heure_fin);
+        foreach ($cours as $c) {
+            if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
+             $hrDeb>strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
+                return false;
+            }
+        }
+        return true;
+    }
     public function store(EmploieDuTempsRequest $request)
     {
+        $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
         if (Promo::where('is_active',1)->pluck('id')[0]!=$request->idPromo) {
-            return ("Impossible pour ce promo !");
+            return ("Impossible pour ce promo");
         }
-        $cours = EmploieDuTemp::where('date_cours',$request->date_cours)->get();
+        $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])->get();
+        // return $cours;
         $hrDeb=strtotime($request->heure_debut);
         $hrFin=strtotime($request->heure_fin);
         foreach ($cours as $c) {
             if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
-             $hrDeb>strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
-                return("Il y'a dejà un cours de prévu à cet heure ! ");
+             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
+                return ("Impossible de faire l'insertion");
             }
         }
-        $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
+    //    if (!$this->validerEmploieDutemps($request->idPromo,$request->heure_debut,$request->heure_fin,$promoRef->id,
+    //    $request->date_cours)) {
+    //         return ("Impossible de faire l'insertion");
+    //    } 
 
         $emploieDuTemps= EmploieDuTemp::firstOrCreate([
                 'nom_cours'=>$request->nom_cours,
@@ -68,6 +88,19 @@ class EmploieDuTempController extends Controller
      */
     public function update(Request $request, EmploieDuTemp $emploieDuTemp)
     {
+        $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
+        if (Promo::where('is_active',1)->pluck('id')[0]!=$request->idPromo) {
+            return ("Impossible pour ce promo");
+        }
+        $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])->get();
+        $hrDeb=strtotime($request->heure_debut);
+        $hrFin=strtotime($request->heure_fin);
+        foreach ($cours as $c) {
+            if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
+             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
+                return ("Impossible de faire l'insertion");
+            }
+        }
         $emploieDuTemp->update($request->only('nom_cours','date_cours','heure_debut','heure_fin'));
         return new EmploieDuTempsResource($emploieDuTemp);
     }
