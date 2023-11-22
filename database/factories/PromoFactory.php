@@ -19,9 +19,9 @@ class PromoFactory extends Factory
      * Define the model's default state.
      */
     public function definition(): array
-    {
+    {   $i=1;
         return [
-            'libelle' => $this->faker->regexify('[A-Za-z0-9]{255}'),
+            'libelle' => 'Promo'.$i,
             'date_debut' => $this->faker->date(),
             'date_fin_prevue' => $this->faker->date(),
             'date_fin_reel' => $this->faker->date(),

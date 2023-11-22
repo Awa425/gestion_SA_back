@@ -14,7 +14,7 @@ return [
     */
 
     'default' => env('MAIL_MAILER', 'smtp'),
-
+    
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
@@ -114,11 +114,13 @@ return [
     */
 
     'markdown' => [
-        'theme' => 'default',
-
+        'logo' => 'https://orangedigitalcenter.be/wp-content/themes/odc/src/assets/img/logo-odc.svg',
+        'signature' => 'Cordialement,
+         Orange Digital Center',
         'paths' => [
             resource_path('views/vendor/mail'),
         ],
+        'theme' => 'default',
     ],
 
 ];

@@ -55,6 +55,11 @@ class PromoController extends Controller
 
 
     }
+//    get promo actuelle
+    public function getPromoActuel(){
+        $promoActuel= Promo::where("is_active",1)->first();
+        return $promoActuel->id;
+    }
 
 
 /**

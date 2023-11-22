@@ -21,7 +21,6 @@ class PromoReferentielApprenantFactory extends Factory
     public function definition(): array
     {
         return [
-            //
         ];
     }
 }

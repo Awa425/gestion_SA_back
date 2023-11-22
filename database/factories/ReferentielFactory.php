@@ -19,7 +19,7 @@ class ReferentielFactory extends Factory
      * Define the model's default state.
      */
     public function definition(): array
-    {
+    {   
         return [
             'libelle' => $this->faker->regexify('[A-Za-z0-9]{255}'),
             'description' => $this->faker->text,

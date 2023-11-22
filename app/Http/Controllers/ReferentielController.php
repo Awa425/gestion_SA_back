@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ReferentielStoreRequest;
-use App\Http\Requests\ReferentielUpdateRequest;
-use App\Http\Resources\ReferentielCollection;
-use App\Http\Resources\ReferentielResource;
+use App\Models\Promo;
+use  App\Models\User ;
 use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use  App\Models\User ;
+use App\Http\Resources\ReferentielResource;
+use App\Http\Resources\ReferentielCollection;
+use App\Http\Requests\ReferentielStoreRequest;
+use App\Http\Requests\ReferentielUpdateRequest;
 
 
 class ReferentielController extends Controller
@@ -41,7 +42,7 @@ class ReferentielController extends Controller
      *       )
      *  )
      */
-
+   
     public function index()
     {
         return new ReferentielCollection(Referentiel::ignoreRequest(['perpage'])

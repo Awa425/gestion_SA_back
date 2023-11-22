@@ -69,7 +69,6 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-
     public function promos() : HasMany
     {
         return $this->hasMany(Promo::class);
@@ -99,7 +98,6 @@ class User extends Authenticatable
     {
         return $user->role->libelle === RoleServiceProvider::VIGILE;
     }
-
 
     public static function isApprenant($user): bool
     {
