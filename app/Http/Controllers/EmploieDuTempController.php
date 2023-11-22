@@ -36,7 +36,8 @@ class EmploieDuTempController extends Controller
         $hrFin=strtotime($heure_fin);
         foreach ($cours as $c) {
             if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
-             $hrDeb>strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
+            $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
+            $hrFin>=strtotime($c->heure_debut) && $hrFin<strtotime($c->heure_fin) ) {
                 return false;
             }
         }
@@ -54,7 +55,8 @@ class EmploieDuTempController extends Controller
         $hrFin=strtotime($request->heure_fin);
         foreach ($cours as $c) {
             if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
-             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
+             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
+             $hrFin>=strtotime($c->heure_debut) && $hrFin<strtotime($c->heure_fin) ) {
                 return ("Impossible de faire l'insertion");
             }
         }
@@ -95,10 +97,14 @@ class EmploieDuTempController extends Controller
         $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])->get();
         $hrDeb=strtotime($request->heure_debut);
         $hrFin=strtotime($request->heure_fin);
-        foreach ($cours as $c) {
-            if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
-             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ) {
-                return ("Impossible de faire l'insertion");
+        if (!$emploieDuTemp) {
+            # code...
+            foreach ($cours as $c) {
+                if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
+                 $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
+                 $hrFin>=strtotime($c->heure_debut) && $hrFin<strtotime($c->heure_fin)) {
+                    return ("Impossible de faire l'insertion");
+                }
             }
         }
         $emploieDuTemp->update($request->only('nom_cours','date_cours','heure_debut','heure_fin'));
