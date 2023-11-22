@@ -56,7 +56,7 @@ class EmploieDuTempController extends Controller
         foreach ($cours as $c) {
             if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
              $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
-             $hrFin>=strtotime($c->heure_debut) && $hrFin<strtotime($c->heure_fin) ) {
+             $hrFin>=strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin) ) {
                 return ("Impossible de faire l'insertion");
             }
         }
@@ -97,16 +97,18 @@ class EmploieDuTempController extends Controller
         $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])->get();
         $hrDeb=strtotime($request->heure_debut);
         $hrFin=strtotime($request->heure_fin);
-        if (!$emploieDuTemp) {
+        if (strtotime($request->date_cours)!=strtotime($emploieDuTemp->date_cours) ||
+         $hrDeb!=strtotime($emploieDuTemp->heure_debut) || $hrFin!=strtotime($emploieDuTemp->heure_fin)) {
             # code...
             foreach ($cours as $c) {
                 if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
                  $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
-                 $hrFin>=strtotime($c->heure_debut) && $hrFin<strtotime($c->heure_fin)) {
-                    return ("Impossible de faire l'insertion");
+                 $hrFin>=strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin)) {
+                    return ("Impossible de faire la modification");
                 }
             }
         }
+
         $emploieDuTemp->update($request->only('nom_cours','date_cours','heure_debut','heure_fin'));
         return new EmploieDuTempsResource($emploieDuTemp);
     }
