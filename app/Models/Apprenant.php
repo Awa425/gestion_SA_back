@@ -3,13 +3,23 @@
 namespace App\Models;
 
 use App\Models\Presence;
+use App\Mail\NouvelApprenantMail;
+use App\Models\ApprenantPresence;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+
 
 class Apprenant extends Authenticatable
 {
@@ -75,6 +85,8 @@ class Apprenant extends Authenticatable
         'date_naissance' => 'date:Y-m-d',
         'is_active' => 'boolean',
     ];
+    protected $appends = ['decrypted_password'];
+
 
     public function toArray()
     {
@@ -88,6 +100,17 @@ class Apprenant extends Authenticatable
         return $this->belongsToMany(Presence::class, 'apprenant_presence', 'apprenant_id', 'presence_id');
     }
 
+    public function getDecryptedPasswordAttribute()
+    {
+
+        // dd('test');
+        try {
+            return Crypt::decryptString($this->attributes['password']);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            // Gérer l'erreur de décryptage ici si nécessaire
+            return null;
+        }
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
