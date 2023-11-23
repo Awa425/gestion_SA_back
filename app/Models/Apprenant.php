@@ -100,17 +100,7 @@ class Apprenant extends Authenticatable
         return $this->belongsToMany(Presence::class, 'apprenant_presence', 'apprenant_id', 'presence_id');
     }
 
-    public function getDecryptedPasswordAttribute()
-    {
-
-        // dd('test');
-        try {
-            return Crypt::decryptString($this->attributes['password']);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            // Gérer l'erreur de décryptage ici si nécessaire
-            return null;
-        }
-    }
+    
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

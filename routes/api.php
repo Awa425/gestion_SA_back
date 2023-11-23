@@ -18,6 +18,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmploieDuTempController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\RoleController;
 use App\Http\Resources\PromoReferentielResource;
 
 /*
@@ -120,3 +121,5 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('events/{idEvent}/restauration',[EventController::class,'restoreEvent']);
 
 });
+
+Route::apiResource('/role',RoleController::class);
