@@ -90,10 +90,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('pages/promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'removeReferentiel']);
     Route::post('apprenants/search', [App\Http\Controllers\ApprenantController::class, 'search']);
     Route::post('apprenants/reset', [App\Http\Controllers\ApprenantController::class, 'reset']);
-   // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
-
-
-
 
     Route::group(['prefix' => 'apprenant'], function (){
 
@@ -119,5 +115,4 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     //Evenements
     Route::put('events/{idEvent}/annulation',[EventController::class,'annulerEvent']);
     Route::put('events/{idEvent}/restauration',[EventController::class,'restoreEvent']);
-
 });

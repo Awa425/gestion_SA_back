@@ -32,7 +32,7 @@ class EventController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(EvenementRequest $request)
-    {
+    {                  
         $promoActive=Promo::where('is_active',1)->first();
         $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
                             ->whereIn('referentiel_id',$request->referentiels_id)
