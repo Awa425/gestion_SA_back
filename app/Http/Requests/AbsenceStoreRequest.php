@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AbsenceStoreRequest extends FormRequest
+class ApprenantStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,11 +19,26 @@ class AbsenceStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'date_absence' => ['required'],
-            'apprenant_id' => ['required'],
-            'justifier' => ['nullable'],
+            'nom' => ['required', 'string', 'max:255'],
+            'prenom' => ['required', 'string', 'max:255'],
+            'email' => ['unique:apprenants','required', 'email', 'max:255'],
+            'password' => ['sometimes', 'max:255',],
+            'date_naissance' => ['required', ],
+            'lieu_naissance' => ['nullable', 'string'],
+            'telephone' => ['required' , 'regex:/^([0-9\s\-\+\(\)]*)$/'],
+            'cni' => ['required' , 'regex:/^([0-9]*)$/' ],
+            'genre' => ['required'],
+            'photo' => ['nullable'],
+            'reserves' => ['nullable'],
             'motif' => ['nullable'],
+
         ];
+    }
+    public function validatedAndFiltered()
+    {
+        $allowedFields = ['nom', 'prenom', 'email', 'password', 'date_naissance', 'lieu_naissance', 'genre', 'telephone','cni','photo','reserves','motif'];
+        return $this->only($allowedFields);
     }
 }
