@@ -53,10 +53,8 @@ class EventController extends Controller
              ]);
              $event->referentiels()->attach($idsPromoReferentiel);
              return new EvenementResource($event);
-
         });
     }
-
     /**
      * Display the specified resource.
      */
