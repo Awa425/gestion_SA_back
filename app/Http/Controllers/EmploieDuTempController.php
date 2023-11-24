@@ -84,7 +84,7 @@ class EmploieDuTempController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, EmploieDuTemp $emploieDuTemp)
+    public function update(EmploieDuTempsRequest $request, EmploieDuTemp $emploieDuTemp)
     {
         $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
         if (Promo::where('is_active',1)->pluck('id')[0]!=$request->idPromo) {
