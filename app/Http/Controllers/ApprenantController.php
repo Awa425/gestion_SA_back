@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Promo;
-use App\Models\Apprenant;
 use App\Models\Absence;
+use App\Models\Apprenant;
 use App\Models\Referentiel;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Notifications\SendMail;
 use App\Models\PromoReferentiel;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
@@ -16,10 +17,10 @@ use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\ApprenantCollection;
 use App\Http\Requests\ApprenantIndexRequest;
 use App\Http\Requests\ApprenantStoreRequest;
+use App\Notifications\SendEventNotification;
 use App\Http\Requests\ApprenantUpdateRequest;
 use App\Http\Requests\import\ApprenantsImport;
 use App\Http\Resources\PromoReferentielResource;
-use App\Notifications\SendEventNotification;
 
 class ApprenantController extends Controller
 {
@@ -36,7 +37,7 @@ class ApprenantController extends Controller
      *    tags={"apprenants"},
      *    summary="Get list of apprenants",
      *    description="Get list of apprenants",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *    @OA\Parameter(name="limit", in="query", description="limit", required=false,
      *        @OA\Schema(type="integer")
      *    ),
@@ -72,7 +73,7 @@ class ApprenantController extends Controller
      *      tags={"apprenants"},
      *      summary="Store apprenant in DB",
      *      description="Store apprenant in DB",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -114,76 +115,96 @@ class ApprenantController extends Controller
 
 
 
-    public static function generate_matricule($promo_libelle, $referentiel_libelle)
+ public function generate_matricule($promo_libelle)
+ {
+     // Obtenez le préfixe de la promo en prenant la première lettre de chaque mot
+     $promo_prefix = '';
+     $promo_tabs = explode(' ', $promo_libelle);
+
+     foreach ($promo_tabs as $promo_tab) {
+         $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
+     }
+
+     // Obtenez le nombre d'apprenants actuels pour déterminer le numéro d'incrémentation
+     $count = Apprenant::count() + 1;
+
+     // Formatez le numéro d'incrémentation avec trois chiffres
+     $formatted_count = str_pad($count, 3, '0', STR_PAD_LEFT);
+
+     // Concaténez le préfixe de la promo avec le numéro d'incrémentation
+     $matricule = $promo_prefix . '-' . $formatted_count;
+
+     return $matricule;
+ }
+
+
+
+ public function store(ApprenantStoreRequest $request)
+ {
+     $data = $request->validatedAndFiltered();
+     $data['password'] = array_key_exists('password', $data) ? $data['password'] : "Passer";
+     $photo = $this->getImageResize($request);
+     $data['photo'] = count($photo) > 0 ? $photo['photo'] : null;
+
+     $data['password'] = bcrypt($data['password']);
+     $data['user_id'] = auth()->user()->id;
+
+     // Utiliser la méthode generate_matricule de l'instance d'ApprenantController
+     $matricule = $this->generate_matricule($request->promo_libelle, $request->referentiel_libelle);
+     $data['matricule'] = $matricule;
+
+     $data['reserves'] = self::diff_array(
+         $request->all(),
+         $request->validated(),
+         null,
+         (new Apprenant())->getFillable()
+     );
+
+     // Insert into apprenant
+     $apprenant = Apprenant::create($data);
+
+     // Insert into promoReferentielApprenant
+     $promoReferentiel = PromoReferentiel::where([
+         ['promo_id', '=', $request->promo_id],
+         ['referentiel_id', '=', $request->referentiel_id]
+     ])->first();
+     $apprenant->promoReferentiels()->attach($promoReferentiel);
+
+     // Envoi de l'email
+     if (method_exists($apprenant, 'notify')) {
+         $apprenant->notify(new SendMail($apprenant));
+     }
+
+     return new ApprenantResource($apprenant);
+ }
+
+
+
+ public function storeExcel(Request $request)
     {
-
-
-        $promo_tabs = explode(' ', $promo_libelle);
-        $referentiel_tabs = explode(' ', $referentiel_libelle);
-        $promo_prefix = '';
-        $referentiel_prefix = '';
-
-        foreach ($promo_tabs as $promo_tab) {
-            $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
-        }
-        foreach ($referentiel_tabs as $referentiel_tab) {
-            $referentiel_prefix .= strtoupper(substr($referentiel_tab, 0, 1));
-        }
-        $date = date('YmdHis') . number_format(microtime(true), 3, '', '');
-        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
-        return $matricule;
-    }
-
-    public function store(ApprenantStoreRequest $request)
-    {
-
-
-        $data = $request->validatedAndFiltered();
-        $data['password']= array_key_exists('password', $data) ?  $data['password'] : "Passer";
-        $photo = $this->getImageResize($request);
-        $data['photo'] = count($photo) > 0 ? $photo['photo'] : null;
-
-
-        $data['password'] = bcrypt($data['password']);
-        $data['user_id'] = auth()->user()->id;
-        $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
-        $referentiel = Referentiel::where('id', '=', $request->referentiel_id)->select('libelle')->first();
-        $data['matricule'] = $this->generate_matricule($promo['libelle'], $referentiel['libelle']);
-        $data['reserves'] = self::diff_array($request->all(), $request->validated(), null, (new Apprenant())->getFillable());
-
-
-
-        //insert into apprenant
-
-        $apprenant = Apprenant::create($data);
-
-        //insert into promoReferentielApprenant
-        $promoReferentiel = PromoReferentiel::where([
-            ['promo_id', '=', $request->promo_id],
-            ['referentiel_id', '=', $request->referentiel_id]
-        ])->first();
-        $apprenant->promoReferentiels()->attach($promoReferentiel);
-
-    
-        return new ApprenantResource($apprenant);
-    }
-
-
-    public function storeExcel(Request $request)
-    {
-
         $request->validate([
             "excel_file" => 'required|mimes:xlsx,csv,xls',
         ]);
+
         try {
             $file = $request->file('excel_file');
-            Excel::import(new ApprenantsImport(), $file);
+            $import = new ApprenantsImport();
+            Excel::import($import, $file);
+
+            // Envoi d'email pour chaque apprenant créé
+            $apprenants = $import->getApprenants();
+
+            foreach ($apprenants as $apprenant) {
+                if (method_exists($apprenant, 'notify')) {
+                    $apprenant->notify(new SendMail($apprenant));
+                }
+            }
 
             return response()->json([
                 'message' => 'Insertion en masse réussie',
             ], 201);
-
         } catch (\Illuminate\Database\QueryException $e) {
+            // Gestion des erreurs lors de l'insertion
             if ($e->errorInfo[1] == 1062) {
                 $message = "Erreur de duplication d'entrée";
             } else {
@@ -193,20 +214,24 @@ class ApprenantController extends Controller
             return response()->json([
                 'message' => 'Erreur lors de l\'insertion en masse : ' . $message,
             ], 401);
-
         } catch (\Exception $e) {
+            // Gestion des autres exceptions
             return response()->json([
                 'message' => 'Erreur lors de l\'insertion en masse : ' . $e->getMessage(),
             ], 401);
         }
     }
+
+
+
+  
  /**
      * @OA\Get(
      *    path="/api/apprenants/{id}",
      *    operationId="show",
      *    tags={"apprenants"},
      *    summary="Get Apprenant Detail",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *    description="Get Apprenant Detail",
      *    @OA\Parameter(name="id", in="path", description="Id of Apprenant", required=true,
      *        @OA\Schema(type="integer")
@@ -240,10 +265,10 @@ class ApprenantController extends Controller
 
     public function search(Request $request)
     {
-        
+
         $apprenant= Apprenant::where('matricule','=', $request->matricule)->first('id');
 
-      
+
         return $apprenant;
 
 
@@ -251,13 +276,13 @@ class ApprenantController extends Controller
 
     public function reset(Request $request)
     {
-        
+
         $apprenant = Apprenant::find($request->id);
-        
+
         $apprenant->update([
 
             'password' => bcrypt("Passer"),
-           
+
         ]);
 
         return $apprenant;
@@ -271,7 +296,7 @@ class ApprenantController extends Controller
      *     operationId="update",
      *     tags={"apprenants"},
      *     summary="Update apprenant in DB",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *     description="Update apprenant in DB",
      *     @OA\Parameter(name="id", in="path", description="Id of apprenant", required=true,
      *         @OA\Schema(type="integer")
@@ -333,7 +358,7 @@ class ApprenantController extends Controller
      *    operationId="destroy",
      *    tags={"apprenants"},
      *    summary="Delete Apprenant",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *    description="Delete Apprenant",
      *    @OA\Parameter(name="id", in="path", description="Id of Apprenant", required=true,
      *        @OA\Schema(type="integer")

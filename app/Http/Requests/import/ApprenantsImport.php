@@ -30,8 +30,10 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
     private $password;
     private $promo;
     private $referentiel;
-    private $referentiel_libelle ;
+    private $referentiel_libelle;
     private $promo_libelle;
+    private $apprenants = [];
+    private $apprenantController;
 
     public function __construct()
     {
@@ -42,17 +44,18 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
         $this->referentiel = Referentiel::find($this->referentielId);
         $this->promo_libelle = $this->promo->libelle;
         $this->referentiel_libelle = $this->referentiel->libelle;
+        $this->apprenantController = new ApprenantController();
     }
+
 
     public function model(array $row)
     {
+        // $date_naissance = Carbon::createFromFormat('Y-m-d', $row['date_naissance'])->toDateString();
+        // $matricule = ApprenantController::generate_matricule($this->promo_libelle, $this->referentiel_libelle);
+        $matricule = $this->apprenantController->generate_matricule($this->promo_libelle, $this->referentiel_libelle);
 
-
-
-        $matricule=ApprenantController::generate_matricule($this->promo_libelle,$this->referentiel_libelle);
         $date_naissance = Carbon::parse($row['date_naissance'])->toDateString();
-
-
+        // dd($row);
         $apprenant = new Apprenant([
             'matricule' => $matricule,
             'nom' => $row['nom'],
@@ -60,7 +63,7 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
             'email' => $row['email'],
             'telephone' => $row['telephone'],
             'password' => $this->password,
-            'date_naissance' =>  $date_naissance,
+            'date_naissance' => $date_naissance,
             'lieu_naissance' => $row['lieu_naissance'],
             'genre' => $row['genre'],
             'user_id' => auth()->user()->id,
@@ -72,13 +75,23 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
             ['referentiel_id', '=', $this->referentielId]
         ])->first();
 
-            $apprenant->save();
-            $apprenant->promoReferentiels()->attach($promoReferentiel);
+        $apprenant->save();
+        $apprenant->promoReferentiels()->attach($promoReferentiel);
+
+        $this->apprenants[] = $apprenant;
 
         return [$apprenant];
     }
+
+
+    public function getApprenants()
+    {
+        return $this->apprenants;
+    }
+
     public function rules(): array
     {
+        // dd(request());
         return [
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -89,12 +102,12 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
             'telephone' => 'required|nullable',
             'cni' => 'sometimes|required|numeric|nullable',
             'genre' => 'required|string|nullable',
-            'photo'=> 'sometimes|required|mimes:png,jpg,jpeg,gif,webp',
+            'photo' => 'sometimes|required|mimes:png,jpg,jpeg,gif,webp',
 
         ];
     }
 
-      /**
+    /**
      * @param  Collection  $collection
      */
     public function collection(Collection $collection)
