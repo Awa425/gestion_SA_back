@@ -71,6 +71,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'prospections' => App\Http\Controllers\ProspectionController::class,
             'insertions' => App\Http\Controllers\InsertionApprenantController::class,
             'events'=>App\Http\Controllers\EventController::class,
+            'presenceEvent'=>App\Http\Controllers\PresenceEventController::class,
             'emploieDuTemps'=>App\Http\Controllers\EmploieDuTempController::class,
             ]
         );
