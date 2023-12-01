@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\presenceEventResource;
-use App\Models\PresenceEvent;
+use App\Models\Promo;
+use App\Models\Apprenant;
 use Illuminate\Http\Request;
+use App\Models\PresenceEvent;
+use App\Models\PromoReferentiel;
+use App\Models\PromoReferentielApprenant;
+use App\Http\Resources\presenceEventResource;
 
 class PresenceEventController extends Controller
 {
@@ -13,7 +17,6 @@ class PresenceEventController extends Controller
      */
     public function index()
     {
-        // return PresenceEvent::all()->load(["apprenants","event"]);
         return presenceEventResource::collection(PresenceEvent::all());
     }
 
@@ -22,11 +25,16 @@ class PresenceEventController extends Controller
      */
     public function store(Request $request)
     {
+        $promoACtuelle=Promo::where("is_active",1)->first();
+
+        $promoRefAppId=PromoReferentielApprenant::where(["apprenant_id"=>$request->apprenant_id,
+                                    "promo_referentiel_id"=>$request->promoReferentielId])->first();
         return PresenceEvent::firstOrCreate([
-            'promo_referentiel_apprenant_id'=>$request->promoRefApp,
+            'promo_referentiel_apprenant_id'=>$promoRefAppId->id,
             'evenement_id'=>$request->evenement_id,
             'isPresent'=>0
         ]);
+
     }
 
     /**
