@@ -55,10 +55,16 @@ class EmploieDuTempController extends Controller
 
         if ($this->validerEmploieDutemps($request->idPromo,$request->heure_debut,$request->heure_fin,$promoRef->id,
         $request->date_cours)){
-             return response ("Impossible de faire l'insertion");
+             return response ([
+                "data"=>[],
+                "message"=> "Il y'a déja un cours de prévu à cette heure !"
+            ]);
         }
         if ($this->validerJourWeekend($request->date_cours)) {
-            return response ("Impossible de faire l'insertion");
+            return response ([
+                "data" => [],
+               "message"=> "Impossible de creer un cours dans un jour weekend ! "
+            ]);
         }
         $emploieDuTemps= EmploieDuTemp::firstOrCreate([
                 'nom_cours'=>$request->nom_cours,
@@ -87,7 +93,10 @@ class EmploieDuTempController extends Controller
     {
         $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
         if (Promo::where('is_active',1)->pluck('id')[0]!=$request->idPromo) {
-            return response("Impossible pour ce promo");
+            return response ([
+                "data"=>[],
+                "message"=> "Impossible d'insérer un cours pour ce promo !"
+            ]);
         }
         $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])
                                 ->whereNot('id',$request->id)
@@ -100,7 +109,10 @@ class EmploieDuTempController extends Controller
                  $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
                  $hrFin>strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin) ||
                  $hrDeb < strtotime($c->heure_debut) && $hrFin >strtotime($c->heure_fin)) {
-                    return response("Impossible de faire la modification");
+                    return response ([
+                        "data"=>[],
+                        "message"=> "Il y'a déja un cours de prévu à cette heure !"
+                    ]);;
                 }
             }
 
