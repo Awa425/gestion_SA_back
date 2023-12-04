@@ -57,9 +57,7 @@ class ApprenantController extends Controller
      *  )
      */
     public function searchAppByEmailOrTel($param){
-        $app=Apprenant::where('email',$param)
-                        ->orWhere('telephone',$param)
-                        ->first();
+        $app=Apprenant::where(['telephone'=>$param])->first();
         if ($app) {
             return new ApprenantResource($app);
         }
@@ -69,7 +67,6 @@ class ApprenantController extends Controller
     }
     public function index(Request $request)
     {
-
         return new ApprenantCollection(Apprenant::where('is_active','=',1)
             ->filter()
             ->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')

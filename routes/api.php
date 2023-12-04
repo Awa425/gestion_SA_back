@@ -17,6 +17,7 @@ use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmploieDuTempController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\PresenceEventController;
 use App\Http\Controllers\PromoController;
 use App\Http\Resources\PromoReferentielResource;
 
@@ -76,6 +77,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             ]
         );
     Route::get('emploieDuTemps/ref/{idRef}/promo/{idPromo}', [EmploieDuTempController::class,'getCoursByIdRefAndIdPromo']);
+    Route::post('presenceEvent/marquerPresence/event/{idEvent}',[PresenceEventController::class,'marquerPresenceApp']);
     Route::get('promos/{id}/absence', [App\Http\Controllers\AbsenceController::class, 'getAbsence']);
 
     Route::post('apprenants/{promo_id}/{referentiel_id}', [App\Http\Controllers\ApprenantController::class, 'store']);
