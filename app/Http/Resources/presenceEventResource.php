@@ -16,8 +16,13 @@ class presenceEventResource extends JsonResource
     {
         return [
             "id"=>$this->id,
-            "apprenant"=>new PromoReferentielApprenantResource($this->apprenants),
-            "isPresent"=>$this->isPresent
+            "apprenant"=>$this->apprenants,
+            "is_present"=>$this->is_present,
+            "nom"=>$this->nom,
+            "prenom"=>$this->prenom,
+            "email"=>$this->email,
+            "telephone"=>$this->telephone,
+            "sexe"=>$this->sexe,
             // "evenement"=>$this->event
         ];
     }

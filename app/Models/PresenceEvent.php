@@ -13,7 +13,7 @@ class PresenceEvent extends Model
 
 
    public function apprenants(){
-    return $this->belongsTo(PromoReferentielApprenant::class,"promo_referentiel_apprenant_id");
+    return $this->belongsTo(Apprenant::class,'apprenant_id');
    }
    public function event(){
     return $this->belongsTo(Evenement::class,"evenement_id");

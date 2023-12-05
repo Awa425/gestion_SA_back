@@ -1,8 +1,8 @@
 <?php
 
+use App\Models\Apprenant;
 use App\Models\Evenement;
 use Illuminate\Support\Facades\Schema;
-use App\Models\PromoReferentielApprenant;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -15,9 +15,15 @@ return new class extends Migration
     {
         Schema::create('presence_events', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(PromoReferentielApprenant::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Apprenant::class)->constrained()->cascadeOnDelete()->nullable();
             $table->foreignIdFor(Evenement::class)->constrained()->cascadeOnDelete();
-            $table->boolean('isPresent', false);
+            $table->string("nom")->nullable();
+            $table->string("prenom")->nullable();
+            $table->string('email')->unique()->nullable();
+            $table->string('telephone')->nullable();
+            $table->string('cni', 255)->unique()->nullable();
+            $table->enum('sexe',['Feminin','Masculin'])->nullable();
+            $table->boolean('is_present')->default(false);
             $table->timestamps();
         });
     }
