@@ -25,14 +25,16 @@ class PresenceEventController extends Controller
      */
     public function store(Request $request)
     {
-        $promoACtuelle=Promo::where("is_active",1)->first();
-
-        $promoRefAppId=PromoReferentielApprenant::where(["apprenant_id"=>$request->apprenant_id,
-                                    "promo_referentiel_id"=>$request->promoReferentielId])->first();
         $presenceEvent= PresenceEvent::firstOrCreate([
-            'promo_referentiel_apprenant_id'=>$promoRefAppId->id,
+            'apprenant_id'=>$request->apprenant_id ,
             'evenement_id'=>$request->evenement_id,
-            'isPresent'=>0
+            'nom'=>$request->nom,
+            "prenom"=>$request->prenom,
+            "email"=>$request->email,
+            "telephone"=>$request->telephone,
+            "cni"=>$request->cni,
+            "sexe"=>$request->sexe,
+            'is_present'=>0
         ]);
         return new presenceEventResource($presenceEvent);
 
