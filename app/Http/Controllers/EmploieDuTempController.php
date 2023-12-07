@@ -112,7 +112,7 @@ class EmploieDuTempController extends Controller
                     return response ([
                         "data"=>[],
                         "message"=> "Il y'a déja un cours de prévu à cette heure !"
-                    ]);;
+                    ]);
                 }
             }
 

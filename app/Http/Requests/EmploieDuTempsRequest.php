@@ -24,8 +24,8 @@ class EmploieDuTempsRequest extends FormRequest
         return [
             'nom_cours'=>'required',
             'date_cours'=>'required | date|after_or_equal:today',
-            'heure_debut'=>'required|date_format:H:i|after_or_equal:08:00|before:16:00',
-            'heure_fin'=>'required|date_format:H:i|before_or_equal:16:00|after:heure_debut',
+            'heure_debut'=>'required|before:16:00|after_or_equal:08:00',
+            'heure_fin'=>'required|before_or_equal:16:00|after:heure_debut',
             'prof_id'=>'required',
         ];
     }

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->unique()->nullable();
             $table->string('telephone')->nullable();
             $table->string('cni', 255)->unique()->nullable();
-            $table->enum('sexe',['Feminin','Masculin'])->nullable();
+            $table->enum('genre',['Feminin','Masculin'])->nullable();
             $table->boolean('is_present')->default(false);
             $table->timestamps();
         });

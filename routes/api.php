@@ -77,7 +77,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             ]
         );
     Route::get('emploieDuTemps/ref/{idRef}/promo/{idPromo}', [EmploieDuTempController::class,'getCoursByIdRefAndIdPromo']);
-    Route::post('presenceEvent/marquerPresence/event/{idEvent}',[PresenceEventController::class,'marquerPresenceApp']);
+    Route::post('presenceEvent/marquerPresence',[PresenceEventController::class,'marquerPresenceApp']);
     Route::get('promos/{id}/absence', [App\Http\Controllers\AbsenceController::class, 'getAbsence']);
 
     Route::post('apprenants/{promo_id}/{referentiel_id}', [App\Http\Controllers\ApprenantController::class, 'store']);

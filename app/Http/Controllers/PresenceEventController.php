@@ -33,21 +33,19 @@ class PresenceEventController extends Controller
             "email"=>$request->email,
             "telephone"=>$request->telephone,
             "cni"=>$request->cni,
-            "sexe"=>$request->sexe,
+            "genre"=>$request->genre,
             'is_present'=>0
         ]);
         return new presenceEventResource($presenceEvent);
 
     }
-    public function marquerPresenceApp(Request $request, $idEvent){
-        // return $idEvent;
-        foreach ($request->presenceEvent as $element) {
-            $idsPromoRefApps[]=PromoReferentielApprenant::where(["promo_referentiel_id"=>$element["promoRefId"],
-                                 "apprenant_id"=>$element["apprenant_id"]])->first()->id;
-        }
-        PresenceEvent::whereIn("promo_referentiel_apprenant_id",$idsPromoRefApps)
-                    ->where("evenement_id",$idEvent)
-                    ->update(['isPresent' => 1]);
+    public function marquerPresenceApp(Request $request){
+    
+        PresenceEvent::whereIn('id', $request->presenceEventIds)
+                      ->update(['is_present'=>1]);
+    }
+    public function enleverPresenceApp(Request $request){
+        
     }
 
     /**
