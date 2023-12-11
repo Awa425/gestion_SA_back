@@ -21,7 +21,8 @@ class Evenement extends Model
         'photo',
         'notfication_date',
         'user_id',
-        'is_active'
+        'is_active',
+        'presentateur'
     ];
 
     public function user(): BelongsTo
