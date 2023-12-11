@@ -25,6 +25,7 @@ class EvenementResource extends JsonResource
             'event_time'=>$this->event_time,
             'is_active'=>$this->is_active,
             'user_id'=>$this->user_id,
+            'presentateur'=>$this->presentateur,
             'referentiels'=> EvenementReferentielResource::collection($this->evenement_referentiels)
                             ->map(function($ref){
                         return $ref->promo_referentiel->referentiel;

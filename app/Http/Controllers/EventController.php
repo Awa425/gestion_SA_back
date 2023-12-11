@@ -60,6 +60,7 @@ class EventController extends Controller
                  'notfication_date'=>$notDate,
                  'event_time'=>$request->event_time,
                  'user_id'=>$request->user_id,
+                 'presentateur'=>$request->presentateur,
                  'is_active'=>1
              ]);
              $event->referentiels()->attach($idsPromoReferentiel);
