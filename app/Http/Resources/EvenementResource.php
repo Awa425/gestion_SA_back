@@ -19,14 +19,15 @@ class EvenementResource extends JsonResource
             'subject'=>$this->subject,
             'photo'=>$this->photo,
             'description'=>$this->description,
-            'event_date'=>$this->event_date,
+            'date_debut'=>$this->date_debut,
+            'date_fin'=>$this->date_fin,
             'notfication_date'=>$this->notfication_date,
             'event_time'=>$this->event_time,
             'is_active'=>$this->is_active,
             'user_id'=>$this->user_id,
             'referentiels'=> EvenementReferentielResource::collection($this->evenement_referentiels)
                             ->map(function($ref){
-                                return $ref->promo_referentiel->referentiel;
+                        return $ref->promo_referentiel->referentiel;
             }),
             'apprenants'=>presenceEventResource::collection($this->presence)
 

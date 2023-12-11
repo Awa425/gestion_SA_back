@@ -22,7 +22,7 @@ class presenceEventResource extends JsonResource
             "prenom"=>$this->prenom,
             "email"=>$this->email,
             "telephone"=>$this->telephone,
-            "sexe"=>$this->sexe,
+            "genre"=>$this->genre,
             // "evenement"=>$this->event
         ];
     }

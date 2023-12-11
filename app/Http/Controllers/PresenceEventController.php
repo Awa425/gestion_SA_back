@@ -9,6 +9,8 @@ use App\Models\PresenceEvent;
 use App\Models\PromoReferentiel;
 use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\presenceEventResource;
+use App\Imports\InvitesImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PresenceEventController extends Controller
 {
@@ -33,23 +35,49 @@ class PresenceEventController extends Controller
             "email"=>$request->email,
             "telephone"=>$request->telephone,
             "cni"=>$request->cni,
-            "sexe"=>$request->sexe,
+            "genre"=>$request->genre,
             'is_present'=>0
         ]);
         return new presenceEventResource($presenceEvent);
 
     }
-    public function marquerPresenceApp(Request $request, $idEvent){
-        // return $idEvent;
-        foreach ($request->presenceEvent as $element) {
-            $idsPromoRefApps[]=PromoReferentielApprenant::where(["promo_referentiel_id"=>$element["promoRefId"],
-                                 "apprenant_id"=>$element["apprenant_id"]])->first()->id;
-        }
-        PresenceEvent::whereIn("promo_referentiel_apprenant_id",$idsPromoRefApps)
-                    ->where("evenement_id",$idEvent)
-                    ->update(['isPresent' => 1]);
+    public function marquerPresenceApp(Request $request){
+    
+        PresenceEvent::whereIn('id', $request->presenceEventIds)
+                      ->update(['is_present'=>1]);
     }
+    public function enleverPresenceApp(Request $request){
+        PresenceEvent::where('id', $request->idEvent)
+                      ->update(['is_present'=>0]);
+    }
+    public function storeInvitesExcel(Request $request){
+        $request->validate([
+            'invitesFile' => 'required|mimes:xlsx,xls,csv',
+        ]);
+        try{
+            $file = $request->file('invitesFile');
+            Excel::import(new InvitesImport, $file);
+            return response([
+                "message" => 'importation fait avec succès !'
+            ]);
+        }catch (\Illuminate\Database\QueryException $e) {
+            // Gestion des erreurs lors de l'insertion
+            if ($e->errorInfo[1] == 1062) {
+                $message = "Erreur de duplication d'entrée";
+            } else {
+                $message = $e->getMessage();
+            }
 
+            return response()->json([
+                'message' => 'Erreur lors de l\'insertion en masse : ' . $message,
+            ], 401);
+        }catch (\Exception $e) {
+            // Gestion des autres exceptions
+            return response()->json([
+                'message' => 'Erreur lors de l\'insertion en masse : ' . $e->getMessage(),
+            ], 401);
+        }
+    }
     /**
      * Display the specified resource.
      */
