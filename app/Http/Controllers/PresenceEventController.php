@@ -6,11 +6,12 @@ use App\Models\Promo;
 use App\Models\Apprenant;
 use Illuminate\Http\Request;
 use App\Models\PresenceEvent;
+use App\Imports\InvitesImport;
 use App\Models\PromoReferentiel;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\presenceEventResource;
-use App\Imports\InvitesImport;
-use Maatwebsite\Excel\Facades\Excel;
 
 class PresenceEventController extends Controller
 {
@@ -21,7 +22,16 @@ class PresenceEventController extends Controller
     {
         return presenceEventResource::collection(PresenceEvent::all());
     }
+    public function getMostPopularEvents(){
 
+        return PresenceEvent::select('evenement_id', DB::raw('COUNT(*) as presence_count'))
+            ->where('is_present', 1)
+            ->groupBy('evenement_id')
+            ->orderByDesc('presence_count')
+            ->limit(3)
+            ->get();
+
+        }
     /**
      * Store a newly created resource in storage.
      */

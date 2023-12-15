@@ -43,9 +43,12 @@ class EventController extends Controller
     public function store(EvenementRequest $request)
     {
         $promoActive=Promo::where('is_active',1)->first();
-        $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
-                            ->whereIn('referentiel_id',$request->referentiels_id)
-                            ->pluck('id');
+        $idsPromoReferentiel=[];
+        if ($request->referentiels_id) {
+            $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
+                                ->whereIn('referentiel_id',$request->referentiels_id)
+                                ->pluck('id');
+        }
         if ($this->controlEvent($request->date_debut,$request->date_fin, $request->subject)) {
             return response ("Impossible");
         }
@@ -63,7 +66,9 @@ class EventController extends Controller
                  'presentateur'=>$request->presentateur,
                  'is_active'=>1
              ]);
-             $event->referentiels()->attach($idsPromoReferentiel);
+             
+            $event->referentiels()->attach($idsPromoReferentiel);
+             
              return new EvenementResource($event);
         });
     }
@@ -83,13 +88,17 @@ class EventController extends Controller
     public function update(Request $request, Evenement $event)
     {
         $promoActive=Promo::where('is_active',1)->first();
-        $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
-                            ->whereIn('referentiel_id',$request->referentiels_id)
-                            ->pluck('id');
+        $idsPromoReferentiel=[];
+        if ($request->referentiels_id) {
+            $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
+                                ->whereIn('referentiel_id',$request->referentiels_id)
+                                ->pluck('id');
+        }
         $event->update($request->only(
-            "subject", "photo", "description", "date_debut","date_fin","notfication_date",'event_time'));
-            
+            "subject", "photo", "description", "date_debut","date_fin","notfication_date",'event_time','presentateur'));
+
         $event->referentiels()->sync($idsPromoReferentiel);
+        
         return new EvenementResource($event);
     }
 
@@ -109,4 +118,5 @@ class EventController extends Controller
     public function restoreEvent($idEvent){
         Evenement::annuleOrRestoreEvent($idEvent,1);
     }
+
 }
