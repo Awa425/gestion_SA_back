@@ -12,6 +12,7 @@ use App\Notifications\SendMail;
 use App\Models\PromoReferentiel;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Schema;
 use App\Http\Resources\ApprenantResource;
 use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\ApprenantCollection;
@@ -222,6 +223,24 @@ class ApprenantController extends Controller
         }
     }
 
+
+    public function searchApprenant($query)
+    {
+        $userTable = (new Apprenant())->getTable();
+
+        if (Schema::hasColumn($userTable, 'nom')) {
+            return new ApprenantCollection(
+                Apprenant::where('nom', 'like', "%$query%")
+                    ->orWhere('prenom', 'like', "%$query%")
+                    ->orWhere('telephone', 'like', "%$query%")
+                    ->orWhere('matricule', 'like', "%$query%")
+                    ->get()
+            );
+        } else {
+            // Gérer le cas où la colonne 'nom' n'existe pas
+            return response()->json(['error' => 'Column nom not found'], 500);
+        }
+    }
 
 
   

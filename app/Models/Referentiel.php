@@ -67,4 +67,8 @@ class Referentiel extends Model
         return $this->belongsToMany(Promo::class, 'promo_referentiels');
     }
 
+    public function apprenants()
+{
+    return $this->belongsToMany(Apprenant::class, 'promo_referentiel_apprenants');
+}
 }

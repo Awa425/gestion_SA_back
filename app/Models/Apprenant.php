@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Models\Presence;
+use App\Models\Referentiel;
 use App\Mail\NouvelApprenantMail;
 use App\Models\ApprenantPresence;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -100,7 +101,7 @@ class Apprenant extends Authenticatable
         return $this->belongsToMany(Presence::class, 'apprenant_presence', 'apprenant_id', 'presence_id');
     }
 
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -115,11 +116,24 @@ class Apprenant extends Authenticatable
         return $this->hasMany(Absence::class);
     }
 
-
-    public function promoReferentiels()
+    public function getDecryptedPasswordAttribute()
     {
-        return $this->belongsToMany(PromoReferentiel::class, 'promo_referentiel_apprenants');
+        if (isset($this->attributes['password'])) {
+            return Crypt::decryptString($this->attributes['password']);
+        }
+
+        // Gérer le cas où la clé 'password' n'est pas définie
+        return null;
     }
+
+    // public function promoReferentiels()
+    // {
+    //     return $this->belongsToMany(PromoReferentiel::class, 'promo_referentiel_apprenants');
+    // }
+    public function promoReferentiels()
+{
+    return $this->belongsToMany(PromoReferentiel::class, 'promo_referentiel_apprenants', 'apprenant_id', 'promo_referentiel_id');
+}
 
 
     public function insertion()

@@ -62,10 +62,10 @@ class SendMail extends Notification
             ->line('- Nom: ' . $notifiable->nom )
             ->line('-Prenom: ' . $notifiable->prenom)
             ->line('-Date de naissance: ' . $notifiable->date_naissance)
-            ->action('Télécharger l\'application mobile', url('/'))
+            ->action('Télécharger l\'application mobile', url('https://play.google.com/store/apps/details?id=com.gestionodc.gestion_sa'))
             ->line('tes informations pour se connecter dans l\'application :')
             ->line('-email: ' . $notifiable->email)
-            ->line('-mot de passe: ' . $notifiable->password)
+            ->line('-mot de passe: Passer')
             ->line('À bientôt sur le campus !')
 
             // ->attachData(file_get_contents($logoUrl), 'logo.png', ['mime' => 'image/png'])

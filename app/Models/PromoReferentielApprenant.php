@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Referentiel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PromoReferentielApprenant extends Model
 {
@@ -37,5 +38,10 @@ class PromoReferentielApprenant extends Model
     public function apprenant()
     {
         return $this->belongsTo(Apprenant::class);
+    }
+
+    public function referentiel(): BelongsTo
+    {
+        return $this->belongsTo(Referentiel::class, 'referentiel_id');
     }
 }
