@@ -111,7 +111,7 @@ class EmploieDuTempController extends Controller
                  $hrDeb < strtotime($c->heure_debut) && $hrFin >strtotime($c->heure_fin)) {
                     return response ([
                         "data" => [],
-                         "message"=> "Il y'a déja un cours de prévu à cette heure !"
+                        "message"=> "Il y'a déja un cours de prévu à cette heure !"
                     ]);
                 }
             }
