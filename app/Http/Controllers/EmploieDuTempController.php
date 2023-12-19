@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Models\Promo;
+use Illuminate\Http\Request;
+use App\Models\EmploieDuTemp;
+use App\Models\PromoReferentiel;
 use App\Http\Requests\EmploieDuTempsRequest;
 use App\Http\Resources\EmploieDuTempsResource;
-use App\Models\EmploieDuTemp;
-use App\Models\Promo;
-use App\Models\PromoReferentiel;
-use Illuminate\Http\Request;
 
 class EmploieDuTempController extends Controller
 {
@@ -29,7 +30,7 @@ class EmploieDuTempController extends Controller
      */
     public function validerEmploieDutemps($idPromo,$heure_deb,$heure_fin,$promoRefId,$dateCours){
         if (Promo::where('is_active',1)->pluck('id')[0]!=$idPromo) {
-            return false;
+            return true;
         }
         $cours = EmploieDuTemp::where(['date_cours'=>$dateCours,'promo_referentiel_id'=>$promoRefId])->get();
         $hrDeb=strtotime($heure_deb);
@@ -37,30 +38,34 @@ class EmploieDuTempController extends Controller
         foreach ($cours as $c) {
             if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
-            $hrFin>=strtotime($c->heure_debut) && $hrFin<strtotime($c->heure_fin) ) {
-                return false;
+            $hrFin>=strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin) ) {
+                return true;
             }
         }
-        return true;
+    }
+    public function validerJourWeekend($dateCours){
+        $date = Carbon::parse($dateCours);
+        if ($date->isWeekend()) {
+            return true;
+        }
     }
     public function store(EmploieDuTempsRequest $request)
     {
         $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
-        if (Promo::where('is_active',1)->pluck('id')[0]!=$request->idPromo) {
-            return response ("Impossible pour ce promo");
-        }
-        $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])
-                                ->get();
-        $hrDeb=strtotime($request->heure_debut);
-        $hrFin=strtotime($request->heure_fin);
-        foreach ($cours as $c) {
-            if (strtotime($c->heure_debut)==$hrDeb && strtotime($c->heure_fin)==$hrFin ||
-             $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
-             $hrFin>=strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin) ) {
-                return response ("Impossible de faire l'insertion");
-            }
-        }
 
+        if ($this->validerEmploieDutemps($request->idPromo,$request->heure_debut,$request->heure_fin,$promoRef->id,
+        $request->date_cours)){
+             return response ([
+                "data"=>[],
+                "message"=> "Il y'a déja un cours de prévu à cette heure !"
+            ]);
+        }
+        if ($this->validerJourWeekend($request->date_cours)) {
+            return response ([
+                "data" => [],
+               "message"=> "Impossible de creer un cours dans un jour weekend ! "
+            ]);
+        }
         $emploieDuTemps= EmploieDuTemp::firstOrCreate([
                 'nom_cours'=>$request->nom_cours,
                 'date_cours'=>$request->date_cours,
@@ -88,7 +93,10 @@ class EmploieDuTempController extends Controller
     {
         $promoRef= PromoReferentiel::where(['referentiel_id'=>$request->idRef,'promo_id'=> $request->idPromo])->first();
         if (Promo::where('is_active',1)->pluck('id')[0]!=$request->idPromo) {
-            return response("Impossible pour ce promo");
+            return response ([
+                "data"=>[],
+                "message"=> "Impossible d'insérer un cours pour ce promo !"
+            ]);
         }
         $cours = EmploieDuTemp::where(['date_cours'=>$request->date_cours,'promo_referentiel_id'=>$promoRef->id])
                                 ->whereNot('id',$request->id)
@@ -101,7 +109,10 @@ class EmploieDuTempController extends Controller
                  $hrDeb>=strtotime($c->heure_debut) && $hrDeb<strtotime($c->heure_fin) ||
                  $hrFin>strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin) ||
                  $hrDeb < strtotime($c->heure_debut) && $hrFin >strtotime($c->heure_fin)) {
-                    return response("Impossible de faire la modification");
+                    return response ([
+                        "data"=>[],
+                        "message"=> "Il y'a déja un cours de prévu à cette heure !"
+                    ]);;
                 }
             }
 

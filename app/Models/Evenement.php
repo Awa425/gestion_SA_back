@@ -48,4 +48,7 @@ class Evenement extends Model
         return $builder->where('id',$idEvent)
                        ->update(['is_active'=>$etat]);
     }
+    public function presence(){
+        return $this->hasMany(PresenceEvent::class);
+    }
 }

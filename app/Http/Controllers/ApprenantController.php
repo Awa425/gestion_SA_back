@@ -56,10 +56,17 @@ class ApprenantController extends Controller
      *       )
      *  )
      */
-
+    public function searchAppByEmailOrTel($param){
+        $app=Apprenant::where(['telephone'=>$param])->first();
+        if ($app) {
+            return new ApprenantResource($app);
+        }
+        return response([
+            "message" => "Apprenant introuvable"
+        ]);
+    }
     public function index(Request $request)
     {
-
         return new ApprenantCollection(Apprenant::where('is_active','=',1)
             ->filter()
             ->paginate(request()->get('perpage', env('DEFAULT_PAGINATION')), ['*'], 'page')
@@ -194,15 +201,16 @@ class ApprenantController extends Controller
             // Envoi d'email pour chaque apprenant créé
             $apprenants = $import->getApprenants();
 
+            
+            return response()->json([
+                'message' => 'Insertion en masse réussie',
+            ], 201);
+            
             foreach ($apprenants as $apprenant) {
                 if (method_exists($apprenant, 'notify')) {
                     $apprenant->notify(new SendMail($apprenant));
                 }
             }
-
-            return response()->json([
-                'message' => 'Insertion en masse réussie',
-            ], 201);
         } catch (\Illuminate\Database\QueryException $e) {
             // Gestion des erreurs lors de l'insertion
             if ($e->errorInfo[1] == 1062) {

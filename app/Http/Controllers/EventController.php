@@ -31,13 +31,24 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    public function controlEvent($dateEvent, $titleEvent){
+        $events= Evenement::all();
+        foreach ($events as $event) {
+            if ($event->event_date==$dateEvent && $event->subject==$titleEvent) {
+                return true;
+            }
+        }
+
+    }
     public function store(EvenementRequest $request)
     {                  
         $promoActive=Promo::where('is_active',1)->first();
         $idsPromoReferentiel= PromoReferentiel::where('promo_id',$promoActive->id)
                             ->whereIn('referentiel_id',$request->referentiels_id)
                             ->pluck('id');
-
+        if ($this->controlEvent($request->event_date, $request->subject)) {
+            return response ("Impossible");
+        }
         return DB::transaction( function () use($request, $idsPromoReferentiel) {
             $notDate=Carbon::parse($request->event_date)->subDays(3)->format('Y-m-d');
             // return $notDate;
@@ -53,10 +64,8 @@ class EventController extends Controller
              ]);
              $event->referentiels()->attach($idsPromoReferentiel);
              return new EvenementResource($event);
-
         });
     }
-
     /**
      * Display the specified resource.
      */

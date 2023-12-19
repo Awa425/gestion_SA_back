@@ -40,7 +40,4 @@ class Presence extends Model
                     ->withTimestamps()
                     ->withPivot('created_at');
     }
-    
-
-
 }
