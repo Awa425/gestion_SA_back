@@ -57,7 +57,7 @@ class ApprenantController extends Controller
      *  )
      */
     public function searchAppByEmailOrTel($param){
-        $app=Apprenant::where(['telephone'=>$param])->first();
+        $app=Apprenant::where('telephone',$param)->first();
         if ($app) {
             return new ApprenantResource($app);
         }

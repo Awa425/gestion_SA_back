@@ -15,12 +15,14 @@ class Evenement extends Model
     protected $fillable=[
         'subject',
         'description',
-        'event_date',
+        'date_debut',
+        'date_fin',
         'event_time',
         'photo',
         'notfication_date',
         'user_id',
-        'is_active'
+        'is_active',
+        'presentateur'
     ];
 
     public function user(): BelongsTo

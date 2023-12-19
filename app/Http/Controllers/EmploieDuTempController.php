@@ -68,7 +68,7 @@ class EmploieDuTempController extends Controller
         }
         $emploieDuTemps= EmploieDuTemp::firstOrCreate([
                 'nom_cours'=>$request->nom_cours,
-                'date_cours'=>$request->date_cours,
+                'date_cours'=>explode('T',$request->date_cours)[0],
                 'heure_debut'=>$request->heure_debut,
                 'heure_fin'=>$request->heure_fin,
                 'prof_id'=>$request->prof_id,
@@ -110,9 +110,9 @@ class EmploieDuTempController extends Controller
                  $hrFin>strtotime($c->heure_debut) && $hrFin<=strtotime($c->heure_fin) ||
                  $hrDeb < strtotime($c->heure_debut) && $hrFin >strtotime($c->heure_fin)) {
                     return response ([
-                        "data"=>[],
-                        "message"=> "Il y'a déja un cours de prévu à cette heure !"
-                    ]);;
+                        "data" => [],
+                         "message"=> "Il y'a déja un cours de prévu à cette heure !"
+                    ]);
                 }
             }
 
