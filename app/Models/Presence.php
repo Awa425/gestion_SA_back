@@ -44,6 +44,7 @@ class Presence extends Model
                     ->withPivot('created_at');
     }
 
+
     public function promoReferentielApprenants(): HasMany
     {
         return $this->hasMany(PromoReferentielApprenant::class);
@@ -58,6 +59,7 @@ class Presence extends Model
     //         'apprenant_id'
     //     )->withTimestamps();
     // }
+
 
 
 }

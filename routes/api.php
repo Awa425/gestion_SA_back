@@ -19,6 +19,10 @@ use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
+
+
+use App\Http\Controllers\PresenceEventController;
+
 use App\Http\Resources\PromoReferentielResource;
 use App\Http\Controllers\EmploieDuTempController;
 
@@ -58,6 +62,9 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::get('/user', function (Request $request) {
         return $request->user();
        });
+       
+    Route::get('promos/promoActuel',[PromoController::class, 'getPromoActuel']);
+    Route::get('presenceEvent/mostPopularEvents',[PresenceEventController::class,'getMostPopularEvents']);
 
     Route::apiResources(
         [
@@ -71,12 +78,16 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
             'prospections' => App\Http\Controllers\ProspectionController::class,
             'insertions' => App\Http\Controllers\InsertionApprenantController::class,
             'events'=>App\Http\Controllers\EventController::class,
+            'presenceEvent'=>App\Http\Controllers\PresenceEventController::class,
             'emploieDuTemps'=>App\Http\Controllers\EmploieDuTempController::class,
-
             ]
         );
     Route::get('emploieDuTemps/ref/{idRef}/promo/{idPromo}', [EmploieDuTempController::class,'getCoursByIdRefAndIdPromo']);
     Route::get('promos/{id}/absence', [App\Http\Controllers\AbsenceController::class, 'getAbsence']);
+    Route::post('presenceEvent/marquerPresence',[PresenceEventController::class,'marquerPresenceApp']);
+    Route::post('presenceEvent/enleverPresence',[PresenceEventController::class,'enleverPresenceApp']);
+    Route::post('presenceEvent/uploadInvites',[PresenceEventController::class,'storeInvitesExcel']);
+
 
     Route::post('apprenants/{promo_id}/{referentiel_id}', [App\Http\Controllers\ApprenantController::class, 'store']);
     Route::get('promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'Referentiel']);
@@ -91,7 +102,10 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('pages/promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'removeReferentiel']);
     Route::post('apprenants/search', [App\Http\Controllers\ApprenantController::class, 'search']);
     Route::post('apprenants/reset', [App\Http\Controllers\ApprenantController::class, 'reset']);
-    // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
+
+    Route::get('apprenants/search/{param}' , [ApprenantController::class,'searchAppByEmailOrTel']);
+   // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
+
 
 
 

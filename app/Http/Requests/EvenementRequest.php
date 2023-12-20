@@ -25,12 +25,9 @@ class EvenementRequest extends FormRequest
     {
         return [
             "subject"=>'required',
-            // Rule::unique('evenements')->where(function ($query) {
-            //     return $query->where('event_date', $this->validationData()['event_date']);
-            // }),
             "description"=>"required",
-            "event_date"=>"required | date|after_or_equal:". Carbon::now()->format('Y-m-d'),
-            "event_time"=>"required"
+            "date_debut"=>"required|date|after_or_equal:". Carbon::now()->format('Y-m-d'),
+            "date_fin"=>"required|date|after_or_equal:date_debut|after_or_equal:". Carbon::now()->format('Y-m-d'),
         ];
     }
 }
