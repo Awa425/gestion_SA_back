@@ -10,20 +10,21 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Schema;
 
 
 
 class UserController extends Controller
 {
      /**
-      
+
      * @OA\Get(
      *    path="/api/users",
      *    operationId=" index  ",
      *    tags={"users"},
      *    summary="Get list of users",
      *    description="Get list of users",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *    @OA\Parameter(name="limit", in="query", description="limit", required=false,
      *        @OA\Schema(type="integer")
      *    ),
@@ -62,7 +63,7 @@ class UserController extends Controller
      *      tags={"users"},
      *      summary="Store user in DB",
      *      description="Store user in DB",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *      @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
@@ -117,7 +118,7 @@ class UserController extends Controller
      *    operationId=" show  ",
      *    tags={"users"},
      *    summary="Get user Detail",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *    description="Get user Detail",
      *    @OA\Parameter(name="id", in="path", description="Id of user", required=true,
      *        @OA\Schema(type="integer")
@@ -146,7 +147,7 @@ class UserController extends Controller
      *     operationId=" update  ",
      *     tags={"users"},
      *     summary="Update user in DB",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *     description="Update user in DB",
      *     @OA\Parameter(name="id", in="path", description="Id of user", required=true,
      *         @OA\Schema(type="integer")
@@ -176,7 +177,7 @@ class UserController extends Controller
 
         if (!empty($validatedData['password'])) {
             $validatedData['password'] = bcrypt($validatedData['password']);
-        } 
+        }
 
         $user->update($validatedData);
 
@@ -188,7 +189,7 @@ class UserController extends Controller
      *    operationId=" destroy  ",
      *    tags={"users"},
      *    summary="Delete user",
-     *    security={{"bearerAuth":{}}}, 
+     *    security={{"bearerAuth":{}}},
      *    description="Delete user",
      *    @OA\Parameter(name="id", in="path", description="Id of user", required=true,
      *        @OA\Schema(type="integer")
@@ -212,5 +213,61 @@ class UserController extends Controller
         ]);
 
         return response()->json(['message' => 'Désactiver avec succès'], 200);
+    }
+
+
+    public function searchUser($query)
+    {
+        $userTable = (new User())->getTable();
+
+        if (Schema::hasColumn($userTable, 'nom')) {
+            return new UserCollection(
+                User::where('nom', 'like', "%$query%")
+                    ->orWhere('prenom', 'like', "%$query%")
+                    ->orWhere('telephone', 'like', "%$query%")
+                    ->orWhere('matricule', 'like', "%$query%")
+                    ->get()
+            );
+        } else {
+            // Gérer le cas où la colonne 'nom' n'existe pas
+            return response()->json(['error' => 'Column nom not found'], 500);
+        }
+    }
+    public function searchByName($name)
+    {
+        return new UserCollection(User::where('name', 'like', "%$name%")->get());
+    }
+
+    /**
+     * Rechercher un utilisateur par prénom.
+     *
+     * @param string $prenom
+     * @return UserCollection
+     */
+    public function searchByPrenom($prenom)
+    {
+        return new UserCollection(User::where('prenom', 'like', "%$prenom%")->get());
+    }
+
+    /**
+     * Rechercher un utilisateur par numéro de téléphone.
+     *
+     * @param string $telephone
+     * @return UserCollection
+     */
+    public function searchByTelephone($telephone)
+    {
+        return new UserCollection(User::where('telephone', 'like', "%$telephone%")->get());
+    }
+
+    /**
+     * Rechercher un utilisateur par matricule.
+     *
+     * @param string $matricule
+     * @return UserCollection
+     */
+    public function searchByMatricule($matricule)
+    {
+        return new UserCollection(User::where('matricule', 'like', "%$matricule%")->get());
     }
 }

@@ -113,4 +113,10 @@ class User extends Authenticatable
     {
         return $user->role->libelle === RoleServiceProvider::VISITEUR;
     }
+
+
+    public function notes()
+    {
+        return $this->hasMany(Note::class, 'prof_id');
+    }
 }
