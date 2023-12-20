@@ -22,7 +22,9 @@ class SendMail extends Notification
      */
     public function __construct()
     {
+
         // $this->notifiable = $notifiable;
+
     }
 
     /**
@@ -47,22 +49,25 @@ class SendMail extends Notification
 
             ->subject('Admission à Sonatel Academy')
 
+
             ->greeting('Bonjour' . $notifiable->prenom . ',')
+
             ->line('C\'est avec une immense joie que nous vous annonçons que vous avez brillamment réussi le test d\'entrée à notre école !')
             ->line('Votre détermination, votre engagement et votre talent ont vraiment fait la différence.')
             ->line('Détails de votre réussite :')
             ->line('Le début de votre aventure éducative est prévu pour le 16 Janvier 2024.')
             ->line('Félicitations pour cette réalisation exceptionnelle ! Nous croyons en votre potentiel et sommes impatients de vous accompagner dans votre parcours académique. Votre réussite inspire et motive toute notre communauté.')
             ->line('Nous sommes fiers de vous accueillir parmi nous.')
+            ->line('-Matricule: ' . $notifiable->matricule)
             ->line('- Nom: ' . $notifiable->nom )
             ->line('-Prenom: ' . $notifiable->prenom)
             ->line('-Date de naissance: ' . $notifiable->date_naissance)
-            ->line('-Matricule: ' . $notifiable->matricule)
-            ->action('Télécharger l\'application mobile', url('/'))
+            ->action('Télécharger l\'application mobile', url('https://play.google.com/store/apps/details?id=com.gestionodc.gestion_sa'))
             ->line('tes informations pour se connecter dans l\'application :')
             ->line('-email: ' . $notifiable->email)
-            ->line('-mot de passe: ' . $notifiable->password)
+            ->line('-mot de passe: Passer')
             ->line('À bientôt sur le campus !')
+
             // ->attachData(file_get_contents($logoUrl), 'logo.png', ['mime' => 'image/png'])
             ->salutation(new HtmlString('Merci pour votre participation.'));
     }

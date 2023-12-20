@@ -9,17 +9,22 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Laravel\Sanctum\PersonalAccessToken;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\PromoController;
 use App\Http\Resources\ApprenantResource;
 use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EmploieDuTempController;
-use App\Http\Controllers\EventController;
+
+
 use App\Http\Controllers\PresenceEventController;
-use App\Http\Controllers\PromoController;
+
 use App\Http\Resources\PromoReferentielResource;
+use App\Http\Controllers\EmploieDuTempController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,8 +102,10 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('pages/promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'removeReferentiel']);
     Route::post('apprenants/search', [App\Http\Controllers\ApprenantController::class, 'search']);
     Route::post('apprenants/reset', [App\Http\Controllers\ApprenantController::class, 'reset']);
+
     Route::get('apprenants/search/{param}' , [ApprenantController::class,'searchAppByEmailOrTel']);
    // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
+
 
 
 
@@ -128,3 +135,13 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::put('events/{idEvent}/annulation',[EventController::class,'annulerEvent']);
     Route::put('events/{idEvent}/restauration',[EventController::class,'restoreEvent']);
 });
+
+Route::apiResource('/role',RoleController::class);
+Route::get('/apprenantswithref', [PresenceController::class, 'presencestotales']);
+Route::get('/searchUser/{query}',[UserController::class,'searchUser']);
+Route::get('/searchStudent/{query}',[ApprenantController::class,'searchApprenant']);
+
+Route::get('/searchUserByCall/{query}',[UserController::class,'searchByTelephone']);
+Route::get('/searchUserByName/{query}',[UserController::class,'searchByName']);
+Route::get('/searchUserByPrenom/{query}',[UserController::class,'searchByPrenom']);
+Route::get('/searchUserByMatricule/{query}',[UserController::class,'searchByMatricule']);
