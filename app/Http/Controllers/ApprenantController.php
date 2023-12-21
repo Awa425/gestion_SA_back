@@ -126,7 +126,7 @@ class ApprenantController extends Controller
  public function generate_matricule($promo_libelle)
  {
      // Obtenez le préfixe de la promo en prenant la première lettre de chaque mot
-     $promo_prefix = '';
+     $promo_prefix = 'P';
      $promo_tabs = explode(' ', $promo_libelle);
 
      foreach ($promo_tabs as $promo_tab) {
@@ -158,7 +158,7 @@ class ApprenantController extends Controller
      $data['user_id'] = auth()->user()->id;
 
      // Utiliser la méthode generate_matricule de l'instance d'ApprenantController
-     $matricule = $this->generate_matricule($request->promo_libelle, $request->referentiel_libelle);
+     $matricule = $this->generate_matricule($request->promo_libelle);
      $data['matricule'] = $matricule;
 
      $data['reserves'] = self::diff_array(
@@ -177,13 +177,13 @@ class ApprenantController extends Controller
          ['referentiel_id', '=', $request->referentiel_id]
      ])->first();
      $apprenant->promoReferentiels()->attach($promoReferentiel);
+     return new ApprenantResource($apprenant);
 
      // Envoi de l'email
      if (method_exists($apprenant, 'notify')) {
          $apprenant->notify(new SendMail($apprenant));
      }
 
-     return new ApprenantResource($apprenant);
  }
 
 
