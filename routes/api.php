@@ -19,10 +19,7 @@ use App\Models\PromoReferentielApprenant;
 use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\ApprenantController;
 use App\Http\Controllers\DashboardController;
-
-
 use App\Http\Controllers\PresenceEventController;
-
 use App\Http\Resources\PromoReferentielResource;
 use App\Http\Controllers\EmploieDuTempController;
 
@@ -38,8 +35,6 @@ use App\Http\Controllers\EmploieDuTempController;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
-// Route::post('apprenant/login', [App\Http\Controllers\ApprenantAuth::class, 'login']);
-
 
 Route::get('/apprenant', function (Request $request) {
     $user = explode(" ",$request->headers->all()["authorization"][0]);
@@ -51,9 +46,6 @@ Route::get('/apprenant', function (Request $request) {
         "apprenant"=> new ApprenantResource($apprenant),
         "promoReferentiel"=> new PromoReferentielResource($promoReferentiel)
     ];
-
-
-
  });
 
 
@@ -88,7 +80,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::post('presenceEvent/enleverPresence',[PresenceEventController::class,'enleverPresenceApp']);
     Route::post('presenceEvent/uploadInvites',[PresenceEventController::class,'storeInvitesExcel']);
 
-
     Route::post('apprenants/{promo_id}/{referentiel_id}', [App\Http\Controllers\ApprenantController::class, 'store']);
     Route::get('promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'Referentiel']);
     Route::get('pages/promos/detail/{promo_id}', [App\Http\Controllers\PromoController::class, 'ReferentielLinked']);
@@ -104,16 +95,9 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::post('apprenants/reset', [App\Http\Controllers\ApprenantController::class, 'reset']);
 
     Route::get('apprenants/search/{param}' , [ApprenantController::class,'searchAppByEmailOrTel']);
-   // Route::get('promos/{promo_id}/{referentiel_id}', [App\Http\Controllers\PromoController::class, 'get_apprenants']);
-
-
-
-
 
     Route::group(['prefix' => 'apprenant'], function (){
-
         Route::post('ajout/excel' , [ApprenantController::class,'storeExcel']);
-
     });
 
     // Dashboard
@@ -129,9 +113,6 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     Route::get('dashboard/apprenats/masculin/{idPromo}', [DashboardController::class, 'getNumAppMasByPromoId']);
     Route::get('dashboard/apprenats/{idPromo}',[DashboardController::class, 'getNumAppByPromo']);
 
-    // Route::get('dashboard/apprenats/{genre}/{idPromo}', [DashboardController::class, 'getNumAppByGenreAndPromoId']);
-
-    //Evenements
     Route::put('events/{idEvent}/annulation',[EventController::class,'annulerEvent']);
     Route::put('events/{idEvent}/restauration',[EventController::class,'restoreEvent']);
 });

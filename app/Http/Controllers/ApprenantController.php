@@ -178,12 +178,14 @@ class ApprenantController extends Controller
      ])->first();
      $apprenant->promoReferentiels()->attach($promoReferentiel);
 
+     return new ApprenantResource($apprenant);
+
      // Envoi de l'email
      if (method_exists($apprenant, 'notify')) {
          $apprenant->notify(new SendMail($apprenant));
      }
 
-     return new ApprenantResource($apprenant);
+     
  }
 
 
