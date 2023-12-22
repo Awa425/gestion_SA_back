@@ -199,14 +199,14 @@ class ApprenantController extends Controller
             $import = new ApprenantsImport();
             Excel::import($import, $file);
 
-            // Envoi d'email pour chaque apprenant créé
             $apprenants = $import->getApprenants();
 
-            
             return response()->json([
                 'message' => 'Insertion en masse réussie',
             ], 201);
             
+            // Envoi d'email pour chaque apprenant créé
+
             foreach ($apprenants as $apprenant) {
                 if (method_exists($apprenant, 'notify')) {
                     $apprenant->notify(new SendMail($apprenant));
