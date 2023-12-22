@@ -74,7 +74,9 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
             ['promo_id', '=', $this->promoId],
             ['referentiel_id', '=', $this->referentielId]
         ])->first();
-
+        // if ($this->apprenantExist($apprenant->email)) {
+        //     $this->apprenantExist($apprenant->email)->promoReferentiels()->attach($promoReferentiel);
+        // }
         $apprenant->save();
         $apprenant->promoReferentiels()->attach($promoReferentiel);
 
@@ -87,6 +89,9 @@ class ApprenantsImport implements ToModel, WithHeadingRow, WithValidation, Skips
     public function getApprenants()
     {
         return $this->apprenants;
+    }
+    public function apprenantExist($email){
+        return Apprenant::where('email', $email)->first();
     }
 
     public function rules(): array

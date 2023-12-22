@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\PromoReferentielApprenant;
 use App\Http\Resources\presenceEventResource;
+use App\Models\Evenement;
+use Illuminate\Console\Scheduling\Event;
+
+use function PHPSTORM_META\map;
 
 class PresenceEventController extends Controller
 {
@@ -23,15 +27,26 @@ class PresenceEventController extends Controller
         return presenceEventResource::collection(PresenceEvent::all());
     }
     public function getMostPopularEvents(){
-
-        return PresenceEvent::select('evenement_id', DB::raw('COUNT(*) as presence_count'))
+        $numPresenceMostPopular=[];
+        $nomPresenceMostPopular=[];
+        $presencesEvent= PresenceEvent::select('evenement_id', DB::raw('COUNT(*) as presence_count'))
             ->where('is_present', 1)
             ->groupBy('evenement_id')
             ->orderByDesc('presence_count')
             ->limit(3)
             ->get();
+        $numPresenceMostPopular= $presencesEvent->map(function ($elt){
+            return $elt->presence_count;
+        });
+        $nomPresenceMostPopular= $presencesEvent->map(function ($elt){
+            return Evenement::where('id',$elt->evenement_id)->first()->subject ;
+        });
+        return response([
+            'nbreEvents'=>$numPresenceMostPopular,
+            'nomsEvents'=>$nomPresenceMostPopular
+        ]);
 
-        }
+    }
     /**
      * Store a newly created resource in storage.
      */

@@ -24,6 +24,7 @@ class EventController extends Controller
      */
     public function index()
     {
+        // return Evenement::all();
         return EvenementResource::collection(Evenement::all());
         // return $this->getAppRefEvent();
  
