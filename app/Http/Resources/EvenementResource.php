@@ -30,7 +30,7 @@ class EvenementResource extends JsonResource
                             ->map(function($ref){
                         return $ref->promo_referentiel->referentiel;
             }),
-            'apprenants'=>presenceEventResource::collection($this->presence)
+            'apprenants'=>$this->presence
 
         ];
 }
