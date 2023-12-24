@@ -24,10 +24,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        // return Evenement::all();
         return EvenementResource::collection(Evenement::all());
-        // return $this->getAppRefEvent();
- 
     }
     /**
      * Store a newly created resource in storage.
@@ -42,7 +39,7 @@ class EventController extends Controller
 
     }
     public function store(EvenementRequest $request)
-    {                  
+    {     
         $promoActive=Promo::where('is_active',1)->first();
         $idsPromoReferentiel=[];
         if ($request->referentiels_id) {
@@ -99,7 +96,7 @@ class EventController extends Controller
             "subject", "photo", "description", "date_debut","date_fin","notfication_date",'event_time','presentateur'));
 
         $event->referentiels()->sync($idsPromoReferentiel);
-        
+
         return new EvenementResource($event);
     }
 

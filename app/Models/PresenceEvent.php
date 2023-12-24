@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Apprenant;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PresenceEvent extends Model
 {
@@ -13,7 +14,7 @@ class PresenceEvent extends Model
 
 
    public function apprenants(){
-    return $this->belongsTo(Apprenant::class,'apprenant_id');
+    return $this->belongsTo(Apprenant::class);
    }
    public function event(){
     return $this->belongsTo(Evenement::class,"evenement_id");

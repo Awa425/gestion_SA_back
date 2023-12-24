@@ -64,7 +64,6 @@ class PresenceEventController extends Controller
             'is_present'=>0
         ]);
         return new presenceEventResource($presenceEvent);
-
     }
     public function marquerPresenceApp(Request $request){
     
