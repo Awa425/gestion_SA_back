@@ -52,8 +52,9 @@ class PresenceEventController extends Controller
      */
     public function store(Request $request)
     {
-        $presenceEvent= PresenceEvent::firstOrCreate([
-            'apprenant_id'=>$request->apprenant_id ,
+      
+        $presenceEvent= PresenceEvent::create([
+            'apprenant_id'=>$request->apprenant_id,
             'evenement_id'=>$request->evenement_id,
             'nom'=>$request->nom,
             "prenom"=>$request->prenom,

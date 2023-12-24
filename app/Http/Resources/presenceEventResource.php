@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class presenceEventResource extends JsonResource
@@ -16,14 +17,13 @@ class presenceEventResource extends JsonResource
     {
         return [
             "id"=>$this->id,
-            "apprenant"=>$this->apprenants,
+            "apprenant"=>ApprenantResource::make($this->apprenant),
             "is_present"=>$this->is_present,
             "nom"=>$this->nom,
             "prenom"=>$this->prenom,
             "email"=>$this->email,
             "telephone"=>$this->telephone,
             "genre"=>$this->genre,
-            // "evenement"=>$this->event
         ];
     }
 }
