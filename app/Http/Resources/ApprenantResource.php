@@ -33,7 +33,7 @@ class ApprenantResource extends JsonResource
             'user' => UserResource::make($this->user) ,
             'is_active' => $this->is_active,
             'photo' => base64_encode($this->photo) != null ?  base64_encode($this->photo) : null,
-            'promoReferentielId'=>$this->promoReferentiels[0]->pivot->promo_referentiel_id
+            'promoReferentielId'=> count($this->promoReferentiels)>0 ? $this->promoReferentiels[0]->pivot->promo_referentiel_id : null
         ];
     }
 }
