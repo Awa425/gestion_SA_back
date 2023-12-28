@@ -123,27 +123,25 @@ class ApprenantController extends Controller
 
 
 
- public function generate_matricule($promo_libelle)
- {
-     // Obtenez le préfixe de la promo en prenant la première lettre de chaque mot
-     $promo_prefix = 'P';
-     $promo_tabs = explode(' ', $promo_libelle);
+ public static function generate_matricule($promo_libelle, $referentiel_libelle)
+    {
 
-     foreach ($promo_tabs as $promo_tab) {
-         $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
-     }
 
-     // Obtenez le nombre d'apprenants actuels pour déterminer le numéro d'incrémentation
-     $count = Apprenant::count() + 1;
+        $promo_tabs = explode(' ', $promo_libelle);
+        $referentiel_tabs = explode(' ', $referentiel_libelle);
+        $promo_prefix = '';
+        $referentiel_prefix = '';
 
-     // Formatez le numéro d'incrémentation avec trois chiffres
-     $formatted_count = str_pad($count, 3, '0', STR_PAD_LEFT);
-
-     // Concaténez le préfixe de la promo avec le numéro d'incrémentation
-     $matricule = $promo_prefix . '-' . $formatted_count;
-
-     return $matricule;
- }
+        foreach ($promo_tabs as $promo_tab) {
+            $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
+        }
+       
+       count($referentiel_tabs)>=2 ? $referentiel_prefix .= strtoupper(substr($referentiel_tabs[0], 0, 3) . substr($referentiel_tabs[1], 0, 3)) : $referentiel_prefix .= strtoupper(substr($referentiel_tabs[0], 0, 3));
+       
+        $date = date('Y') .'_'. Apprenant::count() + 1;
+        $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
+        return $matricule;
+    }
 
 
 
@@ -156,10 +154,10 @@ class ApprenantController extends Controller
 
      $data['password'] = bcrypt($data['password']);
      $data['user_id'] = auth()->user()->id;
-
-     // Utiliser la méthode generate_matricule de l'instance d'ApprenantController
-     $matricule = $this->generate_matricule($request->promo_libelle);
-     $data['matricule'] = $matricule;
+     $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
+     $referentiel = Referentiel::where('id', '=', $request->referentiel_id)->select('libelle')->first();
+     $data['matricule'] = $this->generate_matricule($promo['libelle'], $referentiel['libelle']);
+    
 
      $data['reserves'] = self::diff_array(
          $request->all(),

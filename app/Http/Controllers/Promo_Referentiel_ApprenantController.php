@@ -121,4 +121,6 @@ class Promo_Referentiel_ApprenantController extends Controller
 
         return response()->noContent();
     }
+
+    
 }
