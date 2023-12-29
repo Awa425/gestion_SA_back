@@ -91,31 +91,18 @@ class DashboardController extends Controller
     {
         $promoActuel=Promo::where('is_active',1)->first();
         $idPromoRef= PromoReferentiel::where('promo_id', $promoActuel->id)->pluck('id');
-        // return $idPromoRef;
         return PromoReferentielApprenant::whereIn('promo_referentiel_id',$idPromoRef)
         ->join('apprenants','apprenants.id','=','promo_referentiel_apprenants.apprenant_id')
         ->get()
         ->count();
-        // $numActiveApprenants = Apprenant::join('promo_referentiel_apprenants', 'promo_referentiel_apprenants.apprenant_id', '=', 'apprenants.id')
-        // ->join('promo_referentiels', 'promo_referentiels.id', '=', 'promo_referentiel_apprenants.promo_referentiel_id')
-        // ->where('apprenants.is_active', 1)
-        // ->count();        
     }
-    public function getnbrAppByRef()
+    public function getnbrAppByRef($idRef)
     {
-        $promoActuel=Promo::where('is_active',1)->first();
-        
-        $idsPromoRef= PromoReferentiel::where('promo_id',$promoActuel->id)->pluck('id');
-        $iddevData=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>3])->first();
-        $iddevWeb=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>1])->first();
-        $refDig=PromoReferentiel::where(['promo_id'=>$promoActuel->id,'referentiel_id'=>2])->first();
-        
+        // $promoActuel=Promo::where('is_active',1)->first();
+        $promoRef=PromoReferentiel::where(['referentiel_id'=>$idRef])->first();
         return response([
-            'ref_dig'=>PromoReferentielApprenant::where('promo_referentiel_id', $refDig ? $refDig->id : 0)->count(),
-            'dev_web'=>PromoReferentielApprenant::where('promo_referentiel_id',$iddevWeb ? $iddevWeb->id : 0)->count(),
-            'dev_data'=>PromoReferentielApprenant::where('promo_referentiel_id',$iddevData? $iddevData->id :0)->count(),
+            'nbreApprenants'=>PromoReferentielApprenant::where('promo_referentiel_id', $promoRef ? $promoRef->id : 0)
+                                                        ->count()
         ]);
     }
-
-    
 }

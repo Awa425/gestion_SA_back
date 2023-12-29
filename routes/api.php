@@ -101,7 +101,7 @@ Route::middleware('auth:sanctum','userAuthorisation')->group(function(){
     });
 
     // Dashboard
-    Route::get('dashboard/referentiels/apprenants', [DashboardController::class,'getnbrAppByRef']);
+    Route::get('dashboard/referentiels/{idRef}/apprenants', [DashboardController::class,'getnbrAppByRef']);
     Route::get('dashboard/promos/nonActive', [DashboardController::class, 'allPromoNonActiveAndApp']);
     Route::get('dashboard/promos', [DashboardController::class, 'promos']);
     Route::get('dashboard/apprenats', [DashboardController::class, 'apprenants']);
