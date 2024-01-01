@@ -90,18 +90,20 @@ class DashboardController extends Controller
     public function apprenantActuel()
     {
         $promoActuel=Promo::where('is_active',1)->first();
-        $idPromoRef= PromoReferentiel::where('promo_id', $promoActuel->id)->pluck('id');
-        return PromoReferentielApprenant::whereIn('promo_referentiel_id',$idPromoRef)
-        ->join('apprenants','apprenants.id','=','promo_referentiel_apprenants.apprenant_id')
-        ->get()
-        ->count();
+        if ($promoActuel) {
+            $idPromoRef= PromoReferentiel::where('promo_id', $promoActuel->id)->pluck('id');
+            return PromoReferentielApprenant::whereIn('promo_referentiel_id',$idPromoRef ? $idPromoRef : 0)
+            ->join('apprenants','apprenants.id','=','promo_referentiel_apprenants.apprenant_id')
+            ->get()
+            ->count();
+        }
     }
     public function getnbrAppByRef($idRef)
     {
         // $promoActuel=Promo::where('is_active',1)->first();
-        $promoRef=PromoReferentiel::where(['referentiel_id'=>$idRef])->first();
+        $promoRef=PromoReferentiel::where(['referentiel_id'=>$idRef])->pluck('id');
         return response([
-            'nbreApprenants'=>PromoReferentielApprenant::where('promo_referentiel_id', $promoRef ? $promoRef->id : 0)
+            'nbreApprenants'=>PromoReferentielApprenant::whereIn('promo_referentiel_id', $promoRef ? $promoRef : 0)
                                                         ->count()
         ]);
     }
