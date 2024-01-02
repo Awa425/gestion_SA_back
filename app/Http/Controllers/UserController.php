@@ -48,7 +48,7 @@ class UserController extends Controller
 
 
         return new UserCollection(User::ignoreRequest(['perpage'])
-        ->filter()
+        
         // ->where('is_active', "=", 1)
         ->orderByDesc('isActive')
         ->paginate(request()
