@@ -125,8 +125,6 @@ class ApprenantController extends Controller
 
  public static function generate_matricule($promo_libelle, $referentiel_libelle)
     {
-
-
         $promo_tabs = explode(' ', $promo_libelle);
         $referentiel_tabs = explode(' ', $referentiel_libelle);
         $promo_prefix = '';
@@ -135,15 +133,11 @@ class ApprenantController extends Controller
         foreach ($promo_tabs as $promo_tab) {
             $promo_prefix .= strtoupper(substr($promo_tab, 0, 1));
         }
-       
-       count($referentiel_tabs)>=2 ? $referentiel_prefix .= strtoupper(substr($referentiel_tabs[0], 0, 3) . substr($referentiel_tabs[1], 0, 3)) : $referentiel_prefix .= strtoupper(substr($referentiel_tabs[0], 0, 3));
-       
+        count($referentiel_tabs)>=2 ? $referentiel_prefix .= strtoupper(substr($referentiel_tabs[0], 0, 3) . substr($referentiel_tabs[1], 0, 3)) : $referentiel_prefix .= strtoupper(substr($referentiel_tabs[0], 0, 3));
         $date = date('Y') .'_'. Apprenant::count() + 1;
         $matricule = $promo_prefix . '_' . $referentiel_prefix . '_'  . $date;
         return $matricule;
     }
-
-
 
  public function store(ApprenantStoreRequest $request)
  {
@@ -157,8 +151,6 @@ class ApprenantController extends Controller
      $promo = Promo::where('id', '=', $request->promo_id)->select('libelle')->first();
      $referentiel = Referentiel::where('id', '=', $request->referentiel_id)->select('libelle')->first();
      $data['matricule'] = $this->generate_matricule($promo['libelle'], $referentiel['libelle']);
-    
-
      $data['reserves'] = self::diff_array(
          $request->all(),
          $request->validated(),
